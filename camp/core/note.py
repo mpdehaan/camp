@@ -1,5 +1,8 @@
 
 from functools import total_ordering
+import re
+
+NOTE_SHORTCUT_REGEX = re.compile("([A-Za-z#]+)(\d*)")
 
 # ours
 from .. import utils
@@ -21,6 +24,8 @@ class Note(object):
 
         assert name is not None
         assert name in NOTES or name in EQUIVALENCE
+        if octave is None:
+            octave = 4
         assert octave is not None and type(octave) == int
 
         self.name = self._equivalence(name)
@@ -104,4 +109,19 @@ class Note(object):
 
     def __repr__(self):
         return "Note<%s%s>" % (self.name, self.octave)
- 
+
+
+def n(st):
+    """
+    n('Db3') -> Note(name='Db', octave=3)
+    """
+    match = NOTE_SHORTCUT_REGEX.match(st)
+    if not match:
+        raise Exception("cannot form note from: %s" % st)
+    name = match.group(1)
+    octave = match.group(2)
+    if octave == '' or octave is None:
+        octave = 4
+    octave = int(octave)
+    return Note(name=name, octave=octave)
+
