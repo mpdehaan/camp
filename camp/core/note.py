@@ -30,6 +30,7 @@ DOWN_HALF_STEP = utils.roll_right(NOTES)
 
 SCALE_DEGREES_TO_STEPS = {
    '1'  : 0, # C (if C major)
+   'b2' : 0.5,
    '2'  : 1, # D
    'b3' : 1.5,
    '3'  : 2, # E
