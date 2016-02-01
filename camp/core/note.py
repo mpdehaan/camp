@@ -111,9 +111,9 @@ class Note(object):
         return "Note<%s%s>" % (self.name, self.octave)
 
 
-def n(st):
+def note(st):
     """
-    n('Db3') -> Note(name='Db', octave=3)
+    note('Db3') -> Note(name='Db', octave=3)
     """
     match = NOTE_SHORTCUT_REGEX.match(st)
     if not match:

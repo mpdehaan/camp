@@ -1,4 +1,4 @@
-from camp.core.note import Note, NOTES, n
+from camp.core.note import Note, NOTES, note
 
 class TestNote(object):
 
@@ -93,11 +93,11 @@ class TestNote(object):
 
    def test_shortcuts(self):
   
-       assert n("C")   == Note(name="C", octave=4)
-       assert n("Db3") == Note(name="Db", octave=3)
-       assert n("Db")  == Note(name="Db")
-       assert n("D#5") == Note(name="Eb", octave=5)
-       assert n("D#")  == Note(name="Eb", octave=4)
+       assert note("C")   == Note(name="C", octave=4)
+       assert note("Db3") == Note(name="Db", octave=3)
+       assert note("Db")  == Note(name="Db")
+       assert note("D#5") == Note(name="Eb", octave=5)
+       assert note("D#")  == Note(name="Eb", octave=4)
     
 
 
