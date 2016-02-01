@@ -20,7 +20,8 @@ class Note(object):
         """
 
         assert name is not None
-        assert octave is not None
+        assert name in NOTES or name in EQUIVALENCE
+        assert octave is not None and type(octave) == int
 
         self.name = self._equivalence(name)
         self.octave = octave
@@ -47,13 +48,13 @@ class Note(object):
         note = self
         if steps > 0:
              while steps > 0:
-                 note = self.up_half_step()
+                 note = note.up_half_step()
                  steps = steps - 0.5
-             return note
         else:
              while steps < 0:
-                 note = self.down_half_step()
+                 note = note.down_half_step()
                  steps = steps + 0.5
+        return note
 
     def _numeric_name(self):
         """
@@ -100,3 +101,7 @@ class Note(object):
         FIXME: duration and volume MAY matter in the future.
         """
         return self._note_number() < other._note_number()
+
+    def __repr__(self):
+        return "Note<%s%s>" % (self.name, self.octave)
+ 
