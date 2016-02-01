@@ -28,6 +28,8 @@ class TestScale(object):
        assert str(scale1) == 'Scale<C4 major>'
 
    def _scale_test(self, expression=None, expected=None, length=None):
+       if isinstance(expected, str):
+           expected = expected.split()
        assert length is not None
        scale1 = scale(expression)
        results = [ note for note in scale1.generate(length=length) ]
@@ -46,6 +48,15 @@ class TestScale(object):
        assert chord(results) == chord(['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5', 'D5', 'E5'])
 
    def test_various(self):
-       self._scale_test(length=16, expression='C4 chromatic', expected='C4 Db4 D4 Eb4 E4 F4 Gb4 G4 Ab4 A4 Bb4 B4 C5 Db5 D5 Eb5'.split())
+       # this is adding some more in depth tests, but hiding some of the ways it would be most likely used by an API consumer
+       # see test_c_major for a more idiomatic example of the scale API
+       self._scale_test(length=16, expression='C4 chromatic', expected='C4 Db4 D4 Eb4 E4 F4 Gb4 G4 Ab4 A4 Bb4 B4 C5 Db5 D5 Eb5')
+       self._scale_test(length=7, expression='C4 natural_minor', expected='C4 D4 Eb4 F G Ab Bb')
+       # make sure we can role over octave boundaries correctly
+       self._scale_test(length=7, expression='D4 natural_minor', expected='D4 E4 F4 G4 A4 Bb4 C5')
+       self._scale_test(length=7, expression='A4 natural_minor', expected='A4 B4 C5 D5 E5 F5 G5')
+       self._scale_test(length=7, expression='A4 major', expected='A4 B4 Db5 D5 E5 Gb5 Ab5')
+
+
 
 

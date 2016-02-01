@@ -36,6 +36,7 @@ SCALE_TYPES = dict(
 SCALE_ALIASES = dict(
    aeolian = 'natural_minor',
    ionian = 'major',
+   minor = 'natural_minor'
 )
 
 from camp.core.note import note, Note
