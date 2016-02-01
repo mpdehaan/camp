@@ -1,7 +1,7 @@
 CAMP - Computer Aided Music Production
 ======================================
 
-CAMP is a music composition system.
+CAMP is a music composition project.
 
 Goals are to provide:
 
@@ -14,14 +14,17 @@ Goals are to provide:
 License
 =======
 
-   * CAMP is licensed an Apache 2 application
-   * If you use CAMP for something interesting, I'd love to hear about it, let me know!
+Apache 2
 
 Notes
 =====
 
+   * The tests probably explain the API best at this point
+   * There's much to do
    * API is super subject to change.
    * No pull requests or tickets just yet please.
+   * If you use CAMP for something interesting, I'd love to hear about it, let me know!
+
 
 Setup
 =====
@@ -30,6 +33,7 @@ For OS X:
 
     brew install python3
     pip3 install -r requirements.txt
+    make tests
  
 Author
 ======
