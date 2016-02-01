@@ -41,14 +41,21 @@ class Note(object):
            return NOTES[EQUIVALENCE.index(name)] 
         return name
 
-    def transpose(self, steps=0, octaves=0):
+    def transpose(self, steps=0, semitones=0, octaves=0):
         """ 
         Returns a note a given number of steps or octaves higher. 
         """
 
-        assert steps is not None or octaves is not None
+        assert steps is not None or octaves is not None or semitones is not None
 
-        steps = steps + (octaves * 6)
+        if steps is None:
+            steps = 0
+        if octaves is None:
+            octaves = 0
+        if semitones is None:
+            semitones = 0
+
+        steps = steps + (octaves * 6) + (semitones * 0.5)
 
         note = self
         if steps > 0:
@@ -106,6 +113,12 @@ class Note(object):
         FIXME: duration and volume MAY matter in the future.
         """
         return self._note_number() < other._note_number()
+
+    def short_name(self):
+        """
+        Returns a string like Eb4
+        """
+        return "%s%s" % (self.name, self.octave)
 
     def __repr__(self):
         return "Note<%s%s>" % (self.name, self.octave)
