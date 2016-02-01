@@ -14,8 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from functools import total_ordering
-
 CHORD_TYPES = dict(
    minor = [ 3, 7 ],
    major = [ 4, 7 ],
@@ -110,6 +108,7 @@ def chord(input):
         notes = [ note(n) for n in input ]
         return Chord(notes)
     else:
-        (root, typ) = input.split()
-        return Chord(root=note(root), typ=typ)
+        tokens = input.split()
+        assert len(tokens) == 2, "invalid chord expression: %s" % input
+        return Chord(root=note(tokens[0]), typ=tokens[1])
 

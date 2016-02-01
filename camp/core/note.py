@@ -28,6 +28,21 @@ EQUIVALENCE    = [ 'C',  'C#', 'D', 'D#', 'E',  'F',  'F#', 'G',  'G#', 'A', 'A#
 UP_HALF_STEP   = utils.roll_left(NOTES)
 DOWN_HALF_STEP = utils.roll_right(NOTES)
 
+SCALE_DEGREES_TO_STEPS = {
+   '1'  : 0, # C (if C major)
+   '2'  : 1, # D
+   'b3' : 1.5,
+   '3'  : 2, # E
+   '4'  : 2.5, # F
+   'b5' : 3,
+   '5'  : 3.5, # G
+   'b6' : 4,
+   '6'  : 4.5, # A
+   'b7' : 5,
+   '7'  : 5.5, # B
+   '8'  : 6
+}
+
 @total_ordering
 class Note(object):
 
@@ -57,13 +72,31 @@ class Note(object):
            return NOTES[EQUIVALENCE.index(name)] 
         return name
 
-    def transpose(self, steps=0, semitones=0, octaves=0):
+    def _scale_degrees_to_steps(self, input):
+        """
+        A 3rd "3" is 3 steps, but a "b3" (minor third) is 2.5 and a "#3" (augmented third) is 3.5
+        This is used in scale.py to make defining scales easier.
+        See https://en.wikipedia.org/wiki/List_of_musical_scales_and_modes
+        """
+        return SCALE_DEGREES_TO_STEPS[str(input)]
+
+    def transpose(self, steps=0, semitones=0, degrees=None, octaves=0):
         """ 
-        Returns a note a given number of steps or octaves higher. 
+        Returns a note a given number of steps or octaves or (other things) higher.
+
+        steps -- half step as 0.5, whole step as 1, or any combination.  The most basic way to do things.
+        semitones - 1 semitone is simply a half step.  Provided to keep some implementations more music-literate.
+        octaves - 6 whole steps, or 12 half steps.  Easy enough.
+        degrees - scale degrees, to keep scale definition somewhat music literate.  "3" is a third, "b3" is a flat third, "3#" is an augmented third, etc.
+
+        You can combine all of them at the same time if you really want (why?), in which case they are additive. 
         """
 
-        assert steps is not None or octaves is not None or semitones is not None
 
+        if degrees is not None:
+            degree_steps = self._scale_degrees_to_steps(degrees)
+        else:
+            degree_steps = 0
         if steps is None:
             steps = 0
         if octaves is None:
@@ -71,7 +104,7 @@ class Note(object):
         if semitones is None:
             semitones = 0
 
-        steps = steps + (octaves * 6) + (semitones * 0.5)
+        steps = steps + (octaves * 6) + (semitones * 0.5) + degree_steps
 
         note = self
         if steps > 0:
@@ -144,6 +177,8 @@ def note(st):
     """
     note('Db3') -> Note(name='Db', octave=3)
     """
+    if type(st) == Note:
+        return st
     match = NOTE_SHORTCUT_REGEX.match(st)
     if not match:
         raise Exception("cannot form note from: %s" % st)
