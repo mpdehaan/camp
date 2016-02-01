@@ -14,11 +14,36 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+# there's no intervals.py yet for fancy names, so this is represented in terms of semitones
+# https://en.wikipedia.org/wiki/Chord_names_and_symbols_(popular_music)
+# minor 2nd - 2 semitones
+# minor 3rd - 3 semitones
+# major 3rd - 4 semitones
+# perfect 4th - 5 semitones
+# perfect 5th - 7 semitones
+# major 6th - 9 semitones
+# major 7th - 11 semitones
+# octave - 12 semitones 
+# etc
+
 CHORD_TYPES = dict(
    minor = [ 3, 7 ],
    major = [ 4, 7 ],
    dim = [ 3, 6 ],
-   aug = [ 4, 8 ]
+   aug = [ 4, 8 ],
+   sus4 = [ 5, 7 ],
+   sus2 = [ 2, 7 ],
+   fourth = [ 5 ],
+   power = [ 7 ],
+   fifth = [ 7 ],
+   M6 = [ 4, 7, 9 ],
+   m6 = [ 3, 7, 9 ],
+   dom7 = [ 4, 7, 10 ],  
+   M7 = [ 4, 7, 11 ],
+   m7 = [ 3, 7, 10 ],
+   aug7 = [ 4, 8, 10 ],
+   dim7 = [ 3, 6, 10 ], 
+   mM7 = [ 3, 7, 11 ] 
 )
 
 from camp.core.note import note, Note
