@@ -1,2 +1,2 @@
 pyflakes
-
+pytest

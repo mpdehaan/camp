@@ -6,7 +6,8 @@ CAMP is a music composition project.
 Goals are to provide:
 
    * a pythonic and intuitive music theory library, enabling "music as code"
-   * tools that enable composition at faster speeds, inspired by trackers & nashville notation, but mixing in higher level constructs
+   * tools that enable composition at faster speeds, inspired by trackers but evolved from them
+   * scale awareness at the forefront with ability to use roman numeral notationfor chords, etc
    * a library suitable as a basis for theory-backed algorithmic composition programs
    * pluggable output modes so we're not dependent on some library continuing to work, but enable both realtime MIDI, MIDI output, and notation
    * a text-like entry format for rapid transcription of scores across multiple tracks, inspired by classic step sequencers
