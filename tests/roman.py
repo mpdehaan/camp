@@ -31,4 +31,4 @@ class TestRoman(object):
 
        assert roman.do("IV") == chord("F4 major")
        assert roman.do("iv") == chord("F4 minor")
-
+       assert roman.do("I:power") == chord(["C4", "G4"])

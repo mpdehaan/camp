@@ -54,14 +54,22 @@ class Roman(object):
         self._note_buffer = [ n for n in self.scale.generate(length=20) ]
 
     def chord(self, sym):
-        # FIXME: handle things like IIdim or however we want to write it
-        # FIXME: handle inversions
+        """
+        Accepts symbols like ii, II, IV:power
+        (the latter being a bit of a notation hack so we might want to change it)
+        """
+ 
+        override_typ = None
+        if ":" in sym:
+           (sym, override_typ) = sym.split(":",1)
 
         chord_data = CHORD_SYMBOLS.get(sym, None)
         if chord_data is None:
            raise Exception("do not know how to parse chord symbol: %s" % sym)
 
         (scale_num, typ) = chord_data
+        if override_typ is not None:
+            typ = override_typ
         base_note = self.note(scale_num)
         return Chord(root=base_note, typ=typ)
 
