@@ -114,7 +114,4 @@ class TestNote(object):
        assert note("Db")  == Note(name="Db")
        assert note("D#5") == Note(name="Eb", octave=5)
        assert note("D#")  == Note(name="Eb", octave=4)
-    
-
-
 

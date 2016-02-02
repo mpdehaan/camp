@@ -89,7 +89,10 @@ class Chord(object):
             self.typ = typ
             self.root = root
             self.notes = self._chordify()
-        
+
+    def copy(self):
+        notes = [ n.copy() for n in self.notes ]
+        return Chord(notes=notes)        
 
     def _chordify(self):
         """
@@ -123,6 +126,20 @@ class Chord(object):
 	"""
         notes = [ note.transpose(steps=steps, octaves=octaves, semitones=None) for note in self.notes ]
         return Chord(notes=notes)
+
+    def invert(self, amount=1, octaves=1):
+        """
+        Inverts a chord.
+        ex: chord("c4 major").invert() -> chord(["E4","G4","C5"])
+        """
+        new_chord = self.copy()
+        if amount >= 1:
+            new_chord.notes[0] = new_chord.notes[0].transpose(octaves=octaves)
+        if amount >= 2:
+            new_chord.notes[1] = new_chord.notes[1].transpose(octaves=octaves)
+        if amount >= 3:
+            new_chord.notes[2] = new_chord.notes[2].transpose(octaves=octaves)
+        return new_chord
 
 def chord(input):
     """

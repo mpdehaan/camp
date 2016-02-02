@@ -52,6 +52,7 @@ class TestChord(object):
        assert chord1.transpose(steps=0.5) == chord(['Db4', 'F4', 'Ab4'])
        assert chord1.transpose(octaves=2) == chord(['C6', 'E6', 'G6'])
     
-
-
+   def test_inversions(self):
+       assert chord("C4 major").invert() == chord(["E4","G4","C5"])
+       assert chord("C4 major").invert(amount=2) == chord(["G4","C5","E5"])
 

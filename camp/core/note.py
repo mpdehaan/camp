@@ -55,6 +55,7 @@ class Note(object):
         """
 
         assert name is not None
+        name = name.title()
         assert name in NOTES or name in EQUIVALENCE
         if octave is None:
             octave = 4
@@ -62,6 +63,9 @@ class Note(object):
 
         self.name = self._equivalence(name)
         self.octave = octave
+
+    def copy(self):
+        return Note(name=self.name, octave=self.octave)
 
     def _equivalence(self, name):
         """ 
