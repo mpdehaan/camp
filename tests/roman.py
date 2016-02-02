@@ -21,20 +21,31 @@ from camp.systems.roman import Roman, roman
 
 class TestRoman(object):
 
-   def test_basics(self):
+    def test_basics(self):
 
-       r = Roman(scale=scale("C4 major"))
+        r = Roman(scale=scale("C4 major"))
 
-       assert r.do("1") == note("C4")
-       assert r.do("3") == note("E4")
-       assert r.do("4") == note("F4")
+        assert r.do("1") == note("C4")
+        assert r.do("3") == note("E4")
+        assert r.do("4") == note("F4")
 
-       assert r.do("IV") == chord("F4 major")
-       assert r.do("iv") == chord("F4 minor")
-       assert r.do("I:power") == chord(["C4", "G4"])
+        assert r.do("IV") == chord("F4 major")
+        assert r.do("iv") == chord("F4 minor")
 
-   def test_shortcuts(self):
+        # somewhat non-standard notation but allows describing other chord types (see chord.py)
+        assert r.do("I:power") == chord(["C4", "G4"])
+
+    def test_shortcuts(self):
    
-       r = roman("C4 major")
-       assert r.do("IV") == chord("F4 major")
-       
+        r = roman("C4 major")
+        assert r.do("IV") == chord("F4 major")
+      
+    def test_inversions(self):
+
+        # non-standard notation but I wanted a somewhat clean-ish way to describe inversions
+        r = roman("C4 major")
+        assert r.do("I'")  == chord(["E4","G4","C5"])
+        assert r.do("I''") == chord(["G4","C5","E5"])
+        assert r.do("I':power") == chord(["G4","C5"])
+
+

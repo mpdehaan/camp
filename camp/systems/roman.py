@@ -59,19 +59,46 @@ class Roman(object):
         (the latter being a bit of a notation hack so we might want to change it)
         """
  
+        # normally chords will be like II or ii, but occasionally II:power
+        # if so, we'll ignore our usual roman parsing and let the chord type after
+        # the colon win
         override_typ = None
         if ":" in sym:
            (sym, override_typ) = sym.split(":",1)
+        
+        # while this isn't really common notation, I wanted a way to describe
+        # inversions, as such, I' means first inversion of I, and I'' means
+        # second inversion, we'll optionally invert a bit further down
+        inversion = 0
+        if sym.endswith("''''"):
+            inversion = 3
+            sym = sym.replace("'''","")
+        elif sym.endswith("''"):
+            inversion = 2
+            sym = sym.replace("''","")
+        elif sym.endswith("'"):
+            inversion = 1
+            sym = sym.replace("'","")
 
+        # here's where we figure out what roman numbers are which, and if the
+        # roman number implies a chord type (it does - but it might be overridden
+        # above).
         chord_data = CHORD_SYMBOLS.get(sym, None)
         if chord_data is None:
            raise Exception("do not know how to parse chord symbol: %s" % sym)
 
+        # here's where we override the chord type if need be
         (scale_num, typ) = chord_data
         if override_typ is not None:
             typ = override_typ
+
+        # now return the built chord, of the right type, inverting if required
         base_note = self.note(scale_num)
-        return Chord(root=base_note, typ=typ)
+        chord = Chord(root=base_note, typ=typ)
+        if inversion != 0:
+            chord = chord.invert(amount=inversion)
+        return chord
+
 
     def note(self, sym):
         position = int(sym) - 1
