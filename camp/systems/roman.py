@@ -88,4 +88,11 @@ class Roman(object):
             return self.chord(sym)
         return self.note(sym)
 
+def roman(scale_pattern):
+    """
+    Quickly generate a Roman numeral interpreter.
+    Ex: r = roman("C4 major")
+    """
+    return Roman(scale=scale(scale_pattern))
+
 

@@ -17,18 +17,24 @@ limitations under the License.
 from camp.core.note import Note, NOTES, note
 from camp.core.chord import Chord, chord
 from camp.core.scale import Scale, scale
-from camp.systems.roman import Roman
+from camp.systems.roman import Roman, roman
 
 class TestRoman(object):
 
    def test_basics(self):
 
-       roman = Roman(scale=scale("C4 major"))
+       r = Roman(scale=scale("C4 major"))
 
-       assert roman.do("1") == note("C4")
-       assert roman.do("3") == note("E4")
-       assert roman.do("4") == note("F4")
+       assert r.do("1") == note("C4")
+       assert r.do("3") == note("E4")
+       assert r.do("4") == note("F4")
 
-       assert roman.do("IV") == chord("F4 major")
-       assert roman.do("iv") == chord("F4 minor")
-       assert roman.do("I:power") == chord(["C4", "G4"])
+       assert r.do("IV") == chord("F4 major")
+       assert r.do("iv") == chord("F4 minor")
+       assert r.do("I:power") == chord(["C4", "G4"])
+
+   def test_shortcuts(self):
+   
+       r = roman("C4 major")
+       assert r.do("IV") == chord("F4 major")
+       
