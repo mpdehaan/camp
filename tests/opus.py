@@ -56,7 +56,7 @@ class TestSong(object):
         sheep_pattern = Pattern(name="sheep-theme", notation='roman',
             bars = [
                 "4 6 4 6 4 4 4 4 6 6 4 1 1 - - - -".split(),
-                "IV - - - - IV - - - - VI - - - -"
+                "4 6 4 6 4 4 4 4 6 4 6 1 . . . . ."
             ],
             bar_repeats = [ 3, 1 ]
         )

@@ -17,7 +17,7 @@ limitations under the License.
 from camp.core.note import Note, NOTES, note
 from camp.core.chord import Chord, chord
 from camp.core.scale import Scale, scale
-from camp.systems.roman import Roman, roman
+from camp.notation.roman import Roman, roman
 
 class TestRoman(object):
 
@@ -36,10 +36,10 @@ class TestRoman(object):
         assert r.do("I:power") == chord(["C4", "G4"])
 
     def test_shortcuts(self):
-   
+
         r = roman("C4 major")
         assert r.do("IV") == chord("F4 major")
-      
+
     def test_inversions(self):
 
         # non-standard notation but I wanted a somewhat clean-ish way to describe inversions
@@ -47,5 +47,3 @@ class TestRoman(object):
         assert r.do("I'")  == chord(["E4","G4","C5"])
         assert r.do("I''") == chord(["G4","C5","E5"])
         assert r.do("I':power") == chord(["G4","C5"])
-
-
