@@ -14,5 +14,35 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+from camp.core.scale import Scale
+from camp.opus.track import Track
+from camp.opus.scene import Scene
+
+# see tests/opus.py for how all this works.
+
 class Song(object):
-    pass
+
+    def __init__(self, name=None, scale=None, pattern_length=16, bars=1, bpm=120):
+
+        assert isinstance(name, str)
+        assert type(scale) == Scale
+        assert type(pattern_length) == int
+        assert type(bars) == int
+        assert type(bpm) == int
+
+        self.name = name
+        self.scale = scale
+        self.pattern_length = pattern_length
+        self.bars = bars
+        self.bpm = bpm
+
+        self._tracks = []
+        self._scenes = []
+
+    def add_track(self, track):
+        assert type(track) == Track
+        self._tracks.append(track)
+
+    def add_scene(self, scene):
+        assert type(scene) == Scene
+        self._scenes.append(scene)

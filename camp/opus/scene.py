@@ -14,5 +14,33 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+# see tests/opus.py for how all this works
+#
+# reminder example:
+#
+# scene1 = song.add_scene(Scene(name="scene1", track_mapping=dict(
+#     track1 = llama_pattern,
+#     track2 = sheep_pattern,
+#     track3 = kick_pattern
+# ))
+
+
 class Scene(object):
-    pass
+
+    def __init__(self, name=None, scale=None, bpm=None, bars=None, track_mapping=None):
+
+        self.name = name
+        self.scale = None  # if not set, use Song value
+        self.bpm = None    # if not set, use Song value
+        self.bars = None   # if not set, use Song value
+        self.track_mapping = track_mapping
+
+        assert isinstance(self.name, str)
+        assert type(self.track_mapping) == dict
+
+        if self.scale is not None:
+            assert type(self.scale) == scale
+        if self.bpm is not None:
+            assert type(self.bpm) in [int, float]
+        if self.bars is not None:
+            assert type(self.bars) == int
