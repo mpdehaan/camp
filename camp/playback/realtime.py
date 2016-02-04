@@ -94,7 +94,7 @@ class Realtime(object):
 
         # if any off events didn't fire because of timing issues,
         # make sure they do
-        for event in Timeline.off_events(self.events):
+        for event in Timeline.off_events(timeline.events):
             callback(off_events)
 
         # TODO: we should probably track all on events to make it
