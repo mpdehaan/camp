@@ -12,6 +12,7 @@ Goals are to provide:
    * pluggable output modes so we're not dependent on some library continuing to work, but enable both realtime MIDI, MIDI output, and notation
    * a friendly entry format for rapid transcription of scores across multiple tracks, inspired by classic step sequencers
    * a library of usable mutators to slice, dice, and evolve musical patterns
+   * easy to describe automation of synth parameters (filter cutoffs, wub wub, etc) 
    * endless-composition genre-shifting program  suitable for never ending songs that also remain interesting
 
 License
