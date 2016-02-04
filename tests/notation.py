@@ -18,6 +18,7 @@ from camp.core.note import Note, NOTES, note
 from camp.core.chord import Chord, chord
 from camp.core.scale import Scale, scale
 from camp.notation.roman import Roman, roman
+from camp.notation.literal import Literal, literal
 
 class TestRoman(object):
 
@@ -47,3 +48,16 @@ class TestRoman(object):
         assert r.do("I'")  == chord(["E4","G4","C5"])
         assert r.do("I''") == chord(["G4","C5","E5"])
         assert r.do("I':power") == chord(["G4","C5"])
+
+class TestLiteral(object):
+
+    def test_basics(self):
+
+        l = Literal()
+        assert l.do("C4") == note("C4")
+        assert l.do("C4-major") == chord("C4 major")
+        assert l.do("C4,E4,G4") == chord("C4 major")
+
+        # FIXME: inversions are not supported in literal.py yet, we'd ideally want
+        # this in a common base class -- low priority
+        #assert l.do("C4'-major") == chord("C5,E4,G4")

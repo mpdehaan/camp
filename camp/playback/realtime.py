@@ -21,6 +21,18 @@ import time
 # https://pypi.python.org/pypi/rtmidi-python
 import rtmidi_python as rtmidi
 
+def print_event(self, io, event):
+    """
+    A debug callback used in testing that does not actually send real events.
+    """
+    pass
+
+def play_event(self, io, event):
+    """
+    A callback that actually sends MIDI events.
+    """
+    pass
+
 class Realtime(object):
 
     def __init__(self, song):
@@ -39,7 +51,7 @@ class Realtime(object):
         self.midi_out = midi_out
 
 
-    def playback(self):
+    def playback_test(self):
 
         note_on = [0x90, 60, 112] # channel 1, middle C, velocity 112
         note_off = [0x80, 60, 0]
@@ -47,3 +59,25 @@ class Realtime(object):
         time.sleep(0.5)
         self.midi_out.send_message(note_off)
         print("OK!")
+
+
+    def play_song(self, callback=play_event):
+
+        # for each scene in the song
+            # play the scene
+        pass
+
+    def play_scene(scene, callback=play_event):
+
+        # determine the lengths of each bar
+
+        # convert each bar to a timeline of event data
+
+        # find the current bar that should be playing for each track
+
+        # combine all the current bars into one line of events
+
+        # while the desired length of the global bar is not expired
+            # fire all the events that have elapsed
+            # sleep some very small slice of time
+        pass

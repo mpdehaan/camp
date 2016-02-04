@@ -31,13 +31,20 @@ Notes
 
 Setup
 =====
- 
+
 For OS X:
 
     brew install python3
     pip3 install -r requirements.txt
-    make tests
+
+Open "Audio/MIDI Setup" and click on the IAC Driver Block.  Pick "Enabled".  
+
+Then:
  
+   make tests
+
+If you skip the IAC step the tests may fail. 
+
 Author
 ======
 
