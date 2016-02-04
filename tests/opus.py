@@ -19,6 +19,7 @@ from camp.opus.song import Song
 from camp.opus.scene import Scene
 from camp.opus.track import Track
 from camp.opus.pattern import Pattern
+from camp.opus.bar import Bar
 
 class TestSong(object):
 
@@ -49,19 +50,22 @@ class TestSong(object):
         # a pattern has a name, a notation system, and can optionally override a scale
         llama_pattern = Pattern(name="llama-theme", notation='roman', scale=scale('c4 minor'),
             bars = [
-               "1 2 3 I II III IV i ii iii iv - 3 2 1".split(),
+               Bar(cells="1 2 3 I II III IV i ii iii iv - 3 2 1".split()),
             ]
         )
         # here the pattern plays the first bar 3 times then the next bar 1 time
         sheep_pattern = Pattern(name="sheep-theme", notation='roman',
             bars = [
-                "4 6 4 6 4 4 4 4 6 6 4 1 1 - - - -".split(),
-                "4 6 4 6 4 4 4 4 6 4 6 1 . . . . ."
-            ],
-            bar_repeats = [ 3, 1 ]
+                Bar(cells="4 6 4 6 4 4 4 4 6 6 4 1 1 - - - -".split(), repeats=3),
+                Bar(cells="4 6 4 6 4 4 4 4 6 4 6 1 . . . . .".split(), repeats=1)
+            ]
         )
         # for drums, scales are pretty bogus, so just input the raw notes (or chords, etc)
-        kick_pattern = Pattern(name="kicks", notation='literal', bars=["C4 - - -".split()], stop=4)
+        kick_pattern = Pattern(name="kicks", notation='literal',
+            bars = [
+                Bar(cells="C4 - - -".split(), stop=4)
+            ]
+        )
 
         # the song has a list of scenes, which might repeat
         scene1 = song.add_scene(Scene(name="scene1", track_mapping=dict(
