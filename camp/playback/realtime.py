@@ -45,6 +45,5 @@ class Realtime(object):
         note_off = [0x80, 60, 0]
         self.midi_out.send_message(note_on)
         time.sleep(0.5)
-        self.m
-        idi_out.send_message(note_off)
+        self.midi_out.send_message(note_off)
         print("OK!")
