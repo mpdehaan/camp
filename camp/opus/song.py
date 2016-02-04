@@ -42,7 +42,9 @@ class Song(object):
     def add_track(self, track):
         assert type(track) == Track
         self._tracks.append(track)
+        return track
 
     def add_scene(self, scene):
         assert type(scene) == Scene
         self._scenes.append(scene)
+        return scene

@@ -30,12 +30,15 @@ from camp.opus.bar import Bar
 
 class Pattern(object):
 
-    def __init__(self, name=None, notation='roman', bars=None, scale=None, ):
+    def __init__(self, name=None, notation='roman', note_length=16, bars=None, scale=None, ):
 
         self.name = name
         self.notation = notation
         self.bars = bars
         self.scale = scale
+        self.note_length = note_length
+
+        assert type(note_length) == int
 
         assert isinstance(self.name, str)
 
