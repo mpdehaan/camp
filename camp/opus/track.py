@@ -22,9 +22,10 @@ limitations under the License.
 
 class Track(object):
 
-    def __init__(self, name=None, midi_channel=None):
+    def __init__(self, song=None, name=None, midi_channel=None):
 
         self.name = name
+        self.song = song
         self.midi_channel = midi_channel
 
         assert isinstance(self.name, str)

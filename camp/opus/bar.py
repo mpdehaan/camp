@@ -23,6 +23,8 @@ class Bar(object):
         self.cells = cells
         self.stop = stop
         self.repeats = repeats
+        self.play_count = 0
+        self.play_head = 0
 
         assert type(self.cells) == list
         if self.stop is not None:
@@ -33,3 +35,11 @@ class Bar(object):
         # to convert each bar into a list of Notes and/or chords, accounting
         # for that some cells may contain ties or rests.  This method likely
         # lives in Pattern, not here, TBD
+
+    def reset_play_head(self, value=0):
+        """ Where are we playing inside this bar? """
+        self.play_head = 0
+
+    def reset_play_count(self, value=0):
+        """ If play count == repeats, we can move to the next bar """
+        self.play_count = 0

@@ -36,15 +36,17 @@ class Song(object):
         self.bars = bars
         self.bpm = bpm
 
-        self._tracks = []
-        self._scenes = []
+        self.tracks = []
+        self.scenes = []
 
     def add_track(self, track):
         assert type(track) == Track
-        self._tracks.append(track)
+        track.song = self
+        self.tracks.append(track)
         return track
 
     def add_scene(self, scene):
         assert type(scene) == Scene
-        self._scenes.append(scene)
+        scene.song = self
+        self.scenes.append(scene)
         return scene

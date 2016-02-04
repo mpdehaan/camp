@@ -37,6 +37,7 @@ class Pattern(object):
         self.bars = bars
         self.scale = scale
         self.note_length = note_length
+        self.play_head = 0
 
         assert type(note_length) == int
 
@@ -57,3 +58,18 @@ class Pattern(object):
         if self.scale is not None:
             # user wishes to override the scale for this pattern only
             assert type(self.scale) == Scale
+
+    def reset_play_head(self, value=0):
+        self.play_head = 0
+        for bar in self.bars:
+            bar.reset_play_head(0)
+            bar.reset_play_count(0)
+
+    def advance_play_head(self, value=0, quarter_note_length=None):
+        """
+        Move the playhead to the future time and return all events it would create
+        even if some are in the future (like note off events)
+        FIXME: notes need duration support!
+        """
+        assert quarter_note_length is not None
+        raise NotImplementedError()

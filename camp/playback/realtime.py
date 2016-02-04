@@ -60,24 +60,43 @@ class Realtime(object):
         self.midi_out.send_message(note_off)
         print("OK!")
 
-
     def play_song(self, callback=play_event):
+        for scene in self.song.scenes:
+            self.play_scene(scene, callback=callback)
 
-        # for each scene in the song
-            # play the scene
-        pass
 
-    def play_scene(scene, callback=play_event):
+    def play_scene(self, scene, callback=play_event):
 
-        # determine the lengths of each bar
+        quarter_note_length = scene.compute_quarter_note_length()
 
-        # convert each bar to a timeline of event data
+        for pattern in scene.patterns():
+            pattern.reset_play_head()
+        playhead = 0
+        scene_time = scene.compute_scene_time()
 
-        # find the current bar that should be playing for each track
+        while playhead < scene_time:
 
-        # combine all the current bars into one line of events
+            playhead += play_speed
 
-        # while the desired length of the global bar is not expired
-            # fire all the events that have elapsed
-            # sleep some very small slice of time
-        pass
+            for pattern in scene.patterns():
+                events = pattern.advance_play_head(play_head,
+                    quarter_note_length=quarter_note_length)
+                timeline.add_events(events)
+
+            events = timeline.pop_due_events(playhead)
+
+            for event in Timeline.on_events(events):
+                callback(event)
+            for event in Timeline.off_events(events):
+                callback(off_events)
+
+            sleep(play_speed)
+
+        # if any off events didn't fire because of timing issues,
+        # make sure they do
+        for event in Timeline.off_events(self.events):
+            callback(off_events)
+
+        # TODO: we should probably track all on events to make it
+        # easier to clear stuck events on Ctrl-C and add an interrupt
+        # handler

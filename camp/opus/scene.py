@@ -24,16 +24,16 @@ limitations under the License.
 #     track3 = kick_pattern
 # ))
 
-
 class Scene(object):
 
-    def __init__(self, name=None, scale=None, bpm=None, bars=None, track_mapping=None):
+    def __init__(self, song=None, name=None, scale=None, bpm=None, bars=None, track_mapping=None):
 
         self.name = name
         self.scale = None  # if not set, use Song value
         self.bpm = None    # if not set, use Song value
         self.bars = None   # if not set, use Song value
         self.track_mapping = track_mapping
+        self.song = None
 
         assert isinstance(self.name, str)
         assert type(self.track_mapping) == dict
@@ -44,3 +44,25 @@ class Scene(object):
             assert type(self.bpm) in [int, float]
         if self.bars is not None:
             assert type(self.bars) == int
+        if self.song is not None:
+            assert str(type(self.song)) == 'Song'
+
+    def track_names(self):
+        return self.track_mapping.keys()
+
+    def patterns(self):
+        return self.track_mapping.values()
+
+    def compute_quarter_note_length(self):
+        bpm = self.song.bpm
+        if self.bpm is not None:
+            bpm = self.bpm
+        return 60 / bpm
+
+    def compute_scene_time(self):
+        """
+        How long will this scene play in seconds?
+        It's a function of the bar count, length, and quarter note length, as
+        well as note type on the song AND the scene.
+        """
+        raise NotImplementedError()

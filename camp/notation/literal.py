@@ -35,7 +35,7 @@ CHORD_SYMBOLS = dict(
    vii = [ 7, 'minor' ],
 )
 
-class Roman(object):
+class Literal(object):
 
     def __init__(self, scale=None):
 
