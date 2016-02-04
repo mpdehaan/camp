@@ -49,6 +49,8 @@ class TestSong(object):
         track3 = song.add_track(Track(name="TR808", midi_channel=2))
 
         # a pattern has a name, a notation system, and can optionally override a scale
+        # TODO: cells gets renamed to "notes" or somesuch
+        # allow passing in a map of CC automation as well.
         llama_pattern = Pattern(name="llama-theme", notation='roman', scale=scale('c4 minor'),
             bars = [
                Bar(cells="1 2 3 I II III IV i ii iii iv - 3 2 1".split()),
