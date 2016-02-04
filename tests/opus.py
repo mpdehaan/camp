@@ -20,6 +20,7 @@ from camp.opus.scene import Scene
 from camp.opus.track import Track
 from camp.opus.pattern import Pattern
 from camp.opus.bar import Bar
+from camp.playback.realtime import Realtime
 
 class TestSong(object):
 
@@ -88,3 +89,8 @@ class TestSong(object):
         #     for x in events
         #        send or print event
         # ??? - to be determined
+
+        realtime = Realtime(song)
+        realtime.playback()
+
+        raise Exception("STOP")
