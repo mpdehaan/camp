@@ -48,7 +48,7 @@ class Timeline(object):
         return event.time <= now_time
 
     def on_events(self):
-        return [ event for event in self.events if event.velocity not in [ 0, None ] ]
+        return [ event for event in self.events if not event.off ]
 
     def off_events(self):
-        return [ event for event in self.events if event.velocity in [ 0, None ] ]
+        return [ event for event in self.events if event.off ]

@@ -4,13 +4,22 @@ from camp.utils import loop_around
 
 class ScalePlayer(Member):
 
-    def __init__(self, scales=None, lengths=None, channel=None):
+    def __init__(self, scales=None, lengths=None, note_durations=None, note_velocities=None, channel=None):
         assert type(scales) == list
         assert type(lengths) == list
         super().__init__()
 
+        if note_velocities is None:
+            note_velocities = [ 127 ]
+        if note_durations is None:
+            note_durations = [ 0.5 ]
+        self.note_durations = note_durations
+        self.note_velocities = note_velocities
         self.length_looper = loop_around(lengths)
         self.scale_looper = loop_around(scales)
+        self.duration_looper = loop_around(note_durations)
+        self.velocity_looper = loop_around(note_velocities)
+
         self.note_gen = self.note_generator()
         self.channel = channel
 
@@ -19,8 +28,12 @@ class ScalePlayer(Member):
         for scale in self.scale_looper:
             # each scale goes for a certain specified length
             # specified in a parallel array
-            actual_len = next(self.length_looper)
-            for note in scale.generate(length=actual_len):
+            scale_length = next(self.length_looper)
+            note_duration = next(self.duration_looper)
+            note_velocity = next(self.velocity_looper)
+            for note in scale.generate(length=scale_length):
+                note.duration = note_duration
+                note.velocity = note_velocity
                 yield note
 
     def on_signal(self, event):

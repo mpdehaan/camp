@@ -16,7 +16,7 @@ limitations under the License.
 
 # https://en.wikipedia.org/wiki/List_of_musical_scales_and_modes
 SCALE_TYPES = dict(
-   major              = [ 1, 2, 3, 4, 5, 6, 7 ], 
+   major              = [ 1, 2, 3, 4, 5, 6, 7 ],
    natural_minor      = [ 1, 2, 'b3', 4, 5, 'b6', 'b7' ],
    blues              = [ 1, 'b3', 4, 'b5', 5, 'b7' ],
    dorian             = [ 1, 2, 'b3', 4, 5, 6, 'b7' ],
@@ -54,7 +54,7 @@ class Scale(object):
         assert root is not None
         assert typ is not None
         if isinstance(root, str):
-            root = note(root) 
+            root = note(root)
         self.root = root
         self.typ = typ
 
@@ -103,4 +103,3 @@ def scale(input):
     """
     (root, typ) = input.split()
     return Scale(root=note(root), typ=typ)
-

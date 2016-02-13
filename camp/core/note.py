@@ -49,7 +49,7 @@ class Note(object):
 
     def __init__(self, name=None, octave=None, velocity=127, duration=0.0625):
 
-        """
+        """        
         Constructs a note.
         note = Note(name='C', octave='4')
         """

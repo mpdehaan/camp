@@ -24,24 +24,22 @@ from camp.band.conductor import Conductor
 
 class TestBand(object):
 
-
     def test_mesh_basic(self):
 
         realtime = Realtime()
         timeline = Timeline()
 
-        scale1 = scale("c4 major")
-        scale2 = scale("c4 blues")
+        scale1 = scale("c6 major")
+        scale2 = scale("c6 minor")
 
-        scale_reader = ScalePlayer(scales=[scale1, scale2], lengths=[16,4], channel=0)
+        scale_reader = ScalePlayer(scales=[scale1, scale2], lengths=[16,4], channel=0, note_velocities=[127,80,50])
         chordify = Chordify(types=['major','minor'], channel=1)
         output = RealtimeOutput(timeline=timeline, bpm=120, time_boredom_seconds=10)
 
         scale_reader.send_to(chordify)
 
         scale_reader.send_to(output)
-        chordify.send_to(output)
-
+        #chordify.send_to(output)
 
         conductor = Conductor(
             signal=[scale_reader, output],
@@ -54,118 +52,3 @@ class TestBand(object):
 
         for x in conductor.midi_event_buffer:
             print(x)
-
-
-
-NOTES_OLD = """
-    def test_mesh_a(self):
-
-        #   scale() --> chordify ---> pattern_router ---> ignore_node --\
-        #                                             \-> octave_shift -> out
-        #   note_repeat -----------------------------------------------/
-
-
-        conductor = Conductor()
-        timeline = Timeline()
-
-        scale1 = scale("c4 major")
-        scale2 = scale("c4 minor")
-        note1 = note("c2")
-
-        scale_reader = ScalePlayer(scales=[scale1, scale2], lengths=[16,4])
-        note_repeat = RepeatPlayer(note=note1)
-
-        chord_mapper = Chordify(types=['major','minor','major','dim'])
-        scale_reader.send_to(chord_mapper)
-
-        ignore = Ignore(filter=[1,0,0,0])
-        octave_shift = OctaveShift(amount=1)
-
-        router = PatternRouter(filter=[0,1,0,0])
-        router.send_to(ignore_node)
-        router.send_to(octave_shift)
-
-        output = RealtimeOutput(timeline)
-        octave_shift.send_to(output)
-        ignore_node.send_to(output)
-        note_repeat.send_to(output)
-
-        conductor.start(signal=[scale_reader, note_repeat], timeline=timeline, mode='save_events')
-"""
-
-OLD_SKETCH = """
-
-
-        # this test is mostly documentation and coverage and is going to be
-        # relatively free of assertions, because of the nature of the work
-
-        # the opus is the framework for a composition.  It has a Python object
-        # model which is also the basic API.  At a high level:
-        # a song has tracks
-        # a song has scenes
-        # each scene chooses a pattern for each track
-        # a scene might override the scale or BPM
-        # each pattern has bars (which might repeat)
-        # bars can be described in multiple types of systems
-        # a pattern might override the scale (but can't override the BPM)
-        # scenes might be manually advanced by a human, or they might not.
-
-        # values set at the song level are essentially global defaults
-        song = Song(name="Random Notes", scale=scale('c4 major'), pattern_length=16, bars=4, bpm=120)
-
-        # tracks get mapped to MIDI channels but they also have printable names
-        track1 = song.add_track(Track(name="melodica", midi_channel=1))
-        track2 = song.add_track(Track(name="trombone", midi_channel=2))
-        track3 = song.add_track(Track(name="TR808", midi_channel=2))
-
-        # a pattern has a name, a notation system, and can optionally override a scale
-        # TODO: cells gets renamed to "notes" or somesuch
-        # allow passing in a map of CC automation as well.
-        llama_pattern = Pattern(name="llama-theme", notation='roman', scale=scale('c4 minor'),
-            bars = [
-               Bar(cells="1 2 3 I II III IV i ii iii iv - 3 2 1".split()),
-            ]
-        )
-        # here the pattern plays the first bar 3 times then the next bar 1 time
-        sheep_pattern = Pattern(name="sheep-theme", notation='roman',
-            bars = [
-                Bar(cells="4 6 4 6 4 4 4 4 6 6 4 1 1 - - - -".split(), repeats=3),
-                Bar(cells="4 6 4 6 4 4 4 4 6 4 6 1 . . . . .".split(), repeats=1)
-            ]
-        )
-        # for drums, scales are pretty bogus, so just input the raw notes (or chords, etc)
-        kick_pattern = Pattern(name="kicks", notation='literal',
-            bars = [
-                Bar(cells="C4 - - -".split(), stop=4)
-            ]
-        )
-
-        # the song has a list of scenes, which might repeat
-        scene1 = song.add_scene(Scene(name="scene1", track_mapping=dict(
-            track1 = llama_pattern,
-            track2 = sheep_pattern,
-            track3 = kick_pattern
-        )))
-
-        # scenes can also override many of the global settings
-        scene2 = song.add_scene(Scene(name="scene2", scale=scale('c5 minor'), bpm=140, bars=6, track_mapping=dict(
-            track1 = llama_pattern,
-            track2 = sheep_pattern,
-            track3 = None
-        )))
-
-        # PSEUDOCODE SKETCH: TODO: real-time AND rendering will probably look like:
-        # while True
-        #     sleep(SMALL_NUMBER) # unless rendering
-        #     events = song.advance_time(SMALL_NUMBER)
-        #     for x in events
-        #        send or print event
-        # ??? - to be determined
-
-        realtime = Realtime(song)
-        #realtime.playback_test()
-
-        realtime.play_song(callback=print_event)
-
-        raise Exception("STOP")
-"""

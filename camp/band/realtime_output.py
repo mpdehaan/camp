@@ -35,7 +35,7 @@ class RealtimeOutput(Member):
         # FIXME: this needs to be calculated off of tempo to be more
         # intuitive, change to BPM shortly.
 
-        self.whole_note_length = (240 / bpm)
+        self.whole_note_length = ( 60 / 120) * 4
 
         super().__init__()
 
@@ -72,7 +72,12 @@ class RealtimeOutput(Member):
 
             event_off = event.copy()
             event_off.off = True
+
+            print("WNL  = %s" % self.whole_note_length)
+            print("DUR  = %s" % event.notes[0].duration)
+
             offset = event.notes[0].duration * self.whole_note_length
+            print("EVENT DURATION = %s" % offset)
 
             self.timeline.add_event(event_off, now_time = self.last_timestamp + offset)
 

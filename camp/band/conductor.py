@@ -71,6 +71,7 @@ class Conductor(object):
         running = True
 
         while running:
+            print("waves baton")
 
             self.output.got_events = False
 
@@ -100,6 +101,10 @@ class Conductor(object):
 
         # make sure we don't leave any notes stuck on
         # TODO: hook SIGINT and make sure these get cancelled on Control-C
+
+        # FIXME: sometimes this last note gets cut off early
+
         print("FLUSHING")
+        print(self.timeline.events)
         for event in self.timeline.off_events():
             self.handle_band_event(event)
