@@ -5,15 +5,18 @@ CAMP is a music composition project.
 
 Goals are to provide:
 
-   * a pythonic and intuitive music theory library, enabling "music as code"
-   * tools that enable composition at faster speeds, inspired by trackers but evolved from them
+   * a python-based, intuitive music theory library, enabling "music as code"
    * scale awareness at the forefront with ability to use roman numeral notation for chords, etc
    * a library suitable as a basis for theory-backed algorithmic composition programs
+   * tools that enable composition at faster speeds, inspired by trackers but evolved from them
+   * a system that can represent a mesh network of improvising but conducted "musicians"
    * pluggable output modes so we're not dependent on some library continuing to work, but enable both realtime MIDI, MIDI output, and notation
    * a friendly entry format for rapid transcription of scores across multiple tracks, inspired by classic step sequencers
    * a library of usable mutators to slice, dice, and evolve musical patterns
    * easy to describe automation of synth parameters (filter cutoffs, wub wub, etc) 
    * endless-composition genre-shifting program  suitable for never ending songs that also remain interesting
+
+These features might not all be used at the same time or even be 100% compatible, but will grow and evolve out of a common base.
 
 License
 =======
@@ -28,7 +31,6 @@ Notes
    * API is super subject to change.
    * No pull requests or tickets just yet please.
    * If you use CAMP for something interesting, I'd love to hear about it, let me know!
-
 
 Setup
 =====

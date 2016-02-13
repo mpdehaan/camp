@@ -15,16 +15,72 @@ limitations under the License.
 """
 
 from camp.core.scale import scale
-from camp.opus.song import Song
-from camp.opus.scene import Scene
-from camp.opus.track import Track
-from camp.opus.pattern import Pattern
-from camp.opus.bar import Bar
-from camp.playback.realtime import Realtime, print_event, play_event
+#from camp.playback.realtime import Realtime
+from camp.playback.timeline import Timeline
+from camp.band.scale_player import ScalePlayer
+from camp.band.chordify import Chordify
+from camp.band.realtime_output import RealtimeOutput
+from camp.band.conductor import Conductor
 
-class TestSong(object):
+class TestBand(object):
 
-    def test_basic_api_usage(self):
+    def test_mesh_basic(self):
+
+        timeline = Timeline()
+
+        scale1 = scale("c4 major")
+        scale2 = scale("c4 blues")
+
+        scale_reader = ScalePlayer(scales=[scale1, scale2], lengths=[16,4])
+        chordify = Chordify(types=['major','minor'])
+        output = RealtimeOutput(timeline)
+
+        scale_reader.send_to(chordify)
+        chordify.send_to(output)
+
+        conductor = Conductor(signal=[scale_reader, output], output=output, timeline=timeline, output_mode='save_events')
+        conductor.start()
+        raise Exception("STOP")
+
+
+NOTES = """
+    def test_mesh_a(self):
+
+        #   scale() --> chordify ---> pattern_router ---> ignore_node --\
+        #                                             \-> octave_shift -> out
+        #   note_repeat -----------------------------------------------/
+
+
+        conductor = Conductor()
+        timeline = Timeline()
+
+        scale1 = scale("c4 major")
+        scale2 = scale("c4 minor")
+        note1 = note("c2")
+
+        scale_reader = ScalePlayer(scales=[scale1, scale2], lengths=[16,4])
+        note_repeat = RepeatPlayer(note=note1)
+
+        chord_mapper = Chordify(types=['major','minor','major','dim'])
+        scale_reader.send_to(chord_mapper)
+
+        ignore = Ignore(filter=[1,0,0,0])
+        octave_shift = OctaveShift(amount=1)
+
+        router = PatternRouter(filter=[0,1,0,0])
+        router.send_to(ignore_node)
+        router.send_to(octave_shift)
+
+        output = RealtimeOutput(timeline)
+        octave_shift.send_to(output)
+        ignore_node.send_to(output)
+        note_repeat.send_to(output)
+
+        conductor.start(signal=[scale_reader, note_repeat], timeline=timeline, mode='save_events')
+"""
+
+OLD_SKETCH = """
+
 
         # this test is mostly documentation and coverage and is going to be
         # relatively free of assertions, because of the nature of the work
@@ -98,3 +154,4 @@ class TestSong(object):
         realtime.play_song(callback=print_event)
 
         raise Exception("STOP")
+"""
