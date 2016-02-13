@@ -47,7 +47,7 @@ SCALE_DEGREES_TO_STEPS = {
 @total_ordering
 class Note(object):
 
-    def __init__(self, name=None, octave=None):
+    def __init__(self, name=None, octave=None, velocity=127, duration=0.0625):
 
         """
         Constructs a note.
@@ -63,18 +63,20 @@ class Note(object):
 
         self.name = self._equivalence(name)
         self.octave = octave
+        self.velocity = velocity
+        self.duration = duration
 
     def copy(self):
-        return Note(name=self.name, octave=self.octave)
+        return Note(name=self.name, octave=self.octave, velocity=self.velocity, duration=self.duration)
 
     def _equivalence(self, name):
-        """ 
-        Normalize note names on input, C# -> Db, etc 
+        """
+        Normalize note names on input, C# -> Db, etc
         Internally everything uses flats.
         """
 
         if name in EQUIVALENCE:
-           return NOTES[EQUIVALENCE.index(name)] 
+           return NOTES[EQUIVALENCE.index(name)]
         return name
 
     def _scale_degrees_to_steps(self, input):
@@ -86,7 +88,7 @@ class Note(object):
         return SCALE_DEGREES_TO_STEPS[str(input)]
 
     def transpose(self, steps=0, semitones=0, degrees=None, octaves=0):
-        """ 
+        """
         Returns a note a given number of steps or octaves or (other things) higher.
 
         steps -- half step as 0.5, whole step as 1, or any combination.  The most basic way to do things.
@@ -94,7 +96,7 @@ class Note(object):
         octaves - 6 whole steps, or 12 half steps.  Easy enough.
         degrees - scale degrees, to keep scale definition somewhat music literate.  "3" is a third, "b3" is a flat third, "3#" is an augmented third, etc.
 
-        You can combine all of them at the same time if you really want (why?), in which case they are additive. 
+        You can combine all of them at the same time if you really want (why?), in which case they are additive.
         """
 
 
@@ -128,11 +130,12 @@ class Note(object):
         """
         return NOTES.index(self.name)
 
-    def _note_number(self):
-        """ 
+    def note_number(self):
+        """
         What order is this note on the keyboard?
         """
-        return NOTES.index(self.name) + (12 * self.octave)
+        nn =  NOTES.index(self.name) + (12 * self.octave)
+        return nn
 
     def up_half_step(self):
         """
@@ -141,8 +144,8 @@ class Note(object):
         number = self._numeric_name()
         name = UP_HALF_STEP[number]
         if self.name == 'B':
-            return Note(name=name, octave=self.octave+1)
-        return Note(name=name, octave=self.octave)
+            return Note(name=name, octave=self.octave+1, velocity=self.velocity, duration=self.duration)
+        return Note(name=name, octave=self.octave, velocity=self.velocity, duration=self.duration)
 
     def down_half_step(self):
         """
@@ -151,22 +154,31 @@ class Note(object):
         number = self._numeric_name()
         name = DOWN_HALF_STEP[number]
         if self.name == 'C':
-            return Note(name=name, octave=self.octave-1)
-        return Note(name=name, octave=self.octave)
+            return Note(name=name, octave=self.octave-1, velocity=self.velocity, duration=self.duration)
+        return Note(name=name, octave=self.octave, velocity=self.velocity, duration=self.duration)
 
     def __eq__(self, other):
         """
         Are two notes the same?
         FIXME: duration and volume MAY matter in the future.
         """
-        return self._note_number() == other._note_number()
- 
+        return self.note_number() == other.note_number() and self.velocity == other.velocity and self.duration == other.duration
+
     def __lt__(self, other):
         """
         Are two notes the same?
         FIXME: duration and volume MAY matter in the future.
         """
-        return self._note_number() < other._note_number()
+        nn = self.note_number()
+        on = other.note_number()
+        if nn < on:
+            return True
+        elif nn == on:
+            if (self.velocity < other.velocity):
+                return True
+            if (self.duration < other.duration):
+                return True
+        return False
 
     def short_name(self):
         """
@@ -193,4 +205,3 @@ def note(st):
         octave = 4
     octave = int(octave)
     return Note(name=name, octave=octave)
-

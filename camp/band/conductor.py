@@ -7,71 +7,99 @@ import time
 
 class Conductor(object):
 
-    def __init__(self, signal=None, output=None, timeline=None, output_mode=None, debug=True):
+    def __init__(self, signal=None, output=None, realtime=None, timeline=None, output_modes=None, debug=True):
 
         assert type(signal) == list
         assert timeline is not None
-        assert output_mode in [ 'save_events', 'print_events', 'realtime']
         assert output is not None
 
-        self.realtime = None
+        self.output_modes = output_modes
+        if output_modes is None:
+            self.output_modes = [ 'print_events', 'play_events']
+        for item in output_modes:
+            assert item in [ 'save_events', 'print_events', 'play_events']
+
+        self.realtime = realtime
         self.signal = signal
         self.timeline = timeline
         self.output = output
-        self.output_mode = output_mode
         self.debug = debug
+        self.bpm = self.output.bpm
+        self.quarter_note_length = 60 / self.bpm
 
-        if self.output_mode in [ 'realtime' ]:
-            self.realtime = Realtime()
+        # these are used ONLY when saving events in the debug output_mode called 'save_events'
+        self.midi_event_buffer = []
+        self.band_event_buffer = []
 
-    def _band_event_to_midi_event(self, event):
-        raise NotImplementedError()
+
+    def _band_event_to_midi_events(self, event):
+
+        midi_events = []
+
+        if event.typ == 'note':
+            if event.off == True:
+                for note in event.notes:
+                    assert event.channel is not None
+                    midi_events.append(self.realtime.note_off(event.channel, note.note_number(), note.velocity))
+            else:
+                for note in event.notes:
+                    assert event.channel is not None
+                    midi_events.append(self.realtime.note_on(event.channel, note.note_number(), note.velocity))
+
+        else:
+            raise Exception("do not know how to convert event: %s" % event)
+
+        return midi_events
+
 
     def handle_band_event(self, event):
-        midi_event = self._band_event_to_midi_event(event)
-        if mode == 'realtime':
-            realtime.play_event(midi_event)
-        elif mode == 'save_events':
-            self.midi_event_buffer.append(midi_event)
+        if 'save_events' in self.output_modes:
             self.band_event_buffer.append(event)
-        elif mode == 'print_events':
-            print(event)
-        else:
-            raise Exception("unknown conductor output mode")
+        midi_events = self._band_event_to_midi_events(event)
+        for midi_event in midi_events:
+            if 'play_events' in self.output_modes:
+                self.realtime.play_event(midi_event)
+            elif 'save_events' in self.output_modes:
+                self.midi_event_buffer.append(midi_event)
+            elif 'print_events' in self.output_modes:
+                print(event)
+            else:
+                raise Exception("unknown conductor output mode")
 
     def start(self):
-        print("conductor :: start")
         beat = Event(typ='beat')
         running = True
 
         while running:
 
-            print("conductor :: loop")
             self.output.got_events = False
 
             for item in self.signal:
-                print("conductor :: signal :: %s" % item)
                 item.signal(beat)
 
             now_time = time.time()
 
             events_due = self.timeline.pop_due_events(now_time=now_time)
-            print("conductor :: events_due :: %s"  % events_due)
             for event in events_due:
                 self.handle_band_event(event)
 
+            # DEBUG only
+            if len(self.timeline.events) > 100:
+                raise Exception("EVENT QUEUEING PROBLEM")
+
             if not self.output.got_events:
-                print("conductor :: switching off")
                 running = False
 
-            # replace with something that better understands BPM.
-            if running and self.output_mode in [ 'realtime' ]:
-                print("conductor :: sleeping")
-                time.sleep(1)
+            until_time = now_time + self.quarter_note_length
+            now_time = time.time()
+            if until_time > now_time:
+                delta = until_time - now_time
+                print("sleeping: %s" % delta)
+                time.sleep(until_time - now_time)
 
 
         # make sure we don't leave any notes stuck on
         # TODO: hook SIGINT and make sure these get cancelled on Control-C
-        print("conductor :: ensuring all notes are off")
+        print("FLUSHING")
         for event in self.timeline.off_events():
             self.handle_band_event(event)

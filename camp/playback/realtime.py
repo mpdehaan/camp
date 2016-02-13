@@ -21,6 +21,7 @@ import time
 # https://pypi.python.org/pypi/rtmidi-python
 import rtmidi_python as rtmidi
 
+from camp.playback.constants import *
 
 class Realtime(object):
 
@@ -35,6 +36,21 @@ class Realtime(object):
 
         midi_out.open_port(0)
         self.midi_out = midi_out
+
+    #def _volume(self, channel, volume):
+    #    cc = CONTROL_CHANGE | channel
+    #    return [cc, volume & 0x7F]
+
+    def note_off(self, channel, note_number, velocity):
+        result = [NOTE_OFF | channel, note_number, velocity]
+        print("MIDI : %x %s %s" % (result[0], result[1], result[2]))
+        return result
+
+
+    def note_on(self, channel, note_number, velocity):
+        result =  [NOTE_ON | channel, note_number, velocity]
+        print("MIDI : %x %s %s" % (result[0], result[1], result[2]))
+        return result
 
     def play_event(self, event):
         self.midi_out.send_message(event)

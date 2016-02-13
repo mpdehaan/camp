@@ -25,12 +25,9 @@ class Timeline(object):
     def __init__(self):
         self.events = []
 
-    def add_events(self, events, now_time):
-        # FIXME: should this ALSO take a now_time a base?
-        for event in events:
-            self.add_event(event)
-
     def add_event(self, event, now_time):
+        if now_time is None or now_time is 0:
+            raise Exception("TIME ERROR!")
         event.time = now_time
         self.events.append(event)
 
@@ -39,6 +36,7 @@ class Timeline(object):
         Find all the events that are BEFORE the playhead and remove them
         from events before returning them
         """
+        print("timeline:: now is :: %s" % now_time)
         to_return = [ event for event in self.events if self._is_due(event, now_time) ]
         to_keep = [ event for event in self.events if not self._is_due(event, now_time) ]
         self.events = to_keep
@@ -47,7 +45,7 @@ class Timeline(object):
         return to_return
 
     def _is_due(self, event, now_time):
-        return event.time >= now_time
+        return event.time <= now_time
 
     def on_events(self):
         return [ event for event in self.events if event.velocity not in [ 0, None ] ]

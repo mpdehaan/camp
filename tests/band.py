@@ -15,7 +15,7 @@ limitations under the License.
 """
 
 from camp.core.scale import scale
-#from camp.playback.realtime import Realtime
+from camp.playback.realtime import Realtime
 from camp.playback.timeline import Timeline
 from camp.band.scale_player import ScalePlayer
 from camp.band.chordify import Chordify
@@ -24,26 +24,40 @@ from camp.band.conductor import Conductor
 
 class TestBand(object):
 
+
     def test_mesh_basic(self):
 
+        realtime = Realtime()
         timeline = Timeline()
 
         scale1 = scale("c4 major")
         scale2 = scale("c4 blues")
 
-        scale_reader = ScalePlayer(scales=[scale1, scale2], lengths=[16,4])
-        chordify = Chordify(types=['major','minor'])
-        output = RealtimeOutput(timeline)
+        scale_reader = ScalePlayer(scales=[scale1, scale2], lengths=[16,4], channel=0)
+        chordify = Chordify(types=['major','minor'], channel=1)
+        output = RealtimeOutput(timeline=timeline, bpm=120, time_boredom_seconds=10)
 
         scale_reader.send_to(chordify)
+
+        scale_reader.send_to(output)
         chordify.send_to(output)
 
-        conductor = Conductor(signal=[scale_reader, output], output=output, timeline=timeline, output_mode='save_events')
+
+        conductor = Conductor(
+            signal=[scale_reader, output],
+            output=output,
+            realtime=realtime,
+            timeline=timeline,
+            output_modes=['play_events','print_events','save_events'])
+
         conductor.start()
-        raise Exception("STOP")
+
+        for x in conductor.midi_event_buffer:
+            print(x)
 
 
-NOTES = """
+
+NOTES_OLD = """
     def test_mesh_a(self):
 
         #   scale() --> chordify ---> pattern_router ---> ignore_node --\
