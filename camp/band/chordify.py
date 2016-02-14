@@ -13,11 +13,11 @@ class Chordify(Member):
         self._which_chord = loop_around(types)
         self.channel = channel
 
-    def on_signal(self, event):
+    def on_signal(self, event, start_time, end_time):
 
         if event.typ == 'note':
             chord_typ = next(self._which_chord)
             chord = Chord(root=event.notes[0], typ=chord_typ)
-            evt = Event(typ='note', velocity=127, channel=event.channel, notes=chord.notes)
+            evt = Event(typ='note', velocity=127, channel=event.channel, notes=chord.notes, time=start_time)
             for send in self.sends:
-                send.signal(evt)
+                send.signal(evt, start_time, end_time)

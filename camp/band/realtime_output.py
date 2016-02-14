@@ -15,12 +15,12 @@ class RealtimeOutput(Member):
     """
 
 
-    def __init__(self, timeline=None, bpm=None, time_boredom_seconds=500):
+    def __init__(self, timeline=None, bpm=None, time_boredom_seconds=60):
 
         assert timeline is not None
         assert bpm is not None
 
-        self.start_time = time.time()
+        self.absolute_start_time = time.time()
 
         # a flag that says if all musicians put their instruments down, we can stop conducting.
         self.got_events = False
@@ -39,11 +39,11 @@ class RealtimeOutput(Member):
 
         super().__init__()
 
-    def on_signal(self, event):
+    def on_signal(self, event, start_time, end_time):
 
         now = time.time()
 
-        if now - self.time_boredom_seconds > self.start_time:
+        if now - self.time_boredom_seconds > self.absolute_start_time:
             self.got_events = False
 
         if event.typ == 'beat':
@@ -59,27 +59,26 @@ class RealtimeOutput(Member):
 
             # event types will be things like NOTE, CONTROL_CHANGE, and SILENCE
             # lack of any events will signal performance end.
-            self.timeline.add_event(event, now_time=self.last_timestamp)
+            self.timeline.add_event(event)
 
             # buglet - technically we don't need to cause a note off if it's going to be legato
             # triggered later, this may introduce some minor indiosyncracies but is not a large
             # enough concern to deal with now
 
-
             # buglet, this technically requires block chords when sending events with a notes array
             # if this is a problem we can change the code to always send one note per event later.
             # easy enough.
 
+            # the main code doesn't have to think in terms of note off events because they
+            # have durations, but because the code interpreting the MIDI timeline does, we create
+            # those events here, at the last possible point in the chain, to avoid most of the
+            # code needing to think about them.
             event_off = event.copy()
             event_off.off = True
-
-            print("WNL  = %s" % self.whole_note_length)
-            print("DUR  = %s" % event.notes[0].duration)
-
             offset = event.notes[0].duration * self.whole_note_length
-            print("EVENT DURATION = %s" % offset)
-
-            self.timeline.add_event(event_off, now_time = self.last_timestamp + offset)
+            event_off.time = event.time + offset
+            #print("OFF EVENT is %s in the future" % (offset))
+            self.timeline.add_event(event_off)
 
             self.got_events = True
 

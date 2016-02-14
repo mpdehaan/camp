@@ -19,16 +19,14 @@ from collections import namedtuple
 
 def event_sort_key(a):
     return (0 - a.time)
-    
+
 class Timeline(object):
 
     def __init__(self):
         self.events = []
 
-    def add_event(self, event, now_time):
-        if now_time is None or now_time is 0:
-            raise Exception("TIME ERROR!")
-        event.time = now_time
+    def add_event(self, event):
+        assert event.time is not None and event.time != 0
         self.events.append(event)
 
     def process_due_events(self, until_time):
@@ -37,35 +35,50 @@ class Timeline(object):
         at the appropriate time.  Loop runs until "until_time" is reached.
         """
 
-        self.events.sort(key=event_sort_key)
+        self.events = sorted(self.events, key=event_sort_key)
+
+        #print("********")
+        #print("EVENTS")
+        #for x in self.events:
+        #    print(x)
+        #print("********")
+
         now_time = time.time()
         while now_time <= until_time:
+
+            print("NOW %s vs UNTIL %s" % (now_time, until_time))
+
             now_time = time.time()
             if len(self.events) == 0:
+                sleep_amount = until_time - now_time
+                self._sleep(sleep_amount)
                 return
             # get the time the next event should trigger
             last_event_time = self.events[-1].time
-            # if this time is BEFORE or EQUAL to now, fire it off
+
             if last_event_time <= now_time:
                 # the next event needs to trigger now
                 print(self.events[-1])
                 yield self.events[-1]
                 self.events.pop()
                 continue
-            elif last_event_time <= until_time:
-                # the event has not occured yet but there is time to wait
-                sleep_amount = last_event_time - now_time
-                print("sleep %s" % sleep_amount)
-                time.sleep(sleep_amount)
-                continue
             else:
-                # the calculation code will need to fire, all events
-                # are in the future beyond the next appointed calculation
-                # time.  As such, sleep until then, but do not longer
-                sleep_amount = until_time - now_time
-                print("sleep %s" % sleep_amount)
-                time.sleep(sleep_amount)
-                return
+                # the next event is LATER than now
+                if last_event_time > until_time:
+                    print("M1")
+                    sleep_amount = until_time - now_time
+                else:
+                    print("M2")
+                    sleep_amount =  last_event_time - now_time
+                self._sleep(sleep_amount)
+                continue
+
+        raise Exception("LOOP EXIT!")
+
+    def _sleep(self, amount):
+        #if amount < 0.05:
+        #    return
+        time.sleep(amount)
 
     def process_off_events(self):
         """

@@ -36,12 +36,12 @@ class ScalePlayer(Member):
                 note.velocity = note_velocity
                 yield note
 
-    def on_signal(self, event):
+    def on_signal(self, event, start_time, end_time):
 
         if event.typ == 'beat':
 
             note = next(self.note_gen)
-            evt = Event(typ='note', velocity=127, channel=event.channel, notes=[note])
+            evt = Event(typ='note', velocity=127, channel=event.channel, notes=[note], time=start_time)
 
             for send in self.sends:
-                send.signal(evt)
+                send.signal(evt, start_time, end_time)

@@ -18,6 +18,7 @@ from camp.core.scale import scale
 from camp.playback.realtime import Realtime
 from camp.playback.timeline import Timeline
 from camp.band.scale_player import ScalePlayer
+from camp.band.subdivide import Subdivide
 from camp.band.chordify import Chordify
 from camp.band.realtime_output import RealtimeOutput
 from camp.band.conductor import Conductor
@@ -31,18 +32,29 @@ class TestBand(object):
 
         scale1 = scale("c6 major")
         scale2 = scale("c6 minor")
+        scale3 = scale("c3 minor")
 
-        scale_reader = ScalePlayer(scales=[scale1, scale2], lengths=[16,4], channel=0, note_velocities=[127,80,50])
-        chordify = Chordify(types=['major','minor'], channel=1)
-        output = RealtimeOutput(timeline=timeline, bpm=120, time_boredom_seconds=10)
+        scale_reader_track1 = ScalePlayer(scales=[scale1, scale2], lengths=[16,4], channel=0, note_velocities=[127,80,50])
+        subdivide_track1 = Subdivide(amounts=[4])
+        scale_reader_track1.send_to(subdivide_track1)
 
-        scale_reader.send_to(chordify)
+        scale_reader_track2 = ScalePlayer(scales=[scale3], lengths=[16,4], channel=0, note_velocities=[127])
+        chordify_track2 = Chordify(types=['major','minor'], channel=0)
+        scale_reader_track2.send_to(chordify_track2)
 
-        scale_reader.send_to(output)
+        output = RealtimeOutput(timeline=timeline, bpm=120, time_boredom_seconds=5)
+        subdivide_track1.send_to(output)
+        chordify_track2.send_to(output)
+
         #chordify.send_to(output)
 
+        # FIXME: BUG: time_boredom_seconds does not appear to work.
+        # FIXME: BUG: if multiple outputs are in the list, one slows down the other.  They should not.
+
         conductor = Conductor(
-            signal=[scale_reader, output],
+            #signal=[scale_reader_track1, scale_reader_track2],
+            signal=[scale_reader_track1],
+
             output=output,
             realtime=realtime,
             timeline=timeline,
