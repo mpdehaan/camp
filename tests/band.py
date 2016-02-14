@@ -47,15 +47,8 @@ class TestBand(object):
         scale_reader_track1.send_to(output)
         chordify_track2.send_to(output)
 
-        #chordify.send_to(output)
-
-        # FIXME: BUG: time_boredom_seconds does not appear to work.
-        # FIXME: BUG: if multiple outputs are in the list, one slows down the other.  They should not.
-
         conductor = Conductor(
-            #signal=[scale_reader_track1, scale_reader_track2],
             signal=[subdivide_track1, scale_reader_track2],
-
             output=output,
             realtime=realtime,
             timeline=timeline,
