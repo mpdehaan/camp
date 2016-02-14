@@ -17,9 +17,9 @@ limitations under the License.
 import time
 from collections import namedtuple
 
-
-
-
+def event_sort_key(a):
+    return (0 - a.time)
+    
 class Timeline(object):
 
     def __init__(self):
@@ -31,24 +31,47 @@ class Timeline(object):
         event.time = now_time
         self.events.append(event)
 
-    def pop_due_events(self, now_time):
+    def process_due_events(self, until_time):
         """
-        Find all the events that are BEFORE the playhead and remove them
-        from events before returning them
+        Processes all events in a loop that will sleep so they are yielded
+        at the appropriate time.  Loop runs until "until_time" is reached.
         """
-        print("timeline:: now is :: %s" % now_time)
-        to_return = [ event for event in self.events if self._is_due(event, now_time) ]
-        to_keep = [ event for event in self.events if not self._is_due(event, now_time) ]
-        self.events = to_keep
-        print("timeline :: remaining events :: %s" % to_keep)
-        print("timeline :: play events :: %s" % to_return)
-        return to_return
 
-    def _is_due(self, event, now_time):
-        return event.time <= now_time
+        self.events.sort(key=event_sort_key)
+        now_time = time.time()
+        while now_time <= until_time:
+            now_time = time.time()
+            if len(self.events) == 0:
+                return
+            # get the time the next event should trigger
+            last_event_time = self.events[-1].time
+            # if this time is BEFORE or EQUAL to now, fire it off
+            if last_event_time <= now_time:
+                # the next event needs to trigger now
+                print(self.events[-1])
+                yield self.events[-1]
+                self.events.pop()
+                continue
+            elif last_event_time <= until_time:
+                # the event has not occured yet but there is time to wait
+                sleep_amount = last_event_time - now_time
+                print("sleep %s" % sleep_amount)
+                time.sleep(sleep_amount)
+                continue
+            else:
+                # the calculation code will need to fire, all events
+                # are in the future beyond the next appointed calculation
+                # time.  As such, sleep until then, but do not longer
+                sleep_amount = until_time - now_time
+                print("sleep %s" % sleep_amount)
+                time.sleep(sleep_amount)
+                return
 
-    def on_events(self):
-        return [ event for event in self.events if not event.off ]
-
-    def off_events(self):
-        return [ event for event in self.events if event.off ]
+    def process_off_events(self):
+        """
+        Yield all the off events.
+        """
+        for event in self.events:
+            if event.off:
+                print(event)
+                yield event

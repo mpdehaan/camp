@@ -12,7 +12,7 @@ class ScalePlayer(Member):
         if note_velocities is None:
             note_velocities = [ 127 ]
         if note_durations is None:
-            note_durations = [ 0.5 ]
+            note_durations = [ 0.25 ]
         self.note_durations = note_durations
         self.note_velocities = note_velocities
         self.length_looper = loop_around(lengths)

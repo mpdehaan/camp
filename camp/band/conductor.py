@@ -79,9 +79,9 @@ class Conductor(object):
                 item.signal(beat)
 
             now_time = time.time()
+            until_time = now_time + self.quarter_note_length
 
-            events_due = self.timeline.pop_due_events(now_time=now_time)
-            for event in events_due:
+            for event in self.timeline.process_due_events(until_time):
                 self.handle_band_event(event)
 
             # DEBUG only
@@ -91,12 +91,6 @@ class Conductor(object):
             if not self.output.got_events:
                 running = False
 
-            until_time = now_time + self.quarter_note_length
-            now_time = time.time()
-            if until_time > now_time:
-                delta = until_time - now_time
-                print("sleeping: %s" % delta)
-                time.sleep(until_time - now_time)
 
 
         # make sure we don't leave any notes stuck on
@@ -106,5 +100,5 @@ class Conductor(object):
 
         print("FLUSHING")
         print(self.timeline.events)
-        for event in self.timeline.off_events():
+        for event in self.timeline.process_off_events():
             self.handle_band_event(event)
