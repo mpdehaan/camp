@@ -41,6 +41,13 @@ class ScalePlayer(Member):
         if event.typ == 'beat':
 
             note = next(self.note_gen)
+
+            # FIXME: how to make this code so it doesn't have to live in each class that generates
+            # note expressions so it can use the subdivider?  Want something like note.apply_event_flags(event) I think.
+            
+            if event.flags.get('subdivide', 0) > 1:
+                note.duration = note.duration / event.flags.get('subdivide')
+
             evt = Event(typ='note', velocity=127, channel=event.channel, notes=[note], time=start_time)
 
             for send in self.sends:

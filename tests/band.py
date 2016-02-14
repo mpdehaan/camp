@@ -33,17 +33,18 @@ class TestBand(object):
         scale1 = scale("c6 major")
         scale2 = scale("c6 minor")
         scale3 = scale("c3 minor")
+        scale4 = scale("c4 major")
 
-        scale_reader_track1 = ScalePlayer(scales=[scale1, scale2], lengths=[16,4], channel=0, note_velocities=[127,80,50])
-        subdivide_track1 = Subdivide(amounts=[4])
-        scale_reader_track1.send_to(subdivide_track1)
+        subdivide_track1 = Subdivide(amounts=[2,4,8])
+        scale_reader_track1 = ScalePlayer(scales=[scale1, scale2], lengths=[16,4], note_durations=[0.25], channel=1, note_velocities=[127,80,50])
+        subdivide_track1.send_to(scale_reader_track1)
 
-        scale_reader_track2 = ScalePlayer(scales=[scale3], lengths=[16,4], channel=0, note_velocities=[127])
-        chordify_track2 = Chordify(types=['major','minor'], channel=0)
+        scale_reader_track2 = ScalePlayer(scales=[scale3, scale4], lengths=[4,4], note_durations=[1], channel=2, note_velocities=[127])
+        chordify_track2 = Chordify(types=['major'], channel=0)
         scale_reader_track2.send_to(chordify_track2)
 
-        output = RealtimeOutput(timeline=timeline, bpm=120, time_boredom_seconds=5)
-        subdivide_track1.send_to(output)
+        output = RealtimeOutput(timeline=timeline, bpm=120, time_boredom_seconds=10)
+        scale_reader_track1.send_to(output)
         chordify_track2.send_to(output)
 
         #chordify.send_to(output)
@@ -53,7 +54,7 @@ class TestBand(object):
 
         conductor = Conductor(
             #signal=[scale_reader_track1, scale_reader_track2],
-            signal=[scale_reader_track1],
+            signal=[subdivide_track1, scale_reader_track2],
 
             output=output,
             realtime=realtime,

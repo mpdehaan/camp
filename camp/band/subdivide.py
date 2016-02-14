@@ -25,22 +25,30 @@ class Subdivide(Member):
         self._subdivide_amounts = loop_around(amounts)
 
     def signal(self, event, start_time, end_time):
+
         delta = end_time - start_time
         slices = next(self._subdivide_amounts)
+
         each_slice_width = delta / slices
         new_start_time = start_time
-        #print("---")
-        #print("SLICES=%s" % slices)
-        #print("OSLICE! %s %s" % (start_time, end_time))
+
+        event = event.copy()
+        event.add_flags(subdivide=slices)
+
+
         for send in self.sends:
-            for slice in range(0,slices):
+
+            for slice_num in range(0,slices):
+
                 new_end_time = new_start_time + each_slice_width
-                #print("SUBDIVIDE! %s %s" % (new_start_time, new_end_time))
 
-                if event.typ == 'note':
-                    for note in event.notes:
-                        note.duration = note.duration / slices
+                if event.typ == 'beat':
+                    event.time = new_start_time
+                    send.signal(event, new_start_time, new_end_time)
 
-                        send.signal(event, new_start_time, new_end_time)
-                new_start_time += each_slice_width
-        #print("---")
+                elif event.typ == 'note':
+                    raise Exception("using subdivide with note is currently untested!")
+                else:
+                    raise Exception("AIEEE?")
+
+                new_start_time = new_start_time + each_slice_width

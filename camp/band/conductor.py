@@ -70,31 +70,21 @@ class Conductor(object):
         beat = Event(typ='beat')
         running = True
 
+        now_time = 0
+
         while running:
-            #print("waves baton")
 
             self.output.got_events = False
 
-            now_time = time.time()
             until_time = now_time + self.quarter_note_length
-
-            print("NOW TIME = %s" % now_time)
-            print("QNL = %s" % self.quarter_note_length)
-            print("UNTIL = %s" % until_time)
-            # raise Exception("OK!")
-
-
-
-            #print("NOW TIME = %s" % now_time)
-            #print("UNTIL TIME = %s" % until_time)
-
 
             for item in self.signal:
                 item.signal(beat, now_time, until_time)
 
-
-            for event in self.timeline.process_due_events(until_time):
+            for event in self.timeline.process_due_events(now_time, until_time):
                 self.handle_band_event(event)
+                # this will automatically sleep until the end of the conductor's
+                # beat and advance now_time for us.
 
             # DEBUG only
             if len(self.timeline.events) > 100:
@@ -103,6 +93,7 @@ class Conductor(object):
             if not self.output.got_events:
                 running = False
 
+            now_time = until_time
 
 
         # make sure we don't leave any notes stuck on
@@ -110,7 +101,6 @@ class Conductor(object):
 
         # FIXME: sometimes this last note gets cut off early
 
-        #print("FLUSHING")
         print(self.timeline.events)
         for event in self.timeline.process_off_events():
             self.handle_band_event(event)

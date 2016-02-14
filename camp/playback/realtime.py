@@ -43,13 +43,11 @@ class Realtime(object):
 
     def note_off(self, channel, note_number, velocity):
         result = [NOTE_OFF | channel, note_number, velocity]
-        print("MIDI : %x %s %s" % (result[0], result[1], result[2]))
         return result
 
 
     def note_on(self, channel, note_number, velocity):
         result =  [NOTE_ON | channel, note_number, velocity]
-        print("MIDI : %x %s %s" % (result[0], result[1], result[2]))
         return result
 
     def play_event(self, event):
