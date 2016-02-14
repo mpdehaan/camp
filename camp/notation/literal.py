@@ -66,6 +66,8 @@ class Literal(object):
         else:
             return note(sym)
 
+
+
 def literal():
     """
     The shortcut method here isn't highly useful, but it's being provided

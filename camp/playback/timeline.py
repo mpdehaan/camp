@@ -53,6 +53,7 @@ class Timeline(object):
                 # the next event needs to trigger now
                 event = self.events.pop(0)
                 yield event
+                print("PLAYING: %s" % event)
                 continue
 
             if now_time > until_time:

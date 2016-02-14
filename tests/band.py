@@ -18,6 +18,7 @@ from camp.core.scale import scale
 from camp.playback.realtime import Realtime
 from camp.playback.timeline import Timeline
 from camp.band.scale_player import ScalePlayer
+from camp.band.roman_player import RomanPlayer
 from camp.band.subdivide import Subdivide
 from camp.band.chordify import Chordify
 from camp.band.realtime_output import RealtimeOutput
@@ -25,7 +26,8 @@ from camp.band.conductor import Conductor
 
 class TestBand(object):
 
-    def test_mesh_basic(self):
+    COMMENTS = """
+    def test_mesh_one(self):
 
         realtime = Realtime()
         timeline = Timeline()
@@ -51,7 +53,33 @@ class TestBand(object):
             signal=[subdivide_track1, scale_reader_track2],
             output=output,
             realtime=realtime,
-            timeline=timeline,
-            output_modes=['play_events','print_events','save_events'])
+            timeline=timeline)
 
         conductor.start()
+    """
+
+    #MEH = """
+    def test_mesh_roman(self):
+
+        realtime = Realtime()
+        timeline = Timeline()
+
+        # play a C major scale for 14 notes on channel 1, repeating, with consistently maximally loud quarter notes each time
+        scale_reader_track1 = ScalePlayer(scales=[scale("c4 major")], lengths=[12], note_durations=[0.25], channel=1, note_velocities=[127])
+        # except throw away the scale and just note what scale we are playing (the same one, here)
+        # and use roman numeral notation to decide what we are really playing - a mix of notes and chords in that scale
+        roman_player_track1 = RomanPlayer(symbols="1 2 3 4 I IV V iii".split(), channel=1)
+        scale_reader_track1.send_to(roman_player_track1)
+
+        # we'll play that and only that for 5 seconds
+        output = RealtimeOutput(timeline=timeline, bpm=120, time_boredom_seconds=5)
+        roman_player_track1.send_to(output)
+
+        conductor = Conductor(
+            signal=[scale_reader_track1],
+            output=output,
+            realtime=realtime,
+            timeline=timeline)
+
+        conductor.start()
+    #"""

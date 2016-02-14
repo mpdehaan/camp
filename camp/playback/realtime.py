@@ -51,6 +51,7 @@ class Realtime(object):
         return result
 
     def play_event(self, event):
+        print(event)
         self.midi_out.send_message(event)
 
     def playback_test(self):

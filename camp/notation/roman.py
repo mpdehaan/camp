@@ -32,7 +32,7 @@ CHORD_SYMBOLS = dict(
    iv  = [ 4, 'minor' ],
    v   = [ 5, 'minor' ],
    vi  = [ 6, 'minor' ],
-   vii = [ 7, 'minor' ],   
+   vii = [ 7, 'minor' ],
 )
 
 class Roman(object):
@@ -58,14 +58,14 @@ class Roman(object):
         Accepts symbols like ii, II, IV:power
         (the latter being a bit of a notation hack so we might want to change it)
         """
- 
+
         # normally chords will be like II or ii, but occasionally II:power
         # if so, we'll ignore our usual roman parsing and let the chord type after
         # the colon win
         override_typ = None
         if ":" in sym:
            (sym, override_typ) = sym.split(":",1)
-        
+
         # while this isn't really common notation, I wanted a way to describe
         # inversions, as such, I' means first inversion of I, and I'' means
         # second inversion, we'll optionally invert a bit further down
@@ -115,11 +115,19 @@ class Roman(object):
             return self.chord(sym)
         return self.note(sym)
 
+    def do_notes(self, sym):
+        """
+        Same as do() but always get back an array of notes.
+        """
+        note_or_chord = self.do(sym)
+        if type(note_or_chord) == Chord:
+            return note_or_chord.notes
+        else:
+            return [ note_or_chord ]        
+
 def roman(scale_pattern):
     """
     Quickly generate a Roman numeral interpreter.
     Ex: r = roman("C4 major")
     """
     return Roman(scale=scale(scale_pattern))
-
-
