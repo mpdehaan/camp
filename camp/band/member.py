@@ -13,7 +13,6 @@ class Member(object):
         """ Do not reimplement signal in subclasses - only on_signal """
 
         if event.channel is None:
-            print("member :: setting channel to :: %s" % self.channel)
             event.channel = self.channel
         self.on_signal(event, start_time, end_time)
 

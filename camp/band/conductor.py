@@ -13,12 +13,6 @@ class Conductor(object):
         assert timeline is not None
         assert output is not None
 
-        self.output_modes = output_modes
-        if output_modes is None:
-            self.output_modes = [ 'print_events', 'play_events']
-        for item in output_modes:
-            assert item in [ 'save_events', 'print_events', 'play_events']
-
         self.realtime = realtime
         self.signal = signal
         self.timeline = timeline
@@ -27,9 +21,7 @@ class Conductor(object):
         self.bpm = self.output.bpm
         self.quarter_note_length = 60 / self.bpm
 
-        # these are used ONLY when saving events in the debug output_mode called 'save_events'
-        self.midi_event_buffer = []
-        self.band_event_buffer = []
+
 
 
     def _band_event_to_midi_events(self, event):
@@ -53,26 +45,20 @@ class Conductor(object):
 
 
     def handle_band_event(self, event):
-        if 'save_events' in self.output_modes:
-            self.band_event_buffer.append(event)
+        print("EVT: %s" % event)
+
         midi_events = self._band_event_to_midi_events(event)
         for midi_event in midi_events:
-            if 'play_events' in self.output_modes:
-                self.realtime.play_event(midi_event)
-            elif 'save_events' in self.output_modes:
-                self.midi_event_buffer.append(midi_event)
-            elif 'print_events' in self.output_modes:
-                print(event)
-            else:
-                raise Exception("unknown conductor output mode")
+            self.realtime.play_event(midi_event)
 
     def start(self):
-        beat = Event(typ='beat')
-        running = True
 
+        running = True
         now_time = 0
 
         while running:
+
+            beat = Event(typ='beat', time=now_time)
 
             self.output.got_events = False
 
@@ -83,24 +69,12 @@ class Conductor(object):
 
             for event in self.timeline.process_due_events(now_time, until_time):
                 self.handle_band_event(event)
-                # this will automatically sleep until the end of the conductor's
-                # beat and advance now_time for us.
-
-            # DEBUG only
-            if len(self.timeline.events) > 100:
-                raise Exception("EVENT QUEUEING PROBLEM")
 
             if not self.output.got_events:
                 running = False
 
             now_time = until_time
 
-
         # make sure we don't leave any notes stuck on
-        # TODO: hook SIGINT and make sure these get cancelled on Control-C
-
-        # FIXME: sometimes this last note gets cut off early
-
-        print(self.timeline.events)
         for event in self.timeline.process_off_events():
             self.handle_band_event(event)

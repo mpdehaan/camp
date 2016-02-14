@@ -55,6 +55,3 @@ class TestBand(object):
             output_modes=['play_events','print_events','save_events'])
 
         conductor.start()
-
-        for x in conductor.midi_event_buffer:
-            print(x)
