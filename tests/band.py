@@ -64,11 +64,13 @@ class TestBand(object):
         realtime = Realtime()
         timeline = Timeline()
 
-        # play a C major scale for 14 notes on channel 1, repeating, with consistently maximally loud quarter notes each time
+        # play a C major scale for 12 notes on channel 1, repeating, with consistently maximally loud quarter notes each time
         scale_reader_track1 = ScalePlayer(scales=[scale("c4 major")], lengths=[12], note_durations=[0.25], channel=1, note_velocities=[127])
         # except throw away the scale and just note what scale we are playing (the same one, here)
         # and use roman numeral notation to decide what we are really playing - a mix of notes and chords in that scale
         roman_player_track1 = RomanPlayer(symbols="1 2 3 4 I IV V iii".split(), channel=1)
+        # FIMXE: TODO: this really makes RomanPlayer a type of Middleware - maybe we want to represent that as ScaleMiddleware and rename it.
+        # Chordify is also like that.  Then rename ScalePlayer to ScaleReader.
         scale_reader_track1.send_to(roman_player_track1)
 
         # we'll play that and only that for 5 seconds
