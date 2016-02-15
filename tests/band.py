@@ -28,9 +28,8 @@ from camp.band.members.transpose import Transpose
 
 class TestBand(object):
 
-    def test_new_api(self):
-        # realtime = Realtime()
-        # timeline = Timeline()
+    def test_simple_band(self):
+
         output = Performance(bpm=120, stop_seconds=10)
 
         scale1 = scale("c6 major")
@@ -47,7 +46,6 @@ class TestBand(object):
 
         source.chain([subdivide, roman, output])
         source.chain([follower, chordify, shift, output])
-
 
         conductor = Conductor(signal=[source], performance=output)
         conductor.start()

@@ -1,3 +1,18 @@
+"""
+Copyright 2016, Michael DeHaan <michael.dehaan@gmail.com>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+"""
 
 from camp.playback.realtime import Realtime
 from camp.playback.event import Event
@@ -12,13 +27,19 @@ class Conductor(object):
 
     Don't think of this metaphor too literally.  This isn't a real world model, exactly.
 
-    With each wave of the baton (every quarter note, a beat in "bpm"), the conductor sends beats down toward listening band members.
-    Band members are more or less duck-typed plugins.
-    These beats are functions in the band members, which may in turn signal other attached band members due to various rules.
-    They may also emit notes, but they may also mess with the beat *OTHER* band members here.  Or check the weather.
-    The realtime_output chooses to listen to specific band members and record their notes onto the timeline.
-    The conductor then periodically reviews this timeline as notes are being entered into it, and converts them to realtime MIDI.
-    For an example, see tests/band.py
+    With each wave of the baton (every quarter note, a beat in "bpm"), the conductor sends a beat event down toward listening band members.
+    This is just an event without data in it.  No notes. No velocity.  But it does mark the start of the quarter note with the time field.
+
+    Each member (who in turn can talk to other members) copy the event, and modify it.  They could add or change the notes, set a velocity,
+    or set a duration.
+
+    If the conductor is not conducting fast enough, a subdivide plugin can speed it up.
+
+    The performance is, counter-intuitively, also a band-member, taking high level note objects and cleaning them  up, making
+    sure time divisions are appropriate, and note events are in the pipeline.  The conductor knows about the performance object
+    and asks for it's timeline.
+
+    The timeline object is responsible for the "clock" of the system and is the key to playback.
     """
 
     def __init__(self, signal=None, performance=None):
@@ -29,15 +50,8 @@ class Conductor(object):
         signal - a list of band members that are keyed into 'beats'.  If not listed here the band
         member needs to be keyed into other band members or they won't play.
 
-        output - an instance of the RealtimeOutput class, this is a specialized band
-        member that takes events with durations and adds the approriate note off events onto the timeline
-
-        realtime - this is an instance of camp.playback.realtime and is the interface to sending actual
-        realtime MIDI data.  Not part of the theoretical object model.
-
-        timeline - an object that records events and can also consume them with appropriately spaced
-        delays.  We are writing the score as it plays, and this is the clock that both records
-        the score as it is being written and keeps everyone on time.
+        performance - the last note in the event chains that both owns the timeline and makes sure
+        band members feeding into the performance impact the timeline.
         """
 
         assert type(signal) == list
