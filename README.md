@@ -99,7 +99,8 @@ Notes
 
    * The tests probably explain the API best at this point, see tests/band.py and other files
    * API is super subject to change.
-   * No pull requests or tickets just yet please - I'm still getting a feel for what I want where it's too much to maintain outside code yet.
+   * Contributors should join the mailing list at https://groups.google.com/forum/#!topic/camp-python-music - to avoid frustration, duplicate work, and API breakage, I highly suggest talking about what you are going to be doing it.
+   * The issue tracker is disabled.  Fix something via a pull request or ask a question on the mailing list.
    * If you use CAMP for something interesting, I'd love to hear about it, let me know!
 
 Setup
