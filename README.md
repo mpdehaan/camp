@@ -94,6 +94,16 @@ License
 
 Apache 2
 
+Mailing List
+============
+
+If you want to get involved with the project, we have a Google Group.
+
+On topic: Ideas, Code discussions, Troubleshooting,  Bug Reports, Sharing things you've built with CAMP, Q&A.
+
+* https://groups.google.com/forum/#!forum/camp-python-music
+
+
 Notes
 =====
 
