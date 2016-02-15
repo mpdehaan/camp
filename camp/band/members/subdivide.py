@@ -1,5 +1,5 @@
 
-from camp.band.member import Member
+from camp.band.members.member import Member
 from camp.utils import loop_around
 
 class Subdivide(Member):

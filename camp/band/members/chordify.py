@@ -1,8 +1,6 @@
-
+from camp.band.members.member import Member
 from camp.core.chord import Chord
 from camp.utils import loop_around
-from camp.band.member import Member
-from camp.playback.event import Event
 
 class Chordify(Member):
 

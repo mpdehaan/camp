@@ -1,5 +1,5 @@
 
-from camp.band.member import Member
+from camp.band.members.member import Member
 from camp.playback.timeline import Timeline
 
 import time

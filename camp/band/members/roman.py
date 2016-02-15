@@ -1,5 +1,4 @@
-from camp.band.member import Member
-from camp.playback.event import Event
+from camp.band.members.member import Member
 from camp.utils import loop_around
 from camp.notation.roman import Roman as RomanNotation
 

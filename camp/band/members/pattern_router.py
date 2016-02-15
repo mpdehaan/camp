@@ -1,6 +1,6 @@
 
 
-from . member import Member
+from camp.band.members.member import Member
 
 class PatternRouter(Member):
 

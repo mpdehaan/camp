@@ -1,8 +1,7 @@
 
 from camp.playback.realtime import Realtime
 from camp.playback.event import Event
-from camp.band.member import Member
-from camp.band.performance import Performance
+from camp.band.members.performance import Performance
 import time
 
 
