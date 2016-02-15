@@ -43,7 +43,7 @@ class Roman(object):
         Constructs an interpreter for Roman numbering.
 
         scale1 = scale("C4 major")
-	roman = Roman(scale=scale1)
+	    roman = Roman(scale=scale1)
         roman.do("IV") == chord("F4 major")
         roman.do(4) == note("F4")
         """
@@ -123,7 +123,7 @@ class Roman(object):
         if type(note_or_chord) == Chord:
             return note_or_chord.notes
         else:
-            return [ note_or_chord ]        
+            return [ note_or_chord ]
 
 def roman(scale_pattern):
     """

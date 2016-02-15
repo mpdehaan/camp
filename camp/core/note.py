@@ -49,7 +49,7 @@ class Note(object):
 
     def __init__(self, name=None, octave=None, velocity=127, duration=0.0625):
 
-        """        
+        """
         Constructs a note.
         note = Note(name='C', octave='4')
         """
@@ -63,11 +63,9 @@ class Note(object):
 
         self.name = self._equivalence(name)
         self.octave = octave
-        self.velocity = velocity
-        self.duration = duration
 
     def copy(self):
-        return Note(name=self.name, octave=self.octave, velocity=self.velocity, duration=self.duration)
+        return Note(name=self.name, octave=self.octave)
 
     def _equivalence(self, name):
         """
@@ -144,8 +142,8 @@ class Note(object):
         number = self._numeric_name()
         name = UP_HALF_STEP[number]
         if self.name == 'B':
-            return Note(name=name, octave=self.octave+1, velocity=self.velocity, duration=self.duration)
-        return Note(name=name, octave=self.octave, velocity=self.velocity, duration=self.duration)
+            return Note(name=name, octave=self.octave+1)
+        return Note(name=name, octave=self.octave)
 
     def down_half_step(self):
         """
@@ -154,31 +152,20 @@ class Note(object):
         number = self._numeric_name()
         name = DOWN_HALF_STEP[number]
         if self.name == 'C':
-            return Note(name=name, octave=self.octave-1, velocity=self.velocity, duration=self.duration)
-        return Note(name=name, octave=self.octave, velocity=self.velocity, duration=self.duration)
+            return Note(name=name, octave=self.octave-1)
+        return Note(name=name, octave=self.octave)
 
     def __eq__(self, other):
         """
         Are two notes the same?
-        FIXME: duration and volume MAY matter in the future.
         """
-        return self.note_number() == other.note_number() and self.velocity == other.velocity and self.duration == other.duration
+        return self.note_number() == other.note_number()
 
     def __lt__(self, other):
         """
         Are two notes the same?
-        FIXME: duration and volume MAY matter in the future.
         """
-        nn = self.note_number()
-        on = other.note_number()
-        if nn < on:
-            return True
-        elif nn == on:
-            if (self.velocity < other.velocity):
-                return True
-            if (self.duration < other.duration):
-                return True
-        return False
+        return self.note_number() < other.note_number()
 
     def short_name(self):
         """

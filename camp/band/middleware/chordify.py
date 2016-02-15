@@ -8,7 +8,7 @@ class Chordify(Member):
 
     """
     Chordify takes a note producing member and turns it into chords of
-    the given type.  The type of each chord can vary in a cycle.
+    the given type.
 
     cf = Chordify(types=["major","major","minor"])
 
@@ -21,9 +21,6 @@ class Chordify(Member):
     cf = Chordify(types=["major"])
 
     There you go, all major chords.
-
-    NOTE: If Chordify recieves chords as input from another BandMember, it will override the chord just acting on the root
-    note.
     """
 
     # TODO: allow "None" as a type to just emit the note.
@@ -42,13 +39,10 @@ class Chordify(Member):
 
     def on_signal(self, event, start_time, end_time):
 
-        if event.typ == 'note':
-            chord_typ = next(self._which_chord)
-            chord = Chord(root=event.notes[0], typ=chord_typ)
-            evt = Event(typ='note', velocity=127, channel=event.channel, notes=chord.notes, time=start_time)
-            if event.flags.get('subdivide', 0) > 1:
-                # FIXME: DRY this a bit - see comments in ScalePlayer.py for similar code.
-                for note in event.notes:
-                    note.duration = note.duration / event.flags.get('subdivide')
-            for send in self.sends:
-                send.signal(evt, start_time, end_time)
+        chord_typ = next(self._which_chord)
+        chord = Chord(root=event.notes[0], typ=chord_typ)
+
+        event.notes = chord.notes
+
+        for send in self.sends:
+            send.signal(event, start_time, end_time)

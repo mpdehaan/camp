@@ -21,6 +21,7 @@ class Member(object):
         This can be thought as the opposite of listens_to.
         """
         self.sends.append(obj)
+        return obj
 
     def listens_to(self, obj):
         """
@@ -28,6 +29,29 @@ class Member(object):
         that is a bit more natural.
         """
         obj.sends.append(self)
+        return self
+
+    def chain(self, chain_list):
+        """
+        A quick way of setting up a lot of nodes to output into one another.
+        Returns the head and tail of the chain.
+        See tests/band.py.
+        """
+        assert type(chain_list) == list
+        assert len(chain_list) > 0
+
+        item = chain_list.pop(0)
+        print("CHAINING %s to %s" % (self, item))
+        self.send_to(item)
+        head = item
+
+        while len(chain_list):
+            item = chain_list.pop(0)
+            head.send_to(item)
+            print("CHAINING %s to %s" % (head, item))
+            head = item
+
+        return (self, item)
 
     def signal(self, event, start_time, end_time):
         """
@@ -35,6 +59,7 @@ class Member(object):
         Do not reimplement signal in subclasses - only on_signal
         """
 
+        event = event.copy()
         if event.channel is None:
             event.channel = self.channel
         self.on_signal(event, start_time, end_time)

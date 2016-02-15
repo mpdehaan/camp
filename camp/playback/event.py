@@ -1,10 +1,11 @@
 
 class Event(object):
-    def __init__(self, typ=None, time=None, channel=None, notes=None, velocity=None, off=False, flags=None):
+    def __init__(self, time=None, channel=None, notes=None, velocity=None, off=False, duration=None, flags=None):
 
-        assert typ in [ 'beat', 'note', 'note', 'silence']
+
         if channel is not None:
             assert type(channel) == int
+
         if velocity is not None:
             assert type(velocity) == int
 
@@ -14,11 +15,11 @@ class Event(object):
         else:
             self.flags = dict()
 
-        self.typ = typ
         self.time = time
         self.channel = channel
         self.notes = notes
         self.velocity = velocity
+        self.duration = duration
         self.off = off
 
     def add_flags(self, **kwargs):
@@ -26,7 +27,15 @@ class Event(object):
             self.flags[k]=v
 
     def copy(self):
-        return Event(typ=self.typ, time=self.time, channel=self.channel, notes=self.notes, velocity=self.velocity, flags=self.flags, off=self.off)
+        return Event(
+            time=self.time,
+            channel=self.channel,
+            notes=self.notes,
+            velocity=self.velocity,
+            duration=self.duration,
+            flags=self.flags,
+            off=self.off)
 
     def __repr__(self):
-        return "<Event (typ=%s,time=%s,channel=%s,notes=%s,velocity=%s,off=%s,flags=%s)>" % (self.typ, self.time, self.channel, self.notes, self.velocity, self.off, self.flags)
+        return "<Event (time=%s,channel=%s,notes=%s,velocity=%s,off=%s,duration=%s,flags=%s)>" % \
+            (self.time, self.channel, self.notes, self.velocity, self.off, self.duration, self.flags)

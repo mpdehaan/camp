@@ -2,6 +2,7 @@
 from camp.playback.realtime import Realtime
 from camp.playback.event import Event
 from camp.band.member import Member
+from camp.band.performance import Performance
 import time
 
 
@@ -21,7 +22,7 @@ class Conductor(object):
     For an example, see tests/band.py
     """
 
-    def __init__(self, signal=None, output=None, realtime=None, timeline=None):
+    def __init__(self, signal=None, performance=None):
 
         """
         Constructor.
@@ -41,14 +42,14 @@ class Conductor(object):
         """
 
         assert type(signal) == list
-        assert timeline is not None
-        assert output is not None
+        assert type(performance) == Performance
 
-        self.realtime = realtime
+        self.realtime = Realtime()
         self.signal = signal
-        self.timeline = timeline
-        self.output = output
-        self.bpm = self.output.bpm
+        #self.timeline = timeline
+        self.performance = performance
+        self.timeline = self.performance.timeline
+        self.bpm = self.performance.bpm
         self.quarter_note_length = 60 / self.bpm
 
     def _band_event_to_midi_events(self, event):
@@ -56,15 +57,15 @@ class Conductor(object):
         Given a camp.band.playback.event Event, return the list of MIDI events associated with it.
         """
         midi_events = []
-        if event.typ == 'note':
+        if event.notes is not None:
             for note in event.notes:
                 if event.off == True:
-                    midi_events.append(self.realtime.note_off(event.channel, note.note_number(), note.velocity))
+                    midi_events.append(self.realtime.note_off(event.channel, note.note_number(), event.velocity))
                 else:
-                    midi_events.append(self.realtime.note_on(event.channel, note.note_number(), note.velocity))
+                    midi_events.append(self.realtime.note_on(event.channel, note.note_number(), event.velocity))
+            return midi_events
         else:
-            raise Exception("do not know how to convert event: %s" % event)
-        return midi_events
+            raise Exception("do not understand non-note events just yet: %s" % event)
 
     def handle_band_event(self, event):
         """
@@ -89,13 +90,13 @@ class Conductor(object):
 
             # we're just going to send a beat signal, the members of the band
             # decide whether to play any notes.  A beat is an inaudible event.
-            beat = Event(typ='beat', time=now_time)
+            beat = Event(time=now_time)
 
             # if the output ever does not produce events in a time slice, the
             # playback will stop.  We may implement a 'silent' event to keep it
             # going, though this is based on the idea of generators - keep playing
             # until the data runs out
-            self.output.got_events = False
+            self.performance.got_events = False
 
             # the beat happens every quarter note.  Here we calculate the time
             # for the current beat cycle to end
@@ -116,7 +117,7 @@ class Conductor(object):
                 self.handle_band_event(event)
 
             # if no events were recorded, we're done, so bail out
-            if not self.output.got_events:
+            if not self.performance.got_events:
                 running = False
 
             # count the beat cycle as concluded

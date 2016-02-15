@@ -15,16 +15,46 @@ limitations under the License.
 """
 
 from camp.core.scale import scale
-from camp.playback.realtime import Realtime
-from camp.playback.timeline import Timeline
-from camp.band.scale_player import ScalePlayer
-from camp.band.roman_player import RomanPlayer
-from camp.band.subdivide import Subdivide
-from camp.band.chordify import Chordify
-from camp.band.realtime_output import RealtimeOutput
+
+# FIXME: this middleware/sources thing should be simplified to "nodes" ?
+
+from camp.band.sources.scale_source import ScaleSource
+
+from camp.band.middleware.roman import Roman
+from camp.band.middleware.subdivide import Subdivide
+from camp.band.middleware.chordify import Chordify
+from camp.band.middleware.scale_follower import ScaleFollower
+from camp.band.middleware.transpose import Transpose
+
+from camp.band.performance import Performance # was RealtimeOutput
 from camp.band.conductor import Conductor
 
 class TestBand(object):
+
+    def test_new_api(self):
+        # realtime = Realtime()
+        # timeline = Timeline()
+        output = Performance(bpm=120, stop_seconds=10)
+
+        scale1 = scale("c6 major")
+        scale2 = scale("c6 minor")
+
+        source = ScaleSource(scales=[ dict(scale=scale1, beats=7), dict(scale=scale2, beats=7) ])
+
+        subdivide = Subdivide(splits=[4])
+        roman = Roman(symbols="1 2 3 4 I IV V iii".split(), channel=1)
+
+        follower = ScaleFollower(lengths=[ 7 ])
+        chordify = Chordify(types=[ 'power' ])
+        shift = Transpose(octaves=[-3], channel=2)
+
+        source.chain([subdivide, roman, output])
+        source.chain([follower, chordify, shift, output])
+
+
+        conductor = Conductor(signal=[source], performance=output)
+        conductor.start()
+
 
     COMMENTS = """
     def test_mesh_one(self):
@@ -58,7 +88,7 @@ class TestBand(object):
         conductor.start()
     """
 
-    #MEH = """
+    MEH = """
     def test_mesh_roman(self):
 
         realtime = Realtime()
@@ -84,4 +114,4 @@ class TestBand(object):
             timeline=timeline)
 
         conductor.start()
-    #"""
+    """

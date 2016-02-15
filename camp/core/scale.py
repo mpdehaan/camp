@@ -89,6 +89,8 @@ class Scale(object):
         """
         Scales are equal if they are the ... same scale
         """
+        if other is None:
+            return False
         return self.root == other.root and self.typ == other.typ
 
     def short_name(self):
