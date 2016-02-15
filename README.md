@@ -116,21 +116,25 @@ Notes
 Setup
 =====
 
-It's recommended you target some soft synths running inside a Digital Audio Workstation program (DAW) or standalone.  Initial testing in the early
-days of this program were done against Native Instrument's Absynth.
+It's recommended you target some soft synths running inside a Digital Audio Workstation program (DAW) or standalone.  
+
+Initial testing in the early days of this program were done against Native Instrument's Absynth.
 
 For OS X:
 
     brew install python3
     pip3 install -r requirements.txt
 
-Open "Audio/MIDI Setup" and click on the IAC Driver Block.  Pick "Enabled".  
+Open "Audio/MIDI Setup" on OS X, pick "Window / Open MIDI  Studio" and click on the IAC Driver Block.  Pick "Enabled" and make sure
+there are some MIDI ports there.
 
 Then:
  
    make tests
 
 If you skip the IAC step the tests may fail. 
+
+If you have problems with this step (or want to share Windows/Linux tips), stop by the mailing list!
 
 Author
 ======
