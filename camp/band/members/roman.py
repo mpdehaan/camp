@@ -24,11 +24,11 @@ class Roman(Member):
     The roman player listens to an incoming note signal and then only really pays attention to the velocity, duration, and scale data.
     The actual note played depends on a symbol off the scale, whether a note or a chord.
 
-    As such, a ScalePlayer makes the most sense to have higher up in the chain.
+    As such, a ScaleSource makes the most sense to have higher up in the chain.
 
     For instance:
 
-    r = RomanPlayer(symbols=["I 2 3 4 IV 2 3 4 iii"])
+    r = RomanPlayer(symbols="I 2 3 4 IV 2 3 4 iii".split())
     """
 
     def __init__(self, symbols=None, channel=None):
@@ -51,8 +51,6 @@ class Roman(Member):
 
     def on_signal(self, event, start_time, end_time):
 
-
-        print("ROMAN!")
 
         scale = event.flags.get('scale',None)
         if scale is None:
