@@ -38,8 +38,10 @@ class Transpose(Member):
             raise Exception("transpose requires notes in the pipeline")
 
         amount = next(self.octaves_looper)
-        for (i,note) in enumerate(event.notes):
-            event.notes[i] = event.notes[i].transpose(octaves=amount)
+
+        notes = [ n.transpose(octaves=amount) for n in event.notes ]
+        print("TRANSPOSED: %s" % notes)
+        event.notes = notes
 
         for send in self.sends:
             send.signal(event, start_time, end_time)

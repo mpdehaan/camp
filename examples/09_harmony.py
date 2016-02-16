@@ -43,15 +43,18 @@ def play():
     scale_choices = [ dict(scale=scale1, beats=24), dict(scale=scale1, beats=24) ]
     source = ScaleSource(scales=Endlessly(scale_choices))
 
-    # the first instrument plays a series of chords, transposed down an octave
-    # from the original scale carrier signal.
+    # the first instrument plays a series of notes
 
     roman1 = Roman(symbols=Endlessly("1 2 4 1 2 3 1 2 4 3 3".split()), channel=1)
     source.chain([roman1, output])
 
-    chordify = Chordify(types=Endlessly("major major major minor".split()), channel=2)
+    # the second instrument transposes that note down two octaves and plays a power
+    # chord.  We could pass in an array of chords to vary the chord type, but this is
+    # probably going to sound less prone to clashing.
+
+    chordify = Chordify(types=Endlessly(["power"]), channel=2)
     transpose = Transpose(octaves=Endlessly([-2]))
-    source.chain([roman1, chordify, transpose])
+    source.chain([roman1, chordify, transpose, output])
 
     # note that roman 1 is part of each chain, but the channel number is overridden
     # in the second set.  This can be done because the event objects are copied as they

@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+import copy
+
 class Event(object):
 
     def __init__(self, time=None, channel=None, notes=None, velocity=None, off=False, duration=None, flags=None):
@@ -42,13 +44,15 @@ class Event(object):
             self.flags[k]=v
 
     def copy(self):
+        notes = copy.copy(self.notes)
+        flags = copy.copy(self.flags)
         return Event(
             time=self.time,
             channel=self.channel,
-            notes=self.notes,
+            notes=notes,
             velocity=self.velocity,
             duration=self.duration,
-            flags=self.flags,
+            flags=flags,
             off=self.off)
 
     def __repr__(self):

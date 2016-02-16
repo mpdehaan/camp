@@ -97,10 +97,10 @@ class Member(object):
         Do not reimplement signal in subclasses - only on_signal
         """
 
-        event = event.copy()
-        if event.channel is None:
-            event.channel = self.channel
-        self.on_signal(event, start_time, end_time)
+        evt = event.copy()
+        if self.channel is not None:
+            evt.channel = self.channel
+        self.on_signal(evt, start_time, end_time)
 
     def on_signal(self, event, start_time, end_time):
         """
