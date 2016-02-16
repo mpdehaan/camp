@@ -15,7 +15,6 @@ limitations under the License.
 """
 
 from camp.band.members.member import Member
-from camp.utils import loop_around
 
 class ScaleFollower(Member):
 
@@ -35,11 +34,9 @@ class ScaleFollower(Member):
     def __init__(self, lengths=None, channel=None):
 
 
-
-        assert type(lengths) == list
         super().__init__()
 
-        self.lengths_looper = loop_around(lengths)
+        self.lengths_looper = self.draw_from(lengths)
         if channel is not None:
             self.channel = channel
 
@@ -47,10 +44,16 @@ class ScaleFollower(Member):
         self.current_scale = None
         self.generator = None
 
-    def get_note_generator(self):
+    def get_note_generator(self, force=False):
 
-        if self.current_scale != self.previous_scale:
-            self.generator = self.current_scale.generate(length=next(self.lengths_looper))
+        if self.current_scale != self.previous_scale or force:
+            try:
+                length = next(self.lengths_looper)
+                print("SUCCESSFUL DRAW 1 %s" % length)
+            except StopIteration:
+                print("STOP LEN 1")
+                return None
+            self.generator = self.current_scale.generate(length=length)
         return self.generator
 
     def on_signal(self, event, start_time, end_time):
@@ -60,7 +63,18 @@ class ScaleFollower(Member):
             raise Exception("missing scale data from note signal, something wrong here")
 
         note_gen = self.get_note_generator()
-        note = next(note_gen)
+        if note_gen is None:
+            return
+        try:
+             note = next(note_gen)
+        except StopIteration:
+             print("STOP LEN 2")
+             note_gen = self.get_note_generator(force=True)
+             if note_gen is None:
+                 return
+             note = next(note_gen)
+
+
         event.notes = [ note ]
 
         self.previous_scale = self.current_scale

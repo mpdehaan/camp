@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+from camp.band.selectors.selector import Selector
+
 class Member(object):
 
     """
@@ -28,6 +30,28 @@ class Member(object):
         """
         self.sends = []
         self.channel = channel
+
+    def draw_from(self, item):
+        """
+        In various places a band member needs to draw from a list.
+        The default form of drawing from an array is to pop off the first
+        element and consume it.  However, when Selectors are employed, we might
+        loop endlessly over the selection.  This method exists to hide
+        the need to understand choosers from those either building a band member
+        or using the API at the simplest level.
+        """
+        if type(item) == list:
+            for x in item:
+                yield x
+        elif isinstance(item, Selector):
+            while True:
+                try:
+                    yield item.draw()
+                except StopIteration:
+                    print("DRAW EXHAUSTED")
+                    return
+        else:
+            raise Exception("do not know how to draw from data source: %s" % item)
 
     def send_to(self, obj):
         """

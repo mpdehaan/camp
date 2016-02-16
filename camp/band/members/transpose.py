@@ -15,7 +15,6 @@ limitations under the License.
 """
 
 from camp.band.members.member import Member
-from camp.utils import loop_around
 
 class Transpose(Member):
 
@@ -25,11 +24,9 @@ class Transpose(Member):
         # TODO: later also support step transpositions
         # or even grabbing the next note in the scale
 
-        assert type(octaves) == list
-
         super().__init__()
 
-        self.octaves_looper = loop_around(octaves)
+        self.octaves_looper = self.draw_from(octaves)
 
         if channel is not None:
             self.channel = channel

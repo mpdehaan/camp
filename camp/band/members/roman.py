@@ -15,7 +15,6 @@ limitations under the License.
 """
 
 from camp.band.members.member import Member
-from camp.utils import loop_around
 from camp.notation.roman import Roman as RomanNotation
 
 class Roman(Member):
@@ -41,11 +40,9 @@ class Roman(Member):
         channel - what MIDI channel to send to?
         """
 
-
-        assert type(symbols) == list
         super().__init__()
 
-        self.symbol_looper = loop_around(symbols)
+        self.symbol_looper = self.draw_from(symbols)
         if channel is not None:
             self.channel = channel
 

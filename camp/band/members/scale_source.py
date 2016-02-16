@@ -15,7 +15,6 @@ limitations under the License.
 """
 
 from camp.band.members.member import Member
-from camp.utils import loop_around
 
 class ScaleSource(Member):
 
@@ -34,13 +33,12 @@ class ScaleSource(Member):
 
     def __init__(self, scales=None, channel=None):
 
-        assert type(scales) == list
         if channel is not None:
             self.channel = channel
 
         super().__init__()
 
-        self.scale_spec_looper = loop_around(scales)
+        self.scale_spec_looper = self.draw_from(scales)
         self.scale_gen = self.scale_generator()
 
 
@@ -61,7 +59,11 @@ class ScaleSource(Member):
 
     def on_signal(self, event, start_time, end_time):
 
-        scale = next(self.scale_gen)
+        try:
+            scale = next(self.scale_gen)
+        except StopIteration:
+            return
+
         event.add_flags(scale=scale)
 
         for send in self.sends:

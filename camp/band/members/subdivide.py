@@ -15,7 +15,6 @@ limitations under the License.
 """
 
 from camp.band.members.member import Member
-from camp.utils import loop_around
 
 class Subdivide(Member):
 
@@ -47,13 +46,11 @@ class Subdivide(Member):
         After that, we'll cycle back and do 1 subdivision again. Ad nauseum.
         """
 
-        assert type(splits) == list
-
         super().__init__()
         if channel is not None:
             self.channel = channel
 
-        self._subdivide_amounts = loop_around(splits)
+        self._subdivide_amounts = self.draw_from(splits)
 
     def on_signal(self, event, start_time, end_time):
 

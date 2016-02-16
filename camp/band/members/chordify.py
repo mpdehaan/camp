@@ -16,7 +16,6 @@ limitations under the License.
 
 from camp.band.members.member import Member
 from camp.core.chord import Chord
-from camp.utils import loop_around
 
 class Chordify(Member):
 
@@ -47,8 +46,7 @@ class Chordify(Member):
 
         super().__init__()
 
-        assert type(types) == list
-        self._which_chord = loop_around(types)
+        self._which_chord = self.draw_from(types)
         self.channel = channel
 
     def on_signal(self, event, start_time, end_time):
