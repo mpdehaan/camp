@@ -14,47 +14,10 @@ As such, it can create smaller things along the way.
 
 Get a VST/AU soft synth, a machine with Python on it, and let's dig in.
 
-API Example
-===========
+Examples
+========
 
-Here's some early mesh-network inspired stuff, from a version of tests/band.py:
-
-        output = Performance(bpm=120, stop_seconds=10)
-        scale1 = scale("c6 major")
-        scale2 = scale("c6 minor")
-
-        source = ScaleSource(scales=[ dict(scale=scale1, beats=7), dict(scale=scale2, beats=7) ])
-        subdivide = Subdivide(splits=[4])
-        roman = Roman(symbols="1 2 3 4 I IV V iii".split(), channel=1)
-
-        follower = ScaleFollower(lengths=[ 7 ])
-        chordify = Chordify(types=[ 'power' ])
-        shift = Transpose(octaves=[-3], channel=2)
-
-        source.chain([subdivide, roman, output])
-        source.chain([follower, chordify, shift, output])
-
-        conductor = Conductor(signal=[source], performance=output)
-        conductor.start()
-
-This isn't really meant to be a Top 40 song, but it's illustrative of the API features.
-
-The performance starts in one scale, the C Major scale based around the 6th octave for 7 beats.  After 7 beats
-it goes down to C6 minor.
-
-There are really two instruments involved.  While a beat is a quarter note, the first musician is playing sixteenths, repeating
-a pattern.  The pattern is the first four notes in the scale, followed by the first, fourth, and fifth major chord.  Then the
-musician plays the third minor chord.
-
-The other musician is doing something a little weird, playing power chords all along the scale, but 3 octaves down.
-
-As the API evolves, musicians will be able to listen more to one another, and there will be all sorts of new ways to introduce
-routing interestingness, randomness, and evolution.
-
-Architecture
-============
-
-Things are still evolving a lot.  Read the code for now.  Notes pending!
+See the examples/ directory for lots of fun stuff!
 
 Goals
 =====
