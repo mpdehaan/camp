@@ -29,5 +29,4 @@ class Endlessly(Selector):
 
     def draw(self):
         result = next(self.my_generator)
-        print("DRAWN: %s" % result)
         return result

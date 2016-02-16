@@ -44,10 +44,9 @@ class Chordify(Member):
         Constructor.  Read class docs.
         """
 
-        super().__init__()
+        super().__init__(channel=channel)
 
         self._which_chord = self.draw_from(types)
-        self.channel = channel
 
     def on_signal(self, event, start_time, end_time):
 

@@ -24,12 +24,9 @@ class Transpose(Member):
         # TODO: later also support step transpositions
         # or even grabbing the next note in the scale
 
-        super().__init__()
+        super().__init__(channel=channel)
 
         self.octaves_looper = self.draw_from(octaves)
-
-        if channel is not None:
-            self.channel = channel
 
 
     def on_signal(self, event, start_time, end_time):
@@ -40,7 +37,6 @@ class Transpose(Member):
         amount = next(self.octaves_looper)
 
         notes = [ n.transpose(octaves=amount) for n in event.notes ]
-        print("TRANSPOSED: %s" % notes)
         event.notes = notes
 
         for send in self.sends:

@@ -40,7 +40,11 @@ class Member(object):
         the need to understand choosers from those either building a band member
         or using the API at the simplest level.
         """
-        if type(item) == list:
+        if item is None:
+            # this allows optional generators to be turned off.
+            while True:
+                yield None
+        elif type(item) == list:
             for x in item:
                 yield x
         elif isinstance(item, Selector):
@@ -79,14 +83,12 @@ class Member(object):
         assert len(chain_list) > 0
 
         item = chain_list.pop(0)
-        print("CHAINING %s to %s" % (self, item))
         self.send_to(item)
         head = item
 
         while len(chain_list):
             item = chain_list.pop(0)
             head.send_to(item)
-            print("CHAINING %s to %s" % (head, item))
             head = item
 
         return (self, item)
@@ -109,11 +111,6 @@ class Member(object):
 
         # for each musician that is listening to us
         for item in self.sends:
-
-            # FIXME - needed?
-            # if item.channel is None:
-            #    item.channel = self.channel
-
             # tell the musician what events we have seen, and what the length
             # of the current beat cycle is
             item.signal(event, start_time, end_time)

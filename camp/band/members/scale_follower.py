@@ -34,11 +34,9 @@ class ScaleFollower(Member):
     def __init__(self, lengths=None, channel=None):
 
 
-        super().__init__()
+        super().__init__(channel=channel)
 
         self.lengths_looper = self.draw_from(lengths)
-        if channel is not None:
-            self.channel = channel
 
         self.previous_scale = None
         self.current_scale = None
@@ -49,9 +47,7 @@ class ScaleFollower(Member):
         if self.current_scale != self.previous_scale or force:
             try:
                 length = next(self.lengths_looper)
-                print("SUCCESSFUL DRAW 1 %s" % length)
             except StopIteration:
-                print("STOP LEN 1")
                 return None
             self.generator = self.current_scale.generate(length=length)
         return self.generator
@@ -68,12 +64,10 @@ class ScaleFollower(Member):
         try:
              note = next(note_gen)
         except StopIteration:
-             print("STOP LEN 2")
              note_gen = self.get_note_generator(force=True)
              if note_gen is None:
                  return
              note = next(note_gen)
-
 
         event.notes = [ note ]
 

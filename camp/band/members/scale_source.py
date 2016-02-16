@@ -33,11 +33,7 @@ class ScaleSource(Member):
 
     def __init__(self, scales=None, channel=None):
 
-        if channel is not None:
-            self.channel = channel
-
-        super().__init__()
-
+        super().__init__(channel=channel)
         self.scale_spec_looper = self.draw_from(scales)
         self.scale_gen = self.scale_generator()
 

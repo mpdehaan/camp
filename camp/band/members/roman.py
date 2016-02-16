@@ -40,11 +40,10 @@ class Roman(Member):
         channel - what MIDI channel to send to?
         """
 
-        super().__init__()
+        super().__init__(channel=channel)
 
         self.symbol_looper = self.draw_from(symbols)
-        if channel is not None:
-            self.channel = channel
+
 
     def on_signal(self, event, start_time, end_time):
 

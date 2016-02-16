@@ -46,9 +46,7 @@ class Subdivide(Member):
         After that, we'll cycle back and do 1 subdivision again. Ad nauseum.
         """
 
-        super().__init__()
-        if channel is not None:
-            self.channel = channel
+        super().__init__(channel=channel)
 
         self._subdivide_amounts = self.draw_from(splits)
 
@@ -72,7 +70,6 @@ class Subdivide(Member):
         # the durations of the notes coming out, otherwise things won't work right.
 
         event.add_flags(subdivide=slices)
-        print("SV by %s" % slices)
 
         # for each subscribed musician or output...
 

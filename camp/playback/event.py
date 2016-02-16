@@ -44,8 +44,8 @@ class Event(object):
             self.flags[k]=v
 
     def copy(self):
-        notes = copy.copy(self.notes)
-        flags = copy.copy(self.flags)
+        notes = copy.deepcopy(self.notes)
+        flags = copy.deepcopy(self.flags)
         return Event(
             time=self.time,
             channel=self.channel,
