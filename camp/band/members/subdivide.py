@@ -71,22 +71,20 @@ class Subdivide(Member):
 
         event.add_flags(subdivide=slices)
 
-        # for each subscribed musician or output...
+        # for however many times we are going to subdivide
 
-        for send in self.sends:
+        for slice_num in range(0,slices):
 
             event = event.copy()
 
-            # for however many times we are going to subdivide
+            # calculate the end time of the new beat we are going to trigger
 
-            for slice_num in range(0,slices):
+            new_end_time = new_start_time + each_slice_width
 
-                # calculate the end time of the new beat we are going to trigger
+            event.time = new_start_time
 
-                new_end_time = new_start_time + each_slice_width
-
-                event.time = new_start_time
+            for send in self.sends:
                 send.signal(event, new_start_time, new_end_time)
 
-                # move on to the next beat in the subdivision.
-                new_start_time = new_start_time + each_slice_width
+            # move on to the next beat in the subdivision.
+            new_start_time = new_start_time + each_slice_width

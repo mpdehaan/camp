@@ -122,6 +122,8 @@ class Arp(Member):
 
     def on_signal(self, event, start_time, end_time):
 
+        produced = []
+
         """
         Callback for the plugin.  This one is a bit complicated.
         """
@@ -165,26 +167,25 @@ class Arp(Member):
 
         event.add_flags(subdivide=slices)
 
-        # for each subscribed musician or output...
+        # for however many times we are going to subdivide
 
-        for send in self.sends:
+        for slice_num in range(0,slices):
 
+            new_event = event.copy()
 
-            # for however many times we are going to subdivide
+            # calculate the end time of the new beat we are going to trigger
 
-            for slice_num in range(0,slices):
+            new_end_time = new_start_time + each_slice_width
+            new_event.time = new_start_time
 
-                new_event = event.copy()
+            self._handle_arp_note(new_event)
 
-                # calculate the end time of the new beat we are going to trigger
-
-                new_end_time = new_start_time + each_slice_width
-
-                new_event.time = new_start_time
-
-                self._handle_arp_note(new_event)
-
+            for send in self.sends:
                 send.signal(new_event, new_start_time, new_end_time)
 
-                # move on to the next beat in the subdivision.
-                new_start_time = new_start_time + each_slice_width
+            # move on to the next beat in the subdivision.
+            new_start_time = new_start_time + each_slice_width
+
+            produced.append(new_event)
+
+        return produced
