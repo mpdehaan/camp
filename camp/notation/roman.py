@@ -34,6 +34,7 @@ CHORD_SYMBOLS = dict(
    vi  = [ 6, 'minor' ],
    vii = [ 7, 'minor' ],
 )
+CHORD_SYMBOLS['-'] = 'REST'
 
 class Roman(object):
 
@@ -87,6 +88,9 @@ class Roman(object):
         if chord_data is None:
            raise Exception("do not know how to parse chord symbol: %s" % sym)
 
+        if chord_data == 'REST':
+            return None
+
         # here's where we override the chord type if need be
         (scale_num, typ) = chord_data
         if override_typ is not None:
@@ -120,7 +124,9 @@ class Roman(object):
         Same as do() but always get back an array of notes.
         """
         note_or_chord = self.do(sym)
-        if type(note_or_chord) == Chord:
+        if note_or_chord is None:
+            return []
+        elif type(note_or_chord) == Chord:
             return note_or_chord.notes
         else:
             return [ note_or_chord ]
