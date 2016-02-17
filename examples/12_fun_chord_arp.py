@@ -32,7 +32,7 @@ def play():
 
     # This one sounds just a bit Perrey and Kingsley with the right VST.
 
-    output = Performance(bpm=120, stop_seconds=10)
+    output = Performance(bpm=60, stop_seconds=10)
 
     # let's play in the A major scale
 
