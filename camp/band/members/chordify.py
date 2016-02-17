@@ -51,9 +51,10 @@ class Chordify(Member):
     def on_signal(self, event, start_time, end_time):
 
         chord_typ = next(self._which_chord)
-        chord = Chord(root=event.notes[0], typ=chord_typ)
 
-        event.notes = chord.notes
+        if event.notes and len(event.notes) > 0:
+            chord = Chord(root=event.notes[0], typ=chord_typ)
+            event.notes = chord.notes
 
         for send in self.sends:
             send.signal(event, start_time, end_time)

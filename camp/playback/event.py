@@ -44,7 +44,9 @@ class Event(object):
             self.flags[k]=v
 
     def copy(self):
-        notes = copy.deepcopy(self.notes)
+        notes = None
+        if self.notes:
+            notes = [ n.copy() for n in self.notes ]
         flags = copy.deepcopy(self.flags)
         return Event(
             time=self.time,
@@ -56,5 +58,8 @@ class Event(object):
             off=self.off)
 
     def __repr__(self):
-        return "<Event (time=%s,channel=%s,notes=%s,velocity=%s,off=%s,duration=%s,flags=%s)>" % \
-            (self.time, self.channel, self.notes, self.velocity, self.off, self.duration, self.flags)
+        on = "ON"
+        if self.off:
+            on = "OFF"
+        return "<Event %s (time=%s,channel=%s,notes=%s,velocity=%s,duration=%s,flags=%s)>" % \
+            (on, self.time, self.channel, self.notes, self.velocity, self.duration, self.flags)

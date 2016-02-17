@@ -105,7 +105,7 @@ class Conductor(object):
 
             # we're just going to send a beat signal, the members of the band
             # decide whether to play any notes.  A beat is an inaudible event.
-            beat = Event(time=now_time)
+            beat = Event(time=now_time, duration=0.25)
 
             # if the output ever does not produce events in a time slice, the
             # playback will stop.  We may implement a 'silent' event to keep it

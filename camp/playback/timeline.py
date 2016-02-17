@@ -52,8 +52,11 @@ class Timeline(object):
             if last_event_time <= now_time:
                 # the next event needs to trigger now
                 event = self.events.pop(0)
-                yield event
-                print("PLAYING: %s" % event)
+                if event.notes and len(event.notes) > 0:
+                    # FIXME: when we have control change and volume events this
+                    # will have to change.  Right now, it keeps output sane.
+                    yield event
+                    print("PLAYING: %s" % event)
                 continue
 
             if now_time > until_time:

@@ -54,6 +54,7 @@ class Roman(Member):
 
         symbol = next(self.symbol_looper)
         event.notes = RomanNotation(scale=scale).do_notes(symbol)
+        print("ROMAN PRODUCTION: %s" % event.notes)
 
         for send in self.sends:
             send.signal(event, start_time, end_time)

@@ -82,7 +82,7 @@ def play():
     # TRIGGER: | C4 ~~~~~~~~~~~~ | D4 ~~~~~~~~~ | ...
     # ---------+-----------------+--------------+
     # RESTS:   | N   N   N  Y    | N   N   N  Y |
-    # SEMI:    | +1  +4  +9  -   | +1  +4  +9   |
+    # SEMI:    | +0  +3  +8  -   | +0  +3  +8   |
     # OCTAVES: | +2  -2  0   0   | +2  -2  0  0 |
     # ---------+-----------------+--------------+
     # PLAY:    | C6  E2  G4  -   | D6  Gb2 A4 - |
@@ -92,7 +92,7 @@ def play():
     # the 'free' mode with those uneven lengths.
 
     arp = Arp(
-        semitones=Endlessly([1,4,9,0]),
+        semitones=Endlessly([0,3,8,0]),
         octaves=Endlessly([2,-2,0,0]),
         splits=Endlessly([4]),
         rests=Endlessly([0,0,0,1])

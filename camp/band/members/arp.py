@@ -102,14 +102,22 @@ class Arp(Member):
         rest = next(self._rests_cond)
 
         if rest:
+            print("ARP RESTING because %s" % rest)
             event.notes = []
         else:
+            print("ARP GOT NOTES: %s" % event.notes)
+            if len(event.notes) == 0:
+                return
+                #raise Exception("ow?")
             for (i,note) in enumerate(event.notes):
                 if octave_shift:
+                    print("ARP:OS")
                     event.notes[i] = note.transpose(octaves=octave_shift)
                 if semitone_shift:
+                    print("ARP:OS")
                     event.notes[i] = note.transpose(semitones=semitone_shift)
                 if scale_shift:
+                    print("ARP:OS")
                     event.notes[i] = self._scale_note_shift(scale_note_shift=scale_shift, note=note)
 
     def on_signal(self, event, start_time, end_time):
@@ -132,6 +140,7 @@ class Arp(Member):
             self.working_scale_notes = [ note.transpose(octaves=-3) for note in scale.copy.generate(length=12*6) ]
 
         if (self.current_scale != self.previous_scale) or self._mode == 'locked' or self._run_once is False:
+            print("ARP RESET")
             self._run_once = True
             self._octave_amounts = self.draw_from(self._octaves)
             self._semitone_amounts = self.draw_from(self._semitones)
@@ -160,21 +169,22 @@ class Arp(Member):
 
         for send in self.sends:
 
-            event = event.copy()
 
             # for however many times we are going to subdivide
 
             for slice_num in range(0,slices):
 
+                new_event = event.copy()
+
                 # calculate the end time of the new beat we are going to trigger
 
                 new_end_time = new_start_time + each_slice_width
 
-                event.time = new_start_time
+                new_event.time = new_start_time
 
-                self._handle_arp_note(event)
+                self._handle_arp_note(new_event)
 
-                send.signal(event, new_start_time, new_end_time)
+                send.signal(new_event, new_start_time, new_end_time)
 
                 # move on to the next beat in the subdivision.
                 new_start_time = new_start_time + each_slice_width
