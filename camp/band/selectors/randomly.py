@@ -24,7 +24,7 @@ def endlessly_generate(alist):
 
         choice = random.choice(alist)
 
-        if type(choice) == dict:
+        if type(choice) == dict and 'value' in choice:
             value = choice.get('value', None)
             length = choice.get('hold', 1)
             if value is None:

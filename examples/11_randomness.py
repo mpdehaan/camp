@@ -43,9 +43,10 @@ def play():
     # for 7 beats, which we covered in example 01.
 
     random_scale_choices = Randomly([
-        dict(value = dict(scale=scale("c6 major"), beats=7) ),
-        dict(value = dict(scale=scale("Db4 minor_pentatonic"), beats=7) ),
-        dict(value = dict(scale=scale("Eb3 mixolydian"), beats=7) )
+        # each of these items are scale specifications.  You've seen these in the very first examples.
+        dict(scale=scale("c6 major"), beats=7),
+        dict(scale=scale("Db4 minor_pentatonic"), beats=7),
+        dict(scale=scale("Eb3 mixolydian"), beats=7)
     ])
 
     # note that the random selector could repeat a selection as currently
