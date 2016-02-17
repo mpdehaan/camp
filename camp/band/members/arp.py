@@ -87,6 +87,9 @@ class Arp(Member):
         self._subdivide_amounts = self.draw_from(splits)
         self._run_once = True
 
+    def reset(self):
+        pass
+
     def _scale_note_shift(self, scale_note_shift=None, note=None):
         raise NotImplementedError()
 

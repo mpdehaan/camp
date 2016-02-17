@@ -36,11 +36,17 @@ class ScaleFollower(Member):
 
         super().__init__(channel=channel)
 
-        self.lengths_looper = self.draw_from(lengths)
 
         self.previous_scale = None
         self.current_scale = None
         self.generator = None
+
+        self._lengths = lengths
+        self.reset()
+
+    def reset(self):
+        self.lengths_looper = self.draw_from(self._lengths)
+
 
     def get_note_generator(self, force=False):
 
@@ -75,3 +81,5 @@ class ScaleFollower(Member):
 
         for send in self.sends:
             send.signal(event, start_time, end_time)
+
+        return [ event ]

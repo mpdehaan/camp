@@ -31,6 +31,12 @@ class Member(object):
         self.sends = []
         self.channel = channel
 
+    def reset(self):
+        """
+        Restarts all iterators over from the beginning.
+        """
+        raise NotImplementedError()
+
     def draw_from(self, item):
         """
         In various places a band member needs to draw from a list.
@@ -102,15 +108,13 @@ class Member(object):
         evt = event.copy()
         if self.channel is not None:
             evt.channel = self.channel
-        self.on_signal(evt, start_time, end_time)
+        return self.on_signal(evt, start_time, end_time)
 
     def on_signal(self, event, start_time, end_time):
         """
-        Override this pattern in each plugin, with variations.
+        Override this pattern in each plugin, with variations, and return
+        the list of events produced
         """
 
-        # for each musician that is listening to us
-        for item in self.sends:
-            # tell the musician what events we have seen, and what the length
-            # of the current beat cycle is
-            item.signal(event, start_time, end_time)
+        # see scale_follower for a good example
+        raise NotImplementedError

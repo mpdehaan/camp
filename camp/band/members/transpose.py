@@ -25,8 +25,11 @@ class Transpose(Member):
         # or even grabbing the next note in the scale
 
         super().__init__(channel=channel)
+        self._octaves = octaves
+        self.reset()
 
-        self.octaves_looper = self.draw_from(octaves)
+    def reset(self):
+        self.octaves_looper = self.draw_from(self._octaves)
 
 
     def on_signal(self, event, start_time, end_time):
@@ -41,3 +44,5 @@ class Transpose(Member):
 
         for send in self.sends:
             send.signal(event, start_time, end_time)
+
+        return [ event ]

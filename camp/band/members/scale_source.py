@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+from camp.core.scale import Scale
 from camp.band.members.member import Member
 
 class ScaleSource(Member):
@@ -31,10 +32,15 @@ class ScaleSource(Member):
     source1 = ScaleSource(scales=[ dict(scale=scale1) ])
     """
 
-    def __init__(self, scales=None, channel=None):
+    def __init__(self, scales=None, beats=8, channel=None):
 
         super().__init__(channel=channel)
-        self.scale_spec_looper = self.draw_from(scales)
+        self.beats = beats
+        self._scales = scales
+        self.reset()
+
+    def reset(self):
+        self.scale_spec_looper = self.draw_from(self._scales)
         self.scale_gen = self.scale_generator()
 
 
@@ -42,12 +48,19 @@ class ScaleSource(Member):
 
         for scale_spec in self.scale_spec_looper:
 
-            scale = scale_spec.get('scale', None)
-            if scale is None:
-                raise Exception("invalid scale spec")
-            self.current_scale = scale
+            # if the long form scale spec is not used, assume the scale
+            # will be used for a default number of beats
+            repeat_beats = self.beats
 
-            repeat_beats = scale_spec.get('beats', 1)
+            if isinstance(scale_spec, Scale):
+                scale = scale_spec
+            else:
+                scale = scale_spec.get('scale', None)
+                if scale is None:
+                    raise Exception("invalid scale spec")
+                repeat_beats = scale_spec.get('beats', 1)
+
+            self.current_scale = scale
 
             for beat in range(0, repeat_beats):
                 yield scale
@@ -64,3 +77,5 @@ class ScaleSource(Member):
 
         for send in self.sends:
             send.signal(event, start_time, end_time)
+
+        return [ event ]

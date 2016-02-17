@@ -41,9 +41,12 @@ class Roman(Member):
         """
 
         super().__init__(channel=channel)
+        self._symbols = symbols
+        self.reset()
 
-        self.symbol_looper = self.draw_from(symbols)
+    def reset(self):
 
+        self.symbol_looper = self.draw_from(self._symbols)
 
     def on_signal(self, event, start_time, end_time):
 
@@ -52,8 +55,14 @@ class Roman(Member):
         if scale is None:
             raise Exception("missing scale data from note signal, something wrong here")
 
-        symbol = next(self.symbol_looper)
+        try:
+            symbol = next(self.symbol_looper)
+        except StopIteration:
+            return []
+
         event.notes = RomanNotation(scale=scale).do_notes(symbol)
 
         for send in self.sends:
             send.signal(event, start_time, end_time)
+
+        return [ event ]

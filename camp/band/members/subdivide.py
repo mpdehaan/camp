@@ -47,14 +47,20 @@ class Subdivide(Member):
         """
 
         super().__init__(channel=channel)
+        self._splits = splits
+        self.reset()
 
-        self._subdivide_amounts = self.draw_from(splits)
+    def reset(self):
+
+        self._subdivide_amounts = self.draw_from(self._splits)
 
     def on_signal(self, event, start_time, end_time):
 
         """
         Callback for the plugin.  This one is a bit complicated.
         """
+
+        produced = []
 
         # calculate the length of the beat cycle
         delta = end_time - start_time
@@ -88,3 +94,7 @@ class Subdivide(Member):
 
             # move on to the next beat in the subdivision.
             new_start_time = new_start_time + each_slice_width
+
+            produced.append(event)
+
+        return produced

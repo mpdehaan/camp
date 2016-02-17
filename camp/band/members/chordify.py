@@ -45,8 +45,12 @@ class Chordify(Member):
         """
 
         super().__init__(channel=channel)
+        self._types = types
+        self.reset()
 
-        self._which_chord = self.draw_from(types)
+    def reset(self):
+
+        self._which_chord = self.draw_from(self._types)
 
     def on_signal(self, event, start_time, end_time):
 
@@ -58,3 +62,5 @@ class Chordify(Member):
 
         for send in self.sends:
             send.signal(event, start_time, end_time)
+
+        return [ event ]
