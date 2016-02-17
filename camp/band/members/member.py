@@ -76,7 +76,11 @@ class Member(object):
         An alternate way of recording a communication arrangement
         that is a bit more natural.
         """
-        obj.sends.append(self)
+        if type(obj) == list:
+            for x in obj:
+                x.sends.append(self)
+        else:
+            obj.sends.append(self)
         return self
 
     def chain(self, chain_list):

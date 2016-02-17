@@ -88,6 +88,8 @@ class Arp(Member):
         self._run_once = True
 
     def reset(self):
+        # for now, I don't believe we need this, because of the way free and locked
+        # are already coded.
         pass
 
     def _scale_note_shift(self, scale_note_shift=None, note=None):
