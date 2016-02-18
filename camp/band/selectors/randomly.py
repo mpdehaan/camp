@@ -17,9 +17,11 @@ limitations under the License.
 from camp.band.selectors.selector import Selector
 
 import random
-
+import copy
 
 def endlessly_generate(alist, mode):
+
+    alist = copy.copy(alist)
 
     while True:
 
@@ -49,6 +51,24 @@ def endlessly_generate(alist, mode):
                     yield False
                 else:
                     yield True
+
+        elif mode == 'exhaust':
+
+            while len(alist) > 0:
+
+                length = len(alist)
+                index = random.randint(0,alist) - 1
+                item = alist.pop(index)
+                yield index
+
+        elif mode == 'human':
+
+            while True:
+
+                length = len(alist)
+                index = random.randint(0,alist) - 1
+                item = alist.pop(index)
+                yield index
 
         else:
 

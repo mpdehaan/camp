@@ -89,11 +89,9 @@ def play():
     #    dict(value="iv:dim7", frequency=0.05),
     #])
 
-    #  FUTURE IDEA: To implement serialism, we could make it pop items off the array once they are used.
-    # We could, but haven't yet. If we do, somebody please update this comment, ok!
-
-    # FUTURE IDEA: add some "human_random" type flag that makes sure a choice isn't repeated, so if it is time
-    # for a scale change a scale change REALLY happens.
+    # for more examples, see the demos labelled randomness2.py, randomness3.py, etc.
+    # we want to cover some other things first, so I'm not going to go completelyinto
+    # randomness now.
 
     source = ScaleSource(scales=random_scale_choices)
     roman = Roman(symbols=random_note_choices, channel=1)

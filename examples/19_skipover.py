@@ -28,34 +28,39 @@ from camp.band.members.transpose import Transpose
 
 def play():
 
-    # Permit, introduced in the example 18_randomness2.py allows us to
-    # silence an entire chain when certain conditions are met.
+    # Previously, in 11_randomness we introduced the default 'choice' random mode, which just endlessly
+    # picks something from a list.
 
-    # However, sometimes, we may want to decide to apply an affect only
-    # when something is true.  Because this could be useful ANYWHERE
-    # the same type of "when" logic can actually be attached to ANYTHING.
+    # in 18_randomness2.py we introduced 'probability', which returns True or False depending on the chances
+    # given.  It's used with the "when" statement, shown in both 18_randomness2.py and 19_skipover.py for doing
+    # some rather fun things.
 
-    # here is a probabilistic way to use random, that combines the concepts.
+    # Some more types of randomness are "exhaust" and "human_random".
 
-    output = Performance(bpm=120, stop_seconds=15)
+    # just to prove this performance will terminate by reaching the END of the performance, we're setting the stop
+    # seconds to a crazy long amount of time.  This one won't loop endlessly, because of the way 'exhaust' mode works.
+    output = Performance(bpm=120, stop_seconds=9999)
 
-    source = ScaleSource(scales=scale("Ab blues"))
+    # exhaust takes a list and feeds it in random order.  It would be the same as shuffle sorting the list, basically, and then
+    # popping off the first element repeatedly.  The result is all items will be used, in a random order, and then the sequence
+    # will stop.
+    #
+    # We normally write this in a one liner, but we'll break it up in this example to make things a bit more clear
 
-    melody = Roman(symbols=Endlessly("1 2 3 4 5 6 7".split()), channel=1)
-    chordify = Chordify(types=Endlessly(['major','minor']), when=Randomly([0,0.45], mode='probability'))
-    transpose = Transpose(octaves=Endlessly([2,-2]), when=Randomly([0,0,0.75], mode='probability'))
+    scale_choices = [scale("Ab blues"), scale("C major"), scale("Eb mixolydian")]
+    scale_chooser = Randomly(scale_choices, mode='exhaust')
+    source = ScaleSource(scales=Randomly(scale_choices, mode='exhaust'))
 
-    # the result is every other note has a 40% chance of becoming a chord,  which is always alternating
-    # major and minor when it happens
+    # human_random is inspired by the Apple iTunes problem.  In a party shuffle mode, people may get suprised to learn
+    # that the system played three Van Halen songs in a row.  Apple changed the system to switch between artists more frequently.
+    # in CAMP, human random will play each item in a list once, before going back and starting over with a new random selection.
 
-    # every THIRD note has a 75 percent chance of being transposed, which will be alternating +2/-2 octaves
-    # when it happens
+    note_choices = "1 2 3 4 5 6 7".split()
+    note_chooser = Randomly(note_choices, mode='human_random')
+    melody = Roman(symbols=note_chooser, channel=1)
 
-    # so now, we have easily inserted CONDITIONAL effects.  The use of when=Randomly wasn't required.
-    # we could also have used Endlessly or Repeatedly.  Though keep in mind if using Repeatedly, when
-    # the event chain is exhausted, that particular part of the performance will stop.  And when everything stops,
-    # the performance is done.  Because this is likely being applied to an effect chain, Repeatedly probably
-    # doesn't make the most sense with "when".  But Endlessly?  Sure!
+    # combining these two concepts together, we are going to play 3 random scales in sequence, and then FOR EACH SCALE, play
+    # the scale notes in random order.
 
     source.chain([melody, chordify, transpose, output])
     conductor = Conductor(signal=[source], performance=output)
