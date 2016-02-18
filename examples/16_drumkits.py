@@ -74,13 +74,14 @@ def play():
                                        K, None, None, None]))
 
     # hihat on the 8th notes every other bar
+    # but wait one bar before starting that up.
     hihat = Ordered(
         sources = Endlessly([
             Literal(symbols="- - - - - - - - - - - - - - - -".split()),
-            Literal(symbols=[
+            Literal(symbols=Endlessly([
                 H, None, H, None, H, None, H, None,
                 H, None, H, None, H, None, H, None
-            ])
+            ]))
         ])
     )
 
