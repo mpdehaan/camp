@@ -10,6 +10,8 @@ Medium:
  * Cleanup README
  * Start thinking about ways to express these configurations in non-code (YAML tracker?) - should be mostly fully featured (arps, etc!) and allow for routing maps.
  * Add a source similar to velocity and duration but for MIDI CC control change - filter sweeps, etc.
+ * Add a delay source, should be possible to delay note start, stop, or both.
+
 Low:
  * Remove old comments
  * A selector that takes an arbitrary callback, which could be used to implement sine waves and other crazy things not in the core
