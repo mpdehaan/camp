@@ -89,6 +89,7 @@ class Subdivide(Member):
 
             event.time = new_start_time
 
+            print("SUBDIVIDE SENDS: %s" % self.sends)
             for send in self.sends:
                 send.signal(event, new_start_time, new_end_time)
 

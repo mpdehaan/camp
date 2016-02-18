@@ -68,7 +68,11 @@ class Member(object):
         Indicates what band members this band member informs.
         This can be thought as the opposite of listens_to.
         """
-        self.sends.append(obj)
+        if type(obj) == list:
+            for x in obj:
+                self.sends.append(x)
+        else:
+            self.sends.append(obj)
         return obj
 
     def listens_to(self, obj):

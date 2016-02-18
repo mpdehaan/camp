@@ -76,15 +76,17 @@ Notes
    * The issue tracker is disabled.  Fix something via a pull request or ask a question on the mailing list.
    * If you use CAMP for something interesting, I'd love to hear about it, let me know!
 
-Setup
-=====
+Setup: OS X
+===========
 
 It's recommended you target some soft synths running inside a Digital Audio Workstation program (DAW) or standalone.  
 
-Initial testing in the early days of this program were done against Native Instrument's Absynth.
+Initial testing in the early days of this program were done against Native Instrument's Absynth and Reaper.  These are prety friendly to set up
+MIDI wise.
 
-For OS X:
+For the program itself, software dependencies:
 
+    # first setup homebrew
     brew install python3
     pip3 install -r requirements.txt
 
@@ -96,6 +98,15 @@ Then:
    make tests
 
 If you skip the IAC step the tests may fail. 
+
+If your IAC driver is not the *SECOND* MIDI port, the system may also fail.  This is because things take a port number.  I need to make
+this read in via en environment variable.  Short term, hack camp/playback/realtime.py if this doesn't work, and change this line:
+
+        midi_out.open_port(1)
+
+If you are using Logic, Logic is by default idiotic when it comes to MIDI and multi-track recording.  In Logic X, go to File > Project Settings > Recording
+and be sure the "Auto Demix" option is checked.  Then, one each channel strip, assign a MIDI channel that is not "ALL".  You will then want to arm all tracks
+for recording before running the program.
 
 If you have problems with this step (or want to share Windows/Linux tips), stop by the mailing list!
 

@@ -59,12 +59,31 @@ class Literal(object):
         # would look like two symbols, so we need to have no whitespace
         # between them
 
+        if sym is None or sym == '-':
+            # REST:
+            return chord([])
         if '-' in sym:
             return chord(sym.replace("-"," "))
         elif "," in sym:
             return chord(sym.split(","))
         else:
             return note(sym)
+
+    def do_notes(self, sym):
+        """
+        Same as do() but always get back an array of notes.
+        """
+        # DRY: duplication with Roman.py - FIXME
+        if sym == '-':
+            # REST
+            return []
+        note_or_chord = self.do(sym)
+        if note_or_chord is None:
+            return []
+        elif type(note_or_chord) == Chord:
+            return note_or_chord.notes
+        else:
+            return [ note_or_chord ]
 
 
 

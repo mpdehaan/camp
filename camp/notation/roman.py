@@ -123,6 +123,8 @@ class Roman(object):
         """
         Same as do() but always get back an array of notes.
         """
+        if sym is None:
+            return []
         note_or_chord = self.do(sym)
         if note_or_chord is None:
             return []

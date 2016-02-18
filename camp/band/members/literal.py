@@ -15,19 +15,15 @@ limitations under the License.
 """
 
 from camp.band.members.member import Member
-from camp.notation.roman import Roman as RomanNotation
+from camp.notation.literal import Literal as LiteralNotation
 
-class Roman(Member):
+# FIXME: so much duplication with Roman, really wants for a base class
+
+class Literal(Member):
 
     """
-    The roman player listens to an incoming note signal and then only really pays attention to the velocity, duration, and scale data.
-    The actual note played depends on a symbol off the scale, whether a note or a chord.
-
-    As such, a ScaleSource makes the most sense to have higher up in the chain.
-
-    For instance:
-
-    r = RomanPlayer(symbols="I 2 3 4 IV 2 3 4 iii".split())
+    Similar to the Roman playback support, this is keyed for literal notes
+    and chords, and ignores scales.  Primarily intended for drum kits.
     """
 
     def __init__(self, symbols=None, channel=None):
@@ -42,17 +38,12 @@ class Roman(Member):
 
     def on_signal(self, event, start_time, end_time):
 
-
-        scale = event.flags.get('scale',None)
-        if scale is None:
-            raise Exception("missing scale data from note signal, something wrong here")
-
         try:
             symbol = next(self.symbol_looper)
         except StopIteration:
             return []
 
-        event.notes = RomanNotation(scale=scale).do_notes(symbol)
+        event.notes = LiteralNotation().do_notes(symbol)
 
         for send in self.sends:
             send.signal(event, start_time, end_time)

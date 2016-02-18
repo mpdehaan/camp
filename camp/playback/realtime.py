@@ -31,10 +31,13 @@ class Realtime(object):
 
         midi_out = rtmidi.MidiOut(b'out')
         available_ports = midi_out.ports
-        for port in available_ports:
-            print(port)
+        found = None
 
-        midi_out.open_port(0)
+        # FIXME: this assumes the IAC port is last in the list
+        # and is NOT going to be always correct!  We need to make
+        # this configurable.
+
+        midi_out.open_port(len(available_ports) - 1)
         self.midi_out = midi_out
 
     #def _volume(self, channel, volume):
@@ -47,6 +50,8 @@ class Realtime(object):
 
 
     def note_on(self, channel, note_number, velocity):
+        print("CH: %s" % channel)
+
         result =  [NOTE_ON | channel, note_number, velocity]
         return result
 
