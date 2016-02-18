@@ -15,6 +15,7 @@ limitations under the License.
 """
 
 import time
+import os
 
 # this has been successfully tested with an Apple IAC Driver
 # open Apple Audio MIDI setup if you have a Mac.
@@ -22,6 +23,16 @@ import time
 import rtmidi_python as rtmidi
 
 from camp.playback.constants import *
+
+def get_ports():
+    midi_out = rtmidi.MidiOut(b'out')
+    available_ports = midi_out.ports
+    return available_ports
+
+def get_bus():
+    ports = get_ports()
+    port_num = os.environ.get("CAMP_MIDI_BUS", len(ports) -1)
+    return int(port_num)
 
 class Realtime(object):
 
@@ -31,13 +42,7 @@ class Realtime(object):
 
         midi_out = rtmidi.MidiOut(b'out')
         available_ports = midi_out.ports
-        found = None
-
-        # FIXME: this assumes the IAC port is last in the list
-        # and is NOT going to be always correct!  We need to make
-        # this configurable.
-
-        midi_out.open_port(len(available_ports) - 1)
+        midi_out.open_port(get_bus())
         self.midi_out = midi_out
 
     #def _volume(self, channel, volume):
