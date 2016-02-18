@@ -17,8 +17,6 @@ limitations under the License.
 from camp.playback.realtime import Realtime
 from camp.playback.event import Event
 from camp.band.members.performance import Performance
-import time
-
 
 class Conductor(object):
 

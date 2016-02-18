@@ -134,9 +134,11 @@ class Arp(Member):
         """
 
         if self._scale_notes:
-            self.current_scale = event.get('scale', None)
-            if self.current_scale is None:
-                raise Exception("requires scale data to arpeggiate on scale")
+            raise NotImplementedError()
+
+            #self.current_scale = event.get('scale', None)
+            #if self.current_scale is None:
+            #   raise Exception("requires scale data to arpeggiate on scale")
             # aside:
             # this new scale isn't SUPER huge for calculations so if you need to do something crazy like
             # jump around 5 octaves and also shift by scale notes, do it like this:
@@ -144,7 +146,7 @@ class Arp(Member):
             # NOT:
             # Arp(scale_notes=Endlessly([100,0,80,-36)])
             # as that will probably make stuff blow up and I can't be bothered with the error handling ATM.
-            self.working_scale_notes = [ note.transpose(octaves=-3) for note in scale.copy.generate(length=12*6) ]
+            # self.working_scale_notes = [ note.transpose(octaves=-3) for note in scale.copy.generate(length=12*6) ]
 
         if (self.current_scale != self.previous_scale) or self._mode == 'locked' or self._run_once is False:
             print("ARP RESET")

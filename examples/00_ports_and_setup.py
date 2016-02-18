@@ -14,12 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from camp.band.conductor import Conductor
-
-from camp.band.members.performance import Performance
-from camp.band.members.scale_source import ScaleSource
-from camp.band.members.scale_follower import ScaleFollower
-
 from camp.playback.realtime import get_ports, get_bus
 
 INSTRUCTIONS = """

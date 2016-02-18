@@ -15,7 +15,6 @@ limitations under the License.
 """
 
 import time
-from collections import namedtuple
 
 def event_sort_key(a):
     return (a.time)

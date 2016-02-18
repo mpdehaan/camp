@@ -14,9 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from camp.core.note import note, Note
+from camp.core.note import note
 from camp.core.chord import chord, Chord
-from camp.core.scale import scale, Scale
 
 CHORD_SYMBOLS = dict(
    I   = [ 1, 'major' ],
@@ -37,7 +36,7 @@ CHORD_SYMBOLS = dict(
 
 class Literal(object):
 
-    def __init__(self, scale=None):
+    def __init__(self):
 
         """
         Constructs an interpreter for specific note names or chords.

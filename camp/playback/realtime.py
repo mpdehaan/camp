@@ -41,7 +41,6 @@ class Realtime(object):
     def __init__(self):
 
         midi_out = rtmidi.MidiOut(b'out')
-        available_ports = midi_out.ports
         midi_out.open_port(get_bus())
         self.midi_out = midi_out
 

@@ -14,9 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from camp.core.note import note, Note
-from camp.core.chord import chord, Chord
-from camp.core.scale import scale, Scale
+from camp.core.chord import Chord
+from camp.core.scale import scale
 
 CHORD_SYMBOLS = dict(
    I   = [ 1, 'major' ],
