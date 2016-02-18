@@ -93,6 +93,12 @@ For the program itself, software dependencies:
 Open "Audio/MIDI Setup" on OS X, pick "Window / Open MIDI  Studio" and click on the IAC Driver Block.  Pick "Enabled" and make sure
 there are some MIDI ports there.
 
+To make sure CAMP is using the right bus, run the following:
+
+    PYTHONPATH=. python3 examples/00_ports_and_setup.py
+
+Which will explain how to select a different bus if needed, and will make sure you are using the right one.
+
 Then:
  
    make tests
