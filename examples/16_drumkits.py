@@ -58,7 +58,7 @@ def play():
     H = "A4"
     C = "Bb4"
 
-    output = Performance(bpm=120, stop_seconds=100)
+    output = Performance(bpm=120, stop_seconds=15)
 
 
     scale_choices = Endlessly([scale("D minor")])
