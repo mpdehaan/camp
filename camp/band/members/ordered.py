@@ -34,6 +34,7 @@ class Ordered(Member):
     def reset(self):
         self.sources_looper = self.draw_from(self._sources)
         self.current_source = next(self.sources_looper)
+        print("CS: %s" % self.current_source)
         self.current_source.reset()
 
     def _get_events_from_a_source(self, event, start_time, end_time):

@@ -100,10 +100,14 @@ class Member(object):
         Returns the head and tail of the chain.
         See tests/band.py.
         """
+
+
         assert type(chain_list) == list
         assert len(chain_list) > 0
 
         item = chain_list.pop(0)
+        assert item is not self
+
         self.send_to(item)
         head = item
 
