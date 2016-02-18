@@ -35,16 +35,14 @@ def play():
     output = Performance(bpm=120, stop_seconds=10)
 
     # play the two scales for 7 beats each, and then keep using those scales
-    scale1 = scale("c4 chromatic")
-    scale_choices = [ dict(scale=scale1, beats=12) ]
-    source = ScaleSource(scales=Endlessly(scale_choices))
+    source = ScaleSource(scales=scale("c4 chromatic"))
 
-    follower = ScaleFollower(lengths=Endlessly([12]))
+    follower = ScaleFollower(lengths=12)
 
     # pay attention to this part - nothing else has changed
     subdivide = Subdivide(splits=Endlessly([1,4]))
 
-    chordify = Chordify(types=Endlessly(["power"]), channel=1)
+    chordify = Chordify(types="power", channel=1)
     source.chain([follower, subdivide, chordify, output])
 
     conductor = Conductor(signal=[source], performance=output)

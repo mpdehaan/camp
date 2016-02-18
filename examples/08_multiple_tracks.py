@@ -46,13 +46,13 @@ def play():
     # from the original scale carrier signal.
 
     roman1 = Roman(symbols=Endlessly("I IV V IV III:dim ii".split()), channel=1)
-    transpose1 = Transpose(octaves=Endlessly([-1]))
+    transpose1 = Transpose(octaves=-1)
     source.chain([roman1,transpose1,output])
 
     # the second instrument plays a series of notes, but is responding to sixteenth
     # notes, not quarter notes, because of the subdivide.
 
-    subdivide2 = Subdivide(splits=Endlessly([4]))
+    subdivide2 = Subdivide(splits=4)
     roman2 = Roman(symbols=Endlessly("1 4 3 4 4 3 2 1".split()), channel=2)
     source.chain([subdivide2,roman2,output])
 
