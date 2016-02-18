@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from camp.core.note import Note, NOTES, note
-from camp.core.chord import Chord, chord
+from camp.core.note import note
+from camp.core.chord import chord
 from camp.core.scale import Scale, scale
 
 class TestScale(object):
@@ -40,9 +40,9 @@ class TestScale(object):
 
        scale1 = scale('C4 major')
        results = []
-       for note in scale1.generate(length=10):
-           results.append(note)
-   
+       for n in scale1.generate(length=10):
+           results.append(n)
+
        # using chords here is kind of silly but it's a useful test function
        # naturally you wouldn't play it this way
        assert chord(results) == chord(['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5', 'D5', 'E5'])
@@ -56,7 +56,3 @@ class TestScale(object):
        self._scale_test(length=7, expression='D4 natural_minor', expected='D4 E4 F4 G4 A4 Bb4 C5')
        self._scale_test(length=7, expression='A4 natural_minor', expected='A4 B4 C5 D5 E5 F5 G5')
        self._scale_test(length=7, expression='A4 major', expected='A4 B4 Db5 D5 E5 Gb5 Ab5')
-
-
-
-

@@ -22,8 +22,6 @@ from camp.band.members.scale_source import ScaleSource
 from camp.band.members.scale_follower import ScaleFollower
 from camp.band.members.chordify import Chordify
 
-from camp.band.selectors.endlessly import Endlessly
-
 def play():
 
     # playing all the power chords in a chromatic scale.

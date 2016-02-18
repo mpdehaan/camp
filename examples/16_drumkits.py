@@ -21,12 +21,8 @@ from camp.band.members.performance import Performance
 from camp.band.members.scale_source import ScaleSource
 from camp.band.members.roman import Roman
 from camp.band.members.literal import Literal
-from camp.band.members.transpose import Transpose
-from camp.band.members.scale_follower import ScaleFollower
 from camp.band.selectors.endlessly import Endlessly
 from camp.band.members.subdivide import Subdivide
-from camp.band.selectors.randomly import Randomly
-from camp.band.selectors.repeatedly import Repeatedly
 from camp.band.members.ordered import Ordered
 
 def play():
@@ -60,12 +56,10 @@ def play():
 
     output = Performance(bpm=120, stop_seconds=15)
 
-
-    scale_choices = Endlessly([scale("D minor")])
-    melody_trigger = ScaleSource(scales=scale_choices)
+    melody_trigger = ScaleSource(scales=scale("D minor"))
     melody = Roman(symbols=Endlessly("1 - - - - 2 - - - -".split()), channel=1)
 
-    drum_trigger = Subdivide(splits=Endlessly([4]), channel=2) # gimme 16th notes for the drum tracks
+    drum_trigger = Subdivide(splits=4, channel=2) # gimme 16th notes for the drum tracks
 
     # kick drum on the quarter notes
     kicks = Literal(symbols=Endlessly([K, None, None, None,

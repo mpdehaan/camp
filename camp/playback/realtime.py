@@ -22,7 +22,7 @@ import os
 # https://pypi.python.org/pypi/rtmidi-python
 import rtmidi_python as rtmidi
 
-from camp.playback.constants import *
+import camp.playback.constants as C
 
 def get_ports():
     midi_out = rtmidi.MidiOut(b'out')
@@ -49,14 +49,11 @@ class Realtime(object):
     #    return [cc, volume & 0x7F]
 
     def note_off(self, channel, note_number, velocity):
-        result = [NOTE_OFF | channel, note_number, velocity]
+        result = [ C.NOTE_OFF | channel, note_number, velocity ]
         return result
 
-
     def note_on(self, channel, note_number, velocity):
-        print("CH: %s" % channel)
-
-        result =  [NOTE_ON | channel, note_number, velocity]
+        result =  [ C.NOTE_ON | channel, note_number, velocity ]
         return result
 
     def play_event(self, event):

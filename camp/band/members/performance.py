@@ -17,8 +17,6 @@ limitations under the License.
 from camp.band.members.member import Member
 from camp.playback.timeline import Timeline
 
-import time
-
 class Performance(Member):
 
     """

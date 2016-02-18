@@ -20,10 +20,7 @@ from camp.band.conductor import Conductor
 from camp.band.members.performance import Performance
 from camp.band.members.scale_source import ScaleSource
 from camp.band.members.roman import Roman
-from camp.band.members.transpose import Transpose
-from camp.band.members.scale_follower import ScaleFollower
 from camp.band.selectors.endlessly import Endlessly
-from camp.band.selectors.randomly import Randomly
 from camp.band.selectors.repeatedly import Repeatedly
 from camp.band.members.ordered import Ordered
 
@@ -56,9 +53,6 @@ def play():
     # for this example, we won't do anything crazy with transpositions or anything.
 
     suite.send_to(output)
-
-    # BONUS TIP: we technically don't have to have just one conductor invocation, if it
-    # keeps it simple.
 
     conductor = Conductor(signal=[source], performance=output)
     conductor.start()

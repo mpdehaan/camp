@@ -44,7 +44,7 @@ class TestNote(object):
        assert Note(name='Bb', octave=4).transpose(steps=0.5) == Note(name='B', octave=4)
        assert Note(name='B', octave=4).transpose(steps=0.5)  == Note(name='C',  octave=5)
 
-       # whole steps (+) 
+       # whole steps (+)
        assert Note(name='C', octave=4).transpose(steps=1)  == Note(name='D',  octave=4)
        assert Note(name='Db', octave=4).transpose(steps=1) == Note(name='Eb', octave=4)
        assert Note(name='D', octave=4).transpose(steps=1)  == Note(name='E',  octave=4)
@@ -88,13 +88,13 @@ class TestNote(object):
        assert Note(name='A', octave=4).transpose(steps=-1)  == Note(name='G',  octave=4)
        assert Note(name='Bb', octave=4).transpose(steps=-1) == Note(name='Ab', octave=4)
        assert Note(name='B', octave=4).transpose(steps=-1)  == Note(name='A',  octave=4)
-       
+
        # octaves (-)
        assert Note(name='C', octave=3).transpose(octaves=-2)  == Note(name='C', octave=1)
 
        # amrbitrary hops
        assert Note(name='C', octave=4).transpose(2.5)        == Note(name='F', octave=4)
-       assert Note(name='F', octave=4).transpose(-2.5)       == Note(name='C', octave=4) 
+       assert Note(name='F', octave=4).transpose(-2.5)       == Note(name='C', octave=4)
        assert Note(name='F', octave=4).transpose(-3.0)       == Note(name='B', octave=3)
        assert Note(name='C', octave=4).transpose(7)          == Note(name='D', octave=5)
 
@@ -108,10 +108,9 @@ class TestNote(object):
        assert Note(name='Bb', octave=4) == Note(name='A#', octave=4)
 
    def test_shortcuts(self):
-  
+
        assert note("C")   == Note(name="C", octave=4)
        assert note("Db3") == Note(name="Db", octave=3)
        assert note("Db")  == Note(name="Db")
        assert note("D#5") == Note(name="Eb", octave=5)
        assert note("D#")  == Note(name="Eb", octave=4)
-

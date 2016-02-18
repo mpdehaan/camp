@@ -11,4 +11,3 @@ setup(
     url='https://github.com/mpdehaan/camp',
     packages=['camp'],
 )
-

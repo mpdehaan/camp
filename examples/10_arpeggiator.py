@@ -20,10 +20,6 @@ from camp.band.conductor import Conductor
 from camp.band.members.performance import Performance
 from camp.band.members.scale_source import ScaleSource
 from camp.band.members.scale_follower import ScaleFollower
-from camp.band.members.chordify import Chordify
-from camp.band.members.subdivide import Subdivide
-from camp.band.members.transpose import Transpose
-from camp.band.members.roman import Roman
 from camp.band.members.arp import Arp
 
 from camp.band.selectors.endlessly import Endlessly

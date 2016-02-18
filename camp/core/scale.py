@@ -39,7 +39,7 @@ SCALE_ALIASES = dict(
    minor = 'natural_minor'
 )
 
-from camp.core.note import note, Note
+from camp.core.note import note
 
 class Scale(object):
 

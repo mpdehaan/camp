@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from camp.core.note import Note, NOTES, note
+from camp.core.note import note
 from camp.core.chord import Chord, chord
 
 class TestChord(object):
@@ -28,10 +28,10 @@ class TestChord(object):
        assert chord1.notes[1] == note('E4')
        assert chord1.notes[2] == note('G4')
        assert str(chord1) == 'Chord<C4,E4,G4>'
-       
+
        chord2 = chord(['G4','C4','E4'])
        assert str(chord2) == 'Chord<C4,E4,G4>'
-       assert chord1 == chord2   
+       assert chord1 == chord2
 
        assert chord(['C4','E4','G4']) != chord(['C4'])
        assert chord(['C4','E4','G4']) != chord(['C4', 'E4', 'G4', 'C5'])
@@ -51,8 +51,7 @@ class TestChord(object):
        chord1 = chord(['G4','C4','E4'])
        assert chord1.transpose(steps=0.5) == chord(['Db4', 'F4', 'Ab4'])
        assert chord1.transpose(octaves=2) == chord(['C6', 'E6', 'G6'])
-    
+
    def test_inversions(self):
        assert chord("C4 major").invert() == chord(["E4","G4","C5"])
        assert chord("C4 major").invert(amount=2) == chord(["G4","C5","E5"])
-

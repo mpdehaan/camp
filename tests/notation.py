@@ -14,11 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from camp.core.note import Note, NOTES, note
-from camp.core.chord import Chord, chord
-from camp.core.scale import Scale, scale
+from camp.core.note import note
+from camp.core.chord import chord
+from camp.core.scale import scale
 from camp.notation.roman import Roman, roman
-from camp.notation.literal import Literal, literal
+from camp.notation.literal import Literal
 
 class TestRoman(object):
 

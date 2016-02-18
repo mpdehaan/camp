@@ -23,7 +23,7 @@ limitations under the License.
 # perfect 5th - 7 semitones
 # major 6th - 9 semitones
 # major 7th - 11 semitones
-# octave - 12 semitones 
+# octave - 12 semitones
 # etc
 
 CHORD_TYPES = dict(
@@ -38,12 +38,12 @@ CHORD_TYPES = dict(
    fifth = [ 7 ],
    M6 = [ 4, 7, 9 ],
    m6 = [ 3, 7, 9 ],
-   dom7 = [ 4, 7, 10 ],  
+   dom7 = [ 4, 7, 10 ],
    M7 = [ 4, 7, 11 ],
    m7 = [ 3, 7, 10 ],
    aug7 = [ 4, 8, 10 ],
-   dim7 = [ 3, 6, 10 ], 
-   mM7 = [ 3, 7, 11 ] 
+   dim7 = [ 3, 6, 10 ],
+   mM7 = [ 3, 7, 11 ]
 )
 
 from camp.core.note import note, Note
@@ -68,7 +68,7 @@ class Chord(object):
         """
 
         self.notes = []
-	
+
         if notes and root:
             raise Exception("notes= and root= are mutually exclusive")
         if notes is None and root is None:
@@ -78,7 +78,7 @@ class Chord(object):
         if typ and typ not in CHORD_TYPES:
             raise Exception("unknown chord type: %s, expecting one of: %s" % (typ, CHORD_TYPES))
         if isinstance(root, str):
-            root = note(root) 
+            root = note(root)
 
         if notes is not None:
             for x in notes:
@@ -92,7 +92,7 @@ class Chord(object):
 
     def copy(self):
         notes = [ n.copy() for n in self.notes ]
-        return Chord(notes=notes)        
+        return Chord(notes=notes)
 
     def _chordify(self):
         """
@@ -103,7 +103,7 @@ class Chord(object):
         notes = []
         notes.append(self.root)
         for offset in offsets:
-            notes.append(self.root.transpose(semitones=offset)) 
+            notes.append(self.root.transpose(semitones=offset))
         return notes
 
     def __repr__(self):
@@ -153,4 +153,3 @@ def chord(input):
         tokens = input.split()
         assert len(tokens) == 2, "invalid chord expression: %s" % input
         return Chord(root=note(tokens[0]), typ=tokens[1])
-

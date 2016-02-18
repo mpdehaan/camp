@@ -21,4 +21,3 @@ def test_roll_left():
 
 def test_roll_right():
     assert utils.roll_right([1,2,3,4,5]) == [5,1,2,3,4]
-

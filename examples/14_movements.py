@@ -21,9 +21,7 @@ from camp.band.members.performance import Performance
 from camp.band.members.scale_source import ScaleSource
 from camp.band.members.roman import Roman
 from camp.band.members.transpose import Transpose
-from camp.band.members.scale_follower import ScaleFollower
 from camp.band.selectors.endlessly import Endlessly
-from camp.band.selectors.randomly import Randomly
 from camp.band.members.ordered import Ordered
 
 def play():
@@ -39,7 +37,6 @@ def play():
 
     # Like before, we're setting stop seconds to 100 seconds but this composition
     # will complete due to the sources being exhausted first, which is the point.
-
 
     output = Performance(bpm=240, stop_seconds=100)
 
