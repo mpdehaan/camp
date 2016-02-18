@@ -23,13 +23,20 @@ class Member(object):
     Each implements on_signal below.
     """
 
-    def __init__(self, channel=None):
+    def __init__(self, channel=None, when=True):
         """
         Not every band member must specify a MIDI channel, but along each
         line in the chain it should be specified somewhere.
         """
         self.sends = []
         self.channel = channel
+        self._when = when
+
+        # FIXME: BUGLET?  Depends how you use it.
+        # currently reset does NOT reset the draw_from on the when.
+        # to do this, we'll need to make sure every reset() calls super()
+        # as it should.  That's minor though.
+        self.when = self.draw_from(self._when)
 
     def reset(self):
         """
@@ -116,7 +123,22 @@ class Member(object):
         evt = event.copy()
         if self.channel is not None:
             evt.channel = self.channel
-        return self.on_signal(evt, start_time, end_time)
+
+        should_run = next(self.when)
+
+        if should_run:
+            return self.on_signal(evt, start_time, end_time)
+        else:
+            # bypass THIS plugin and fire the sends directly
+            # on_signal does not have a chance to run.
+            results = []
+            evt.keep_alive = True
+            for send in self.sends:
+                results.append(send.signal(evt, start_time, end_time))
+            if len(results) > 0:
+                return results
+            else:
+                return [ event ]
 
     def on_signal(self, event, start_time, end_time):
         """

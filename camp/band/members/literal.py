@@ -26,9 +26,9 @@ class Literal(Member):
     and chords, and ignores scales.  Primarily intended for drum kits.
     """
 
-    def __init__(self, symbols=None, channel=None):
+    def __init__(self, symbols=None, channel=None, when=True):
 
-        super().__init__(channel=channel)
+        super().__init__(channel=channel, when=when)
         self._symbols = symbols
         self.reset()
 

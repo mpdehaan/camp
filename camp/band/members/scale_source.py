@@ -32,9 +32,9 @@ class ScaleSource(Member):
     source1 = ScaleSource(scales=[ dict(scale=scale1) ])
     """
 
-    def __init__(self, scales=None, beats=8, channel=None):
+    def __init__(self, scales=None, beats=8, channel=None, when=True):
 
-        super().__init__(channel=channel)
+        super().__init__(channel=channel, when=when)
         self.beats = beats
         self._scales = scales
         self.reset()

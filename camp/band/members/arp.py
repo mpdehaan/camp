@@ -35,7 +35,7 @@ class Arp(Member):
     with some extra features.
     """
 
-    def __init__(self, channel=None, splits=None, semitones=None, octaves=None, scale_notes=None, rests=None, mode='locked'):
+    def __init__(self, channel=None, splits=None, semitones=None, octaves=None, scale_notes=None, rests=None, mode='locked', when=True):
 
         """
         Usage:
@@ -65,7 +65,7 @@ class Arp(Member):
 
         """
 
-        super().__init__(channel=channel)
+        super().__init__(channel=channel, when=when)
 
         print("ARP CH=%s" % self.channel)
 

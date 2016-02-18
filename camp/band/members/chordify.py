@@ -38,13 +38,13 @@ class Chordify(Member):
 
     # TODO: allow "None" as a type to just emit the note.
 
-    def __init__(self, types=None, channel=None):
+    def __init__(self, types=None, channel=None, when=True):
 
         """
         Constructor.  Read class docs.
         """
 
-        super().__init__(channel=channel)
+        super().__init__(channel=channel, when=when)
         self._types = types
         self.reset()
 

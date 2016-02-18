@@ -58,11 +58,12 @@ class Performance(Member):
             event.duration = 0.25
         if event.velocity is None:
             event.velocity = 127
-        if event.notes is None:
-            print("NO NOTES?")
+
+        if (event.notes is None or len(event.notes) == 0) and event.keep_alive:
+            # an empty set of notes is ok under certain conditions
+            print("FIXED!")
+            self.got_events = True
             return
-
-
 
         if end_time >= self.stop_seconds:
             self.got_events = False

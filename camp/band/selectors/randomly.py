@@ -18,21 +18,42 @@ from camp.band.selectors.selector import Selector
 
 import random
 
-def endlessly_generate(alist):
+
+def endlessly_generate(alist, mode):
 
     while True:
 
-        choice = random.choice(alist)
+        if mode == 'choice':
 
-        if type(choice) == dict and 'value' in choice:
-            value = choice.get('value', None)
-            length = choice.get('hold', 1)
-            if value is None:
-                raise Exception("expecting value in choice expression, usage of Randomly is munged")
-            for count in range(0, length):
-                yield value
+            print("HIT!")
+            choice = random.choice(alist)
+
+            if type(choice) == dict and 'value' in choice:
+                value = choice.get('value', None)
+                length = choice.get('hold', 1)
+                if value is None:
+                    raise Exception("expecting value in choice expression, usage of Randomly is munged")
+                for count in range(0, length):
+                    yield value
+            else:
+                yield choice
+
+        elif mode == 'probability':
+
+            for item in alist:
+
+                zero_to_one = random.random()
+                print("V,I = %s, %s" % (zero_to_one, item))
+
+                if zero_to_one > item:
+                    yield False
+                else:
+                    yield True
+
         else:
-            yield choice
+
+            raise Exception("unknown Randomly mode")
+
 
 class Randomly(Selector):
 
@@ -42,9 +63,9 @@ class Randomly(Selector):
     # the item off the list once consumed.  When done, update comments in 11_randomness.py
     # to show the example.
 
-    def __init__(self, alist):
+    def __init__(self, alist, mode='choice'):
         self.data = alist
-        self.my_generator = endlessly_generate(alist)
+        self.my_generator = endlessly_generate(alist, mode)
 
         random.seed()
 

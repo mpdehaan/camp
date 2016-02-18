@@ -30,9 +30,9 @@ class Roman(Member):
     r = RomanPlayer(symbols="I 2 3 4 IV 2 3 4 iii".split())
     """
 
-    def __init__(self, symbols=None, channel=None):
+    def __init__(self, symbols=None, channel=None, when=True):
 
-        super().__init__(channel=channel)
+        super().__init__(channel=channel, when=when)
         self._symbols = symbols
         self.reset()
 

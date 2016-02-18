@@ -20,12 +20,12 @@ class Ordered(Member):
 
     # see examples/13_ordering.py
 
-    def __init__(self, channel=None, sources=None):
+    def __init__(self, channel=None, sources=None, when=True):
 
         # TODO: later also support step transpositions
         # or even grabbing the next note in the scale
 
-        super().__init__(channel=channel)
+        super().__init__(channel=channel, when=when)
 
         assert sources is not None
         self._sources = sources

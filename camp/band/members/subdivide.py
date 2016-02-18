@@ -30,7 +30,7 @@ class Subdivide(Member):
     It does this by slicing up the beat into smaller beats.
     """
 
-    def __init__(self, channel=None, splits=None):
+    def __init__(self, channel=None, splits=None, when=True):
 
         """
         Usage:
@@ -46,7 +46,7 @@ class Subdivide(Member):
         After that, we'll cycle back and do 1 subdivision again. Ad nauseum.
         """
 
-        super().__init__(channel=channel)
+        super().__init__(channel=channel, when=when)
         self._splits = splits
         self.reset()
 

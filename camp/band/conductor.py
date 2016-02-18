@@ -101,6 +101,7 @@ class Conductor(object):
 
         while running:
 
+            print("-- BEAT")
             # we're just going to send a beat signal, the members of the band
             # decide whether to play any notes.  A beat is an inaudible event.
             beat = Event(time=now_time, duration=0.25)
@@ -131,6 +132,7 @@ class Conductor(object):
 
             # if no events were recorded, we're done, so bail out
             if not self.performance.got_events:
+                print("OUT OF EVENTS")
                 running = False
 
             # count the beat cycle as concluded

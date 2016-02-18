@@ -19,12 +19,12 @@ from camp.band.members.member import Member
 class Transpose(Member):
 
 
-    def __init__(self, channel=None, octaves=None):
+    def __init__(self, channel=None, octaves=None, when=True):
 
         # TODO: later also support step transpositions
         # or even grabbing the next note in the scale
 
-        super().__init__(channel=channel)
+        super().__init__(channel=channel, when=when)
         self._octaves = octaves
         self.reset()
 

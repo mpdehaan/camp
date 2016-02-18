@@ -31,10 +31,10 @@ class ScaleFollower(Member):
     while playing back it would start over at the beginning of the new scale.
     """
 
-    def __init__(self, lengths=None, channel=None):
+    def __init__(self, lengths=None, channel=None, when=True):
 
 
-        super().__init__(channel=channel)
+        super().__init__(channel=channel, when=when)
 
 
         self.previous_scale = None
