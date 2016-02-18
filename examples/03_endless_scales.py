@@ -35,11 +35,17 @@ def play():
     scale1 = scale("c6 major")
     scale2 = scale("c6 minor")
     scale_choices = [ dict(scale=scale1, beats=7), dict(scale=scale2, beats=7) ]
+
     source = ScaleSource(scales=Endlessly(scale_choices))
+
+    # note: the syntax is simpler to just play ONE scale repeatedly, and you'll see this
+    # done more in future examples.  Because we don't need to stay in one scale for N beats
+    # before moving on to another, we don't need all the extra info.
+    # source = ScaleSource(scales=scale1)
 
     # the scale follower will play the first 7 notes in each scale, whatever the current
     # scale is.
-    follower = ScaleFollower(lengths=Endlessly([7]), channel=1)
+    follower = ScaleFollower(lengths=7, channel=1)
     source.chain([follower, output])
 
     conductor = Conductor(signal=[source], performance=output)

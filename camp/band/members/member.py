@@ -58,10 +58,10 @@ class Member(object):
                 try:
                     yield item.draw()
                 except StopIteration:
-                    print("DRAW EXHAUSTED")
                     return
         else:
-            raise Exception("do not know how to draw from data source: %s" % item)
+            while True:
+                yield item
 
     def send_to(self, obj):
         """
