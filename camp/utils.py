@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+import importlib
+
 def loop_around(alist):
     """
     Returns a generator that keeps looping around a pattern
@@ -41,3 +43,21 @@ def roll_right(x):
     first = new_list.pop()
     new_list.insert(0, first)
     return new_list
+
+def instance_produce(namespace, class_name, args, kwargs):
+    """
+    Produce a class by name.
+    """
+    mod= importlib.import_module(namespace)
+    cls = getattr(mod, class_name.title())
+    return cls(*args, **kwargs)
+
+def exclude_dict(orig, keys):
+    """
+    Given a dictionary, return a new one without certain keys.
+    """
+    new = dict()
+    for (k,v) in orig.items():
+        if k not in keys:
+            new[k] = v
+    return new
