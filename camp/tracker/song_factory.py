@@ -26,7 +26,7 @@ from camp.band.members.performance import Performance
 
 class SongFactory(object):
 
-    __slots__ = [ 'defaults', 'fx_busses', 'scenes', 'instruments', 'patterns' ]
+    __slots__ = [ 'defaults', 'fx_buses', 'scenes', 'instruments', 'patterns' ]
 
     def __init__(self, name=None, author=None):
         self.defaults = dict()
@@ -35,35 +35,36 @@ class SongFactory(object):
         # by name, a dict of pattern objects
         self.patterns = dict()
         # by name, a  list of instantiated camp.band.member objects
-        self.fx_busses = None
+        self.fx_buses = dict()
         # by name, a dict of scene objects
         # scene objects contain chain management code
-        self.scenes = None
+        self.scenes = dict()
 
     def set(self, *items):
 
         for item in items:
-
             if hasattr(item, '__call__'):
                 item = item(self)
-
             item._factory = self
             if isinstance(item, Defaults):
-                self.defaults.update(item.as_dict())
+                which = self.defaults
             elif isinstance(item, FxBuses):
-                self.fx_busses = item
+                which = self.fx_buses
             elif isinstance(item, Instruments):
-                self.instruments = item
+                which = self.instruments
             elif isinstance(item, Scenes):
-                self.scenes = item
+                which = self.scenes
             elif isinstance(item, Patterns):
-                self.patterns = item
+                which = self.patterns
             else:
                 raise Exception("unknown object type: %s" % item)
+            which.update(item.as_dict())
 
     def handle_scene(self, scene_name, play=False):
 
-        scene = self.scenes.get_scene(scene_name)
+        scene = self.scenes.get(scene_name)
+        if scene is None:
+            raise Exception("no such scene: %s" % scene_name)
         conductor = Conductor(signal=scene.get_signals(), output=scene.get_output())
         if play:
             conductor.play()
