@@ -15,29 +15,105 @@ limitations under the License.
 """
 
 from camp.band.members.scale_source import ScaleSource
-from camp.core.scale import scale
+from camp.band.members.performance import Performance
+from camp.core.scale import scale as core_scale
 
 class Scene(object):
 
-    def __init__(self, scale=None, pre_fx=None, post_fx=None, patterns=None, bar_count=None):
+    def __init__(self, bpm=None, scale=None, pre_fx=None, post_fx=None, patterns=None, bar_count=None):
 
         self.scale = scale
+        self.bpm = None
         self.pre_fx = pre_fx
         self.post_fx = post_fx
         self.patterns = patterns
         self.bar_count = bar_count
 
         self._factory = None # set up by scenes.py
-        self._scale_source = ScaleSource(scale=scale(self.scale))
+        self._scale_source = ScaleSource(scales=core_scale(self.scale))
         self._output = None
+        self._players = dict()
 
     def build(self):
 
-        # using self._factory ...
         self._build_output()
-        self._build_pre_fx_chains()
-        self._build_post_fx_chains()
-        self._build_instruments()
+        self._build_fx_chains()
+        self._build_players()
+        self._build_interconnects()
+
+    def _build_output(self):
+
+        # FIXME: the system uses stop_seconds to cap a scene at a given number of seconds
+        # but we are really more interested in beats.  We probably want to attach a new timer
+        # instance to the output to make this work instead, until then stop_seconds is hard coded
+        # for DEBUG only and should be removed.  This should use defaults/scene_max_bars and bars on
+        # the scene object.
+
+        if self.bpm is None:
+            self.bpm = self._factory.defaults['bpm']
+        self._output = Performance(bpm=self.bpm, stop_seconds = 10)
+
+    def _build_fx_chains(self):
+        for (chain_name, items) in self._factory.fx_buses.items():
+            previous = None
+            for item in items:
+                if previous is not None:
+                    previous.sends = []
+                    previous.send_to(item)
+                previous = item
+
+    def _build_players(self):
+        for (instrument_name, pattern_list) in self.patterns:
+            instrument = self._factory.instruments[instrument_name]
+            channel = self.instrument.channel
+            notation = self.instrument.notation
+            sources = []
+            for pattern_name in pattern_list:
+                pattern = self._factory.patterns.get(pattern_name, None)
+
+                real_pattern = None
+                if notation == 'roman':
+                    real_pattern = Roman(symbols=pattern)
+                elif notation == 'literal':
+                    real_pattern = Literal(symbols=pattern)
+                else:
+                    raise Exception("unknown notation type for instrument: %s" % instrument_name)
+                sources.append(real_pattern)
+
+            self._players[instrument_name] = Ordered(sources=[sources])
+
+    def _stitch_fx_chain(assigments, from_node, to_node):
+
+        fx_chain_name = assignments[instrument_name]
+        fx_chain = self._factory.fx_buses[fx_chain_name]
+        head = fx_chain[0]
+        tail = fx_chain[-1]
+        from_node.send_to(head)
+        tail.send_to(to_node)
+
+    def _build_interconnects(self):
+
+        for (instrument_name, player) in self._players.items():
+
+            player = self._players[instrument_name]
+
+            # TODO: consider whether it makes sense for a FxBus to connect to another FxBus
+            # ignoring for now.
+
+            if instrument_name not in self.pre_fx:
+                # connect directly to source
+                self.source.send_to(self._players[instrument_name])
+            else:
+                # ensure prefx is coupled to source and tail is coupled to output
+                self._stitch_fx_chain(self.pre_fx, source, player)
+
+
+            if instrument_name not in self.post_fx:
+                # connect directly to output
+                player.send_to(self.output)
+            else:
+                # ensure player is coupled to head of post fx and tail is coupled to output
+                self._stitch_fx_chain(self.post_fx, player, output)
 
     def get_signals(self):
         return [ self._scale_source ]
