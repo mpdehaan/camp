@@ -23,24 +23,45 @@ from camp.utils import instance_produce, exclude_dict
 
 class FxBus(object):
 
-    def __init__(self, param_list):
+    def __init__(self):
 
         self._nodes = []
 
-        if type(param_list) != list:
-            raise Exception("The constructor to FxBus expects a list of dicts, got: %s" % param_list)
+    def set(self, param_list):
 
-        for params in param_list:
+        def callback(song):
 
-            if type(params) != dict:
-                raise Exception("The constructor to FxBus expects a list of dicts, got element: %s" % params)
+            if type(param_list) != list:
+                raise Exception("The constructor to FxBus expects a list of dicts, got: %s" % param_list)
 
-            module = params.get('module', None)
+            for params in param_list:
 
-            if module is None:
-                raise Exception("'module' required in FxBus")
+                if type(params) != dict:
+                    raise Exception("The constructor to FxBus expects a list of dicts, got element: %s" % params)
 
-            namespace = "camp.band.members.%s" % module
-            print("NAMESPACE=%s" % namespace)
-            instance = instance_produce(namespace, module, [], exclude_dict(params, 'module'))
-            self._nodes.append(instance)
+                module = params.get('module', None)
+                if module is None:
+                    raise Exception("'module' required in FxBus")
+
+                    namespace = "camp.band.members.%s" % module
+
+                    params_out = dict()
+                    for (k,v) in params.items():
+                        if k == 'module':
+                            continue
+                            if isinstance(v, str):
+                                if v not in self._factory.patterns:
+                                    raise Exception("referenced pattern is not defined: %s" % v)
+                                else:
+                                    v = self._factory.patterns[v]
+                                    params_out[k] = v
+
+                    instance = instance_produce(namespace, module, [], params_out)
+                    self._nodes.append(instance)
+
+            return self
+
+        return callback
+
+    def nodes(self):
+        return self._nodes

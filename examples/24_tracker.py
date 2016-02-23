@@ -17,6 +17,7 @@ limitations under the License.
 from camp.tracker.song_factory import SongFactory
 from camp.tracker.defaults import Defaults
 from camp.tracker.instruments import Instruments
+from camp.tracker.instrument import Instrument
 from camp.tracker.patterns import RandomPatterns, BasicPatterns, EndlessPatterns
 from camp.tracker.fx_buses import FxBuses
 from camp.tracker.fx_bus import FxBus
@@ -54,9 +55,9 @@ def play():
 
         # -- INSTRUMENTS --
         Instruments().set(
-            strings = 1,
-            lead    = 2,
-            drums   = 3
+            strings = Instrument(channel=1),
+            lead    = Instrument(channel=2),
+            drums   = Instrument(channel=3, notation='literal')
         ),
 
         # -- PATTERNS --
@@ -79,31 +80,31 @@ def play():
 
         # --- FX ---
         FxBuses().set(
-            arpeggiate_strings = FxBus([
+            arpeggiate_strings = FxBus().set([
                 dict(module='arp', splits=[4], octaves='transpose_pt1', mode='locked')
             ]),
-            random_velocity_and_duration = FxBus([
+            random_velocity_and_duration = FxBus().set([
                 dict(module='velocity', levels='velocity_pt1'),
                 dict(module='duration', lengths='duration_pt1')
             ]),
-            chordify_lead = FxBus([
+            chordify_lead = FxBus().set([
                 dict(module='chordify', types='chordify_pt1', when='chordify_chance_pt1')
             ]),
-            tranpose_lead = FxBus([
+            tranpose_lead = FxBus().set([
                 dict(module='transpose', octaves='transpose_pt1')
             ])
         ),
 
         # -- SCENES --
         Scenes().set(
-            overture = Scene(
+            overture = Scene().set(
                 scale = "C4 major",
                 bar_count = 12,
                 pre_fx = dict(strings='random_velocity_and_duration'),
                 post_fx = dict(strings='arpeggiate_strings', lead='transpose_lead'),
                 patterns = dict(strings='basic_chords', lead=[ 'some_jam_pat', 'some_jam2_pat' ])
             ),
-            llama_theme = Scene(
+            llama_theme = Scene().set(
                 scale = "C4 major",
                 bar_count = 12,
                 pre_fx = dict(strings = 'random_velocity_and_duration'),

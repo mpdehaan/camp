@@ -26,9 +26,14 @@ class Scenes(object):
     def set(self, **scenes):
 
         def callback(song):
+
             for (scene_name, scene) in scenes.items():
+
+                if getattr(scene, '__call__', None) is not None:
+                    scene = scene(song)
                 if not isinstance(scene, Scene):
-                    raise Exception("only a Scene is allowed inside of Scenes set method")
+                    raise Exception("only a Scene is allowed inside of Scenes set method, got %s" % scene)
+                    
                 self._scenes[scene_name] = scene
                 scene._factory = song
                 scene.build()

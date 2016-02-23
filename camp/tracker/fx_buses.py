@@ -27,9 +27,12 @@ class FxBuses(object):
 
         def callback(song):
             for (bus_name, bus) in buses.items():
+                if getattr(bus, '__call__', None) is not None:
+                    bus = bus(song)
                 if not isinstance(bus, FxBus):
-                    raise Exception("only a FxBus is allowed inside of FxBusses set method")
+                    raise Exception("only a FxBus is allowed inside of FxBusses set method, got: %s" % bus)
                 self._buses[bus_name] = bus
+                bus._factory = song
             return self
 
         return callback

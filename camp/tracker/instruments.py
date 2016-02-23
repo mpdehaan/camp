@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+from camp.tracker.instrument import Instrument
+
 class Instruments(object):
 
     __slots__ = [ "_instruments", "_factory" ]
@@ -24,10 +26,18 @@ class Instruments(object):
     def set(self, **kwargs):
 
         def callback(song):
-            for (instrument_name, midi_channel) in kwargs.items():
-                if type(midi_channel) != int:
-                    raise Exception("instrument midi channel requires an integer")
-                self._instruments[instrument_name] = midi_channel
+
+            for (instrument_name, instrument) in kwargs.items():
+
+                if getattr(instrument, '__call__', None) is not None:
+                    print("YAY?")
+                    instrument = instrument(song)
+
+                if type(instrument) != Instrument:
+                    raise Exception("instruments collection requires an instrument")
+
+                self._instruments[instrument_name] = instrument
+
             return self
         return callback
 

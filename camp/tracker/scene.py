@@ -20,19 +20,29 @@ from camp.core.scale import scale as core_scale
 
 class Scene(object):
 
-    def __init__(self, bpm=None, scale=None, pre_fx=None, post_fx=None, patterns=None, bar_count=None):
+    def __init__(self, **kwargs):
+        self.set(**kwargs)
 
-        self.scale = scale
-        self.bpm = None
-        self.pre_fx = pre_fx
-        self.post_fx = post_fx
-        self.patterns = patterns
-        self.bar_count = bar_count
+    def set(self, bpm=None, scale=None, pre_fx=None, post_fx=None, patterns=None, bar_count=None):
 
-        self._factory = None # set up by scenes.py
-        self._scale_source = ScaleSource(scales=core_scale(self.scale))
-        self._output = None
-        self._players = dict()
+        def callback(song):
+
+            self._factory = song
+            self.scale = scale
+            self.bpm = None
+            self.pre_fx = pre_fx
+            self.post_fx = post_fx
+            self.patterns = patterns
+            self.bar_count = bar_count
+
+            self._factory = None # set up by scenes.py
+            self._scale_source = ScaleSource(scales=core_scale(self.scale))
+            self._output = None
+            self._players = dict()
+
+            return self
+
+        return callback
 
     def build(self):
 
@@ -54,30 +64,37 @@ class Scene(object):
         self._output = Performance(bpm=self.bpm, stop_seconds = 10)
 
     def _build_fx_chains(self):
-        for (chain_name, items) in self._factory.fx_buses.items():
+        for (chain_name, bus) in self._factory.fx_buses.items():
             previous = None
-            for item in items:
+            nodes = bus.nodes()
+            for item in nodes:
                 if previous is not None:
                     previous.sends = []
                     previous.send_to(item)
                 previous = item
 
     def _build_players(self):
-        for (instrument_name, pattern_list) in self.patterns:
+
+        for (instrument_name, pattern_list) in self.patterns.items():
+
             instrument = self._factory.instruments[instrument_name]
-            channel = self.instrument.channel
-            notation = self.instrument.notation
+            channel = instrument.channel
+            notation = instrument.notation
             sources = []
+
             for pattern_name in pattern_list:
+
                 pattern = self._factory.patterns.get(pattern_name, None)
 
                 real_pattern = None
+
                 if notation == 'roman':
                     real_pattern = Roman(symbols=pattern)
                 elif notation == 'literal':
                     real_pattern = Literal(symbols=pattern)
                 else:
                     raise Exception("unknown notation type for instrument: %s" % instrument_name)
+
                 sources.append(real_pattern)
 
             self._players[instrument_name] = Ordered(sources=[sources])
@@ -85,7 +102,7 @@ class Scene(object):
     def _stitch_fx_chain(assigments, from_node, to_node):
 
         fx_chain_name = assignments[instrument_name]
-        fx_chain = self._factory.fx_buses[fx_chain_name]
+        fx_chain = self._factory.fx_buses[fx_chain_name].nodes()
         head = fx_chain[0]
         tail = fx_chain[-1]
         from_node.send_to(head)
