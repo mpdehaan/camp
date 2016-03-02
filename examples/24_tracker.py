@@ -29,11 +29,13 @@ from camp.tracker.scene import Scene
 # AND IS NOT YET OPERATIONAL.  This also applies to the whole camp.tracker
 # namespace.
 
-# The next step after this is to build the generative API *on top* of the Tracker API
+# One possible next step after this is to build the generative API *on top* of the Tracker API
 # as this manages instrument routing for us and is therefore easier to think about
+#
+# We'll probably build a ASCII TUI sequencer on top of this first.
 # ----------------------------------------------------------------------------------
 
-# a demo of using the Tracker API from Python to define compositions
+# a demo of using the Tracker "DSL" API from Python to define compositions
 # with somewhat less flexible routing but easier data entry
 # SUBJECT TO CHANGE - MASSIVELY
 
@@ -72,10 +74,18 @@ def play():
 
         RandomPatterns(mode='choice').set(
             random_pt1 = "1 2 3 4 5 6 7",
-            transpose_pt1 = [ 2, 0, -2 ]
+            transpose_pt1 = [ 2, 0, -2 ],
+            # implies we want a new kind of generator below...
+            velocity_pt1 = [ 127, 126, 125, 124, 123, 122, 121, 120, 119, 118, 117, 116, 115, 114, 113, 112, 111, 110 ]
+        ),
+
+        RandomPatterns(mode='probability').set(
+            chordify_chance_pt1 = [ 0, 0.5, 0.25, 0.125 ]
         ),
 
         EndlessPatterns().set(
+            duration_pt1 = [ 0.25, 0.25, 0.125, 0.125 ],
+            chordify_pt1 = [ "major", "major", "minor", "major", "pow", "aug"]
         ),
 
         # --- FX ---
@@ -117,7 +127,8 @@ def play():
 
     # -- GO! --
 
-    scene_names = ['overture', 'llama_theme', 'bridge', 'chorus', 'verse', 'chorus', 'verse', 'ending']
+    # scene_names = ['overture', 'llama_theme', 'bridge', 'chorus', 'verse', 'chorus', 'verse', 'ending']
+    scene_names = ['overture', 'llama_theme' ]
     song.play(scene_names)
 
 

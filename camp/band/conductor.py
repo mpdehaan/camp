@@ -53,6 +53,8 @@ class Conductor(object):
         """
 
         assert type(signal) == list
+        print("PERF=%s" % performance)
+
         assert type(performance) == Performance
 
         self.realtime = Realtime()

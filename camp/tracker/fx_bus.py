@@ -15,6 +15,7 @@ limitations under the License.
 """
 
 from camp.utils import instance_produce, exclude_dict
+from camp.band.selectors.endlessly import Endlessly
 
 # FxBus([
 #     dict(module='velocity', levels='velocity_pt1'),
@@ -31,10 +32,17 @@ class FxBus(object):
 
         def callback(song):
 
+            # FIXME: in any function where song is passed in, remove references to _factory in all files
+            self._factory = song
+
+            print("-- FORMING MODULES --")
+
             if type(param_list) != list:
                 raise Exception("The constructor to FxBus expects a list of dicts, got: %s" % param_list)
 
             for params in param_list:
+
+                print("PARAMS: %s" % params)
 
                 if type(params) != dict:
                     raise Exception("The constructor to FxBus expects a list of dicts, got element: %s" % params)
@@ -43,21 +51,28 @@ class FxBus(object):
                 if module is None:
                     raise Exception("'module' required in FxBus")
 
-                    namespace = "camp.band.members.%s" % module
+                namespace = "camp.band.members.%s" % module
 
-                    params_out = dict()
-                    for (k,v) in params.items():
-                        if k == 'module':
-                            continue
-                            if isinstance(v, str):
-                                if v not in self._factory.patterns:
-                                    raise Exception("referenced pattern is not defined: %s" % v)
-                                else:
-                                    v = self._factory.patterns[v]
-                                    params_out[k] = v
+                params_out = dict()
 
-                    instance = instance_produce(namespace, module, [], params_out)
-                    self._nodes.append(instance)
+                for (k,v) in params.items():
+
+                    if k == 'module':
+                        pass
+                    elif isinstance(v, str):
+                        # FIXME: DO WE WANT TO HAVE A SPECIFIC SYNTAX TO DENOTE A PATTERN LOOKUP RATHER THAN DOING IT IMPLICITLY?
+                        # (yes, shouty, maybe important)
+                        if v in song.patterns:
+                            v = song.patterns[v]
+                        params_out[k] = v
+                    elif type(v) == list:
+                        params_out[k] = Endlessly(v)
+                    else:
+                        raise Exception("unknown pattern type: %s" % v)
+
+                instance = instance_produce(namespace, module, [], params_out)
+                print("--> INSTANCE: %s" % instance)
+                self._nodes.append(instance)
 
             return self
 

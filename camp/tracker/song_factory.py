@@ -65,9 +65,9 @@ class SongFactory(object):
         scene = self.scenes.get(scene_name)
         if scene is None:
             raise Exception("no such scene: %s" % scene_name)
-        conductor = Conductor(signal=scene.get_signals(), output=scene.get_output())
+        conductor = Conductor(signal=scene.get_signals(), performance=scene.get_output())
         if play:
-            conductor.play()
+            conductor.start()
 
     def play(self, scene_names):
 

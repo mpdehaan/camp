@@ -112,6 +112,7 @@ class Scene(object):
             # FIXME: typed exceptions everywhere to make it easier for higher level apps
             raise Exception("fx bus not found: %s" % fx_chain_name)
         fx_chain = self._factory.fx_buses[fx_chain_name].nodes()
+        print("NODES: %s" % fx_chain)
         head = fx_chain[0]
         tail = fx_chain[-1]
         from_node.send_to(head)
@@ -145,4 +146,4 @@ class Scene(object):
         return [ self._scale_source ]
 
     def get_output(self):
-        return [ self._output ]
+        return self._output
