@@ -55,9 +55,9 @@ def play():
 
         # -- INSTRUMENTS --
         Instruments().set(
-            strings = Instrument(channel=1),
-            lead    = Instrument(channel=2),
-            drums   = Instrument(channel=3, notation='literal')
+            strings = Instrument().set(channel=1),
+            lead    = Instrument().set(channel=2),
+            drums   = Instrument().set(channel=3, notation='literal')
         ),
 
         # -- PATTERNS --
@@ -90,7 +90,7 @@ def play():
             chordify_lead = FxBus().set([
                 dict(module='chordify', types='chordify_pt1', when='chordify_chance_pt1')
             ]),
-            tranpose_lead = FxBus().set([
+            transpose_lead = FxBus().set([
                 dict(module='transpose', octaves='transpose_pt1')
             ])
         ),
@@ -117,7 +117,7 @@ def play():
 
     # -- GO! --
 
-    scene_names = ['overture', 'llama_theme']
+    scene_names = ['overture', 'llama_theme', 'bridge', 'chorus', 'verse', 'chorus', 'verse', 'ending']
     song.play(scene_names)
 
 

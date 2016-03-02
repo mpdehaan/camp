@@ -16,12 +16,15 @@ limitations under the License.
 
 from camp.band.members.scale_source import ScaleSource
 from camp.band.members.performance import Performance
+from camp.band.members.roman import Roman
+from camp.band.members.literal import Literal
+from camp.band.members.ordered import Ordered
 from camp.core.scale import scale as core_scale
 
 class Scene(object):
 
-    def __init__(self, **kwargs):
-        self.set(**kwargs)
+    def __init__(self):
+        pass
 
     def set(self, bpm=None, scale=None, pre_fx=None, post_fx=None, patterns=None, bar_count=None):
 
@@ -97,11 +100,17 @@ class Scene(object):
 
                 sources.append(real_pattern)
 
-            self._players[instrument_name] = Ordered(sources=[sources])
+            self._players[instrument_name] = Ordered(sources=sources)
 
-    def _stitch_fx_chain(assigments, from_node, to_node):
+    def _stitch_fx_chain(self, assignments, instrument_name, from_node, to_node):
+
+        print("ASSIGNMENTS: %s" % assignments)
+        print("FX BUSES: %s" % self._factory.fx_buses)
 
         fx_chain_name = assignments[instrument_name]
+        if fx_chain_name not in self._factory.fx_buses:
+            # FIXME: typed exceptions everywhere to make it easier for higher level apps
+            raise Exception("fx bus not found: %s" % fx_chain_name)
         fx_chain = self._factory.fx_buses[fx_chain_name].nodes()
         head = fx_chain[0]
         tail = fx_chain[-1]
@@ -119,18 +128,18 @@ class Scene(object):
 
             if instrument_name not in self.pre_fx:
                 # connect directly to source
-                self.source.send_to(self._players[instrument_name])
+                self._scale_source.send_to(self._players[instrument_name])
             else:
                 # ensure prefx is coupled to source and tail is coupled to output
-                self._stitch_fx_chain(self.pre_fx, source, player)
+                self._stitch_fx_chain(self.pre_fx, instrument_name, self._scale_source, player)
 
 
             if instrument_name not in self.post_fx:
                 # connect directly to output
-                player.send_to(self.output)
+                player.send_to(self._output)
             else:
                 # ensure player is coupled to head of post fx and tail is coupled to output
-                self._stitch_fx_chain(self.post_fx, player, output)
+                self._stitch_fx_chain(self.post_fx, instrument_name, player, self._output)
 
     def get_signals(self):
         return [ self._scale_source ]

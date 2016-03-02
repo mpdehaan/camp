@@ -29,13 +29,12 @@ class Instruments(object):
 
             for (instrument_name, instrument) in kwargs.items():
 
-                if getattr(instrument, '__call__', None) is not None:
-                    print("YAY?")
-                    instrument = instrument(song)
+                instrument = instrument(song)
 
                 if type(instrument) != Instrument:
                     raise Exception("instruments collection requires an instrument")
 
+                print("AIGHT")
                 self._instruments[instrument_name] = instrument
 
             return self

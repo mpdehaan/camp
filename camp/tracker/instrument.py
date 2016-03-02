@@ -23,13 +23,13 @@ VALID_NOTATIONS = [ 'roman', 'literal' ]
 class Instrument(object):
 
     def __init__(self, **kwargs):
-        self.set(**kwargs)
+        pass
 
     def set(self, channel=None, notation='roman'):
-        print("SET!")
+        print("INSTRUMENT SET!")
 
         def callback(song):
-            print("GO!")
+            print("GO CALLBACK!")
 
             self.channel = channel
             self.notation = notation
@@ -38,7 +38,7 @@ class Instrument(object):
 
             if type(self.channel) != int:
                 raise Exception("channel must be set, as an integer, got: %s" % self.channel)
-            if notation not in VALID_NOTATION:
+            if notation not in VALID_NOTATIONS:
                 raise Exception("invalid notation type: %s" % notation)
 
             return self
