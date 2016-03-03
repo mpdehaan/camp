@@ -127,6 +127,12 @@ class Arp(Member):
 
     def on_signal(self, event, start_time, end_time):
 
+        if event.notes is None or len(event.notes) == 0:
+            # FIXME: should have a function for this boilerplate pattern and use it in all instances
+            for send in self.sends:
+                send.signal(event, start_time, end_time)
+            return event
+
         produced = []
 
         """

@@ -22,7 +22,7 @@ VALID_NOTATIONS = [ 'roman', 'literal' ]
 
 class Instrument(object):
 
-    def __init__(self, **kwargs):
+    def __init__(self):
         pass
 
     def set(self, channel=None, notation='roman'):
@@ -41,6 +41,7 @@ class Instrument(object):
             if notation not in VALID_NOTATIONS:
                 raise Exception("invalid notation type: %s" % notation)
 
+            print("MY CHANNEL IS %s" % self.channel)
             return self
 
         return callback

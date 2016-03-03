@@ -30,7 +30,7 @@ def play():
     # here's an example that might *START* to approximate a song.
     # here we have two instruments playing on two different tracks.
 
-    output = Performance(bpm=120, stop_seconds=10)
+    output = Performance(bpm=60, stop_seconds=10)
 
     # both instruments will use the same scale at the same time, but there is a scale
     # change as we cycle between scales every 24 beats

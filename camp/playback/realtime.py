@@ -49,11 +49,11 @@ class Realtime(object):
     #    return [cc, volume & 0x7F]
 
     def note_off(self, channel, note_number, velocity):
-        result = [ C.NOTE_OFF | channel, note_number, velocity ]
+        result = [ C.NOTE_OFF | channel - 1, note_number, velocity ]
         return result
 
     def note_on(self, channel, note_number, velocity):
-        result =  [ C.NOTE_ON | channel, note_number, velocity ]
+        result =  [ C.NOTE_ON | channel - 1, note_number, velocity ]
         return result
 
     def play_event(self, event):

@@ -34,6 +34,7 @@ class Roman(Member):
 
         super().__init__(channel=channel, when=when)
         self._symbols = symbols
+        print("ROMAN CONSTRUCTED WITH SYMBOLS=%s" % symbols)
         self.reset()
 
     def reset(self):
@@ -49,10 +50,12 @@ class Roman(Member):
 
         try:
             symbol = next(self.symbol_looper)
+            print("ROMAN DRAW: %s" % symbol)
         except StopIteration:
             return []
 
         event.notes = RomanNotation(scale=scale).do_notes(symbol)
+        print("ROMAN NOTES: %s" % event.notes)
 
         for send in self.sends:
             send.signal(event, start_time, end_time)

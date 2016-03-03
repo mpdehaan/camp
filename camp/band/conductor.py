@@ -72,7 +72,7 @@ class Conductor(object):
         midi_events = []
         if event.notes is not None:
             if event.channel is None:
-                raise Exception("missing channel assignment somewhere in the pipeline")
+                raise Exception("missing channel assignment somewhere in the pipeline: %s" % event.channel)
             for note in event.notes:
                 if event.off == True:
                     midi_events.append(self.realtime.note_off(event.channel, note.note_number(), event.velocity))

@@ -69,7 +69,8 @@ def play():
 
         BasicPatterns().set(
             some_jam_pt1 = "4 6 1 6 | 4 4 4 4 | 6 6 4 1 | 1 4 6 4 | 6 4 4 4 | 4 6 4 6",
-            some_jam_pt2 = "1 2 3 4 | 3 2 5 1 | 1 1 7 6 | 5 4 3 2 | 1 2 3 4 | 5 6 7 1"
+            some_jam_pt2 = "1 2 3 4 | 3 2 5 1 | 1 1 7 6 | 5 4 3 2 | 1 2 3 4 | 5 6 7 1",
+            basic_chords = "I IV V I"
         ),
 
         RandomPatterns(mode='choice').set(
@@ -112,14 +113,14 @@ def play():
                 bar_count = 12,
                 pre_fx = dict(strings='random_velocity_and_duration'),
                 post_fx = dict(strings='arpeggiate_strings', lead='transpose_lead'),
-                patterns = dict(strings='basic_chords', lead=[ 'some_jam_pat', 'some_jam2_pat' ])
+                patterns = dict(strings='basic_chords', lead=[ 'some_jam_pt2', 'some_jam_pt1' ])
             ),
             llama_theme = Scene().set(
                 scale = "C4 major",
                 bar_count = 12,
                 pre_fx = dict(strings = 'random_velocity_and_duration'),
                 post_fx = dict(strings = 'arpeggiate_strings', lead = 'transpose_lead'),
-                patterns = dict(strings = 'basic_chords', lead = [ 'some_jam_pat', 'some_jam2_pat' ])
+                patterns = dict(strings = 'basic_chords', lead = [ 'some_jam_pt1', 'some_jam_pt2' ])
             )
         )
 

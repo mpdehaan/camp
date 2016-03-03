@@ -29,7 +29,13 @@ class Instruments(object):
 
             for (instrument_name, instrument) in kwargs.items():
 
+                print("CREATING INSTRUMENT: %s" % instrument)
+
                 instrument = instrument(song)
+                print(instrument.channel)
+                if instrument.channel is None:
+                    raise Exception("DEBUG: channel is None")
+
 
                 if type(instrument) != Instrument:
                     raise Exception("instruments collection requires an instrument")

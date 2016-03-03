@@ -16,29 +16,25 @@ limitations under the License.
 
 from camp.band.members.member import Member
 
-class Transpose(Member):
+class Channel(Member):
 
+    """
+    A very lame plugin that only sets the MIDI channel.  You can set this on
+    any event at all, so this is basically a no-op.  It is needed by the tracker
+    implementation and may not have direct application otherwise, so you can
+    pretend it does not exist!
+    """
 
-    def __init__(self, channel=None, octaves=None, when=True):
-
-        # TODO: later also support step transpositions
-        # or even grabbing the next note in the scale
-
+    def __init__(self, channel=None, when=True):
+        assert channel is not None
         super().__init__(channel=channel, when=when)
-        self._octaves = octaves
         self.reset()
 
     def reset(self):
-        self.octaves_looper = self.draw_from(self._octaves)
+        pass
 
 
     def on_signal(self, event, start_time, end_time):
-
-        amount = next(self.octaves_looper)
-
-        if event.notes is not None and len(event.notes) > 0:
-            notes = [ n.transpose(octaves=amount) for n in event.notes ]
-            event.notes = notes
 
         for send in self.sends:
             send.signal(event, start_time, end_time)

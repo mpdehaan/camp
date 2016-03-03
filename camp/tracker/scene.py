@@ -16,6 +16,7 @@ limitations under the License.
 
 from camp.band.members.scale_source import ScaleSource
 from camp.band.members.performance import Performance
+from camp.band.members.channel import Channel
 from camp.band.members.roman import Roman
 from camp.band.members.literal import Literal
 from camp.band.members.ordered import Ordered
@@ -85,14 +86,21 @@ class Scene(object):
             notation = instrument.notation
             sources = []
 
+            print("PATTERN LIST= %s" % pattern_list)
+            if isinstance(pattern_list, str):
+                pattern_list = [ pattern_list ]
+
             for pattern_name in pattern_list:
 
                 pattern = self._factory.patterns.get(pattern_name, None)
+                if pattern is None:
+                    raise Exception("pattern not found: %s" % pattern_name)
 
                 real_pattern = None
 
                 if notation == 'roman':
                     real_pattern = Roman(symbols=pattern)
+                    print("RP=%s" % pattern)
                 elif notation == 'literal':
                     real_pattern = Literal(symbols=pattern)
                 else:
@@ -104,43 +112,60 @@ class Scene(object):
 
     def _stitch_fx_chain(self, assignments, instrument_name, from_node, to_node):
 
-        print("ASSIGNMENTS: %s" % assignments)
-        print("FX BUSES: %s" % self._factory.fx_buses)
 
         fx_chain_name = assignments[instrument_name]
         if fx_chain_name not in self._factory.fx_buses:
             # FIXME: typed exceptions everywhere to make it easier for higher level apps
             raise Exception("fx bus not found: %s" % fx_chain_name)
+
         fx_chain = self._factory.fx_buses[fx_chain_name].nodes()
-        print("NODES: %s" % fx_chain)
+
+        # FIXME: BOOKMARK: I think need to implement COPY methods here as reuse of the same chain may cause
+        # some interestingness... maybe.  Nodes should return copies of the objects (?)
+
         head = fx_chain[0]
         tail = fx_chain[-1]
+        print("FROM %s to %s" % (from_node, head))
+        print("AND FROM %s to %s" % (tail, to_node))
         from_node.send_to(head)
         tail.send_to(to_node)
 
     def _build_interconnects(self):
 
         for (instrument_name, player) in self._players.items():
+            # FIXME: all of this stuff should use python standard logging
+            print("---")
+            print("CONFIGURING INSTRUMENT CHAIN: %s" % instrument_name)
+            print(dir(player))
+
 
             player = self._players[instrument_name]
+            #import pdb; pdb.set_trace()
 
             # TODO: consider whether it makes sense for a FxBus to connect to another FxBus
             # ignoring for now.
 
             if instrument_name not in self.pre_fx:
                 # connect directly to source
+                print("PRE DIRECT CONNECT")
                 self._scale_source.send_to(self._players[instrument_name])
             else:
                 # ensure prefx is coupled to source and tail is coupled to output
+                print("PRE CONNECT")
                 self._stitch_fx_chain(self.pre_fx, instrument_name, self._scale_source, player)
 
+            instrument = self._factory.instruments[instrument_name]
+            channel_assign = Channel(channel=instrument.channel)
+            player.send_to(channel_assign)
 
             if instrument_name not in self.post_fx:
                 # connect directly to output
-                player.send_to(self._output)
+                print("POST DIRECT CONNECT")
+                channel_assign.send_to(self._output)
             else:
                 # ensure player is coupled to head of post fx and tail is coupled to output
-                self._stitch_fx_chain(self.post_fx, instrument_name, player, self._output)
+                print("POST CONNECT")
+                self._stitch_fx_chain(self.post_fx, instrument_name, channel_assign, self._output)
 
     def get_signals(self):
         return [ self._scale_source ]

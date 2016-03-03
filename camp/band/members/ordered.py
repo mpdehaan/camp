@@ -57,7 +57,7 @@ class Ordered(Member):
         events = self._get_events_from_a_source(event, start_time, end_time)
 
         for event in events:
-            print("--")
+            print("> ORDERED PLAY: %s" % event)
             for send in self.sends:
                 print("SIGNAL SEND TO: %s" % send)
                 send.signal(event, start_time, end_time)
