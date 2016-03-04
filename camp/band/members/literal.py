@@ -32,6 +32,9 @@ class Literal(Member):
         self._symbols = symbols
         self.reset()
 
+    def copy(self):
+        return Literal(symbols=self._symbols, channel=self.channel, when=self._when)
+
     def reset(self):
 
         self.symbol_looper = self.draw_from(self._symbols)

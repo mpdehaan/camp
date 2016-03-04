@@ -87,6 +87,10 @@ class Arp(Member):
         self._subdivide_amounts = self.draw_from(splits)
         self._run_once = True
 
+    def copy(self):
+        return Arp(channel=self.channel, splits=self._splits, semitones=self._semitones, octaves=self._octaves, scale_notes=self._scale_notes,
+          rests=self._rests, mode=self._mode, when=self._when)
+
     def reset(self):
         # for now, I don't believe we need this, because of the way free and locked
         # are already coded.

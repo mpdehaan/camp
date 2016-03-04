@@ -44,6 +44,9 @@ class ScaleFollower(Member):
         self._lengths = lengths
         self.reset()
 
+    def copy(self):
+        return ScaleFollower(lengths=self._lengths, channel=self.channel, when=self._when)
+
     def reset(self):
         self.lengths_looper = self.draw_from(self._lengths)
 

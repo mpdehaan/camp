@@ -48,6 +48,9 @@ class Chordify(Member):
         self._types = types
         self.reset()
 
+    def copy(self):
+        return Chordify(types=self._types, channel=self.channel, when=self._when)
+
     def reset(self):
 
         self._which_chord = self.draw_from(self._types)

@@ -28,6 +28,10 @@ class Duration(Member):
         self._lengths = lengths
         self.reset()
 
+    def copy(self):
+        return Duration(lengths=self._lengths, channel=self.channel, when=self._when)
+        # BOOKMARK: I AM ADDING COPY CONSTRUCTORS NOW
+
     def reset(self):
 
         # question: not sure if this should respond to reset due to scale change

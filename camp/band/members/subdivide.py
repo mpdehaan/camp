@@ -50,6 +50,9 @@ class Subdivide(Member):
         self._splits = splits
         self.reset()
 
+    def copy(self):
+        return Subdivide(channel=self.channel, when=self._when, splits=self._splits)
+
     def reset(self):
 
         self._subdivide_amounts = self.draw_from(self._splits)

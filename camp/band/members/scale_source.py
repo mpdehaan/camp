@@ -39,6 +39,9 @@ class ScaleSource(Member):
         self._scales = scales
         self.reset()
 
+    def copy(self):
+        return ScaleSource(scales=self._scales, beats=self.beats, channel=self.channel, when=self._when)
+
     def reset(self):
         self.scale_spec_looper = self.draw_from(self._scales)
         self.scale_gen = self.scale_generator()

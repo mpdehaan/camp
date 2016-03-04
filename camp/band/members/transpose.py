@@ -28,6 +28,9 @@ class Transpose(Member):
         self._octaves = octaves
         self.reset()
 
+    def copy(self):
+        return Transpose(channel=self.channel, octaves=self._octaves, when=self._when)
+
     def reset(self):
         self.octaves_looper = self.draw_from(self._octaves)
 

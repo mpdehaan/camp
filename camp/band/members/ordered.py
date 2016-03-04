@@ -31,6 +31,9 @@ class Ordered(Member):
         self._sources = sources
         self.reset()
 
+    def copy(self):
+        return Ordered(channel=self.channel, when=self._when, sources=self._sources)
+
     def reset(self):
         self.sources_looper = self.draw_from(self._sources)
         self.current_source = next(self.sources_looper)

@@ -112,6 +112,9 @@ class Scene(object):
 
     def _stitch_fx_chain(self, assignments, instrument_name, from_node, to_node):
 
+        # SHOULD BE REMOVABLE
+        #if assignments is None or instrument_name not in assignments:
+        #    return
 
         fx_chain_name = assignments[instrument_name]
         if fx_chain_name not in self._factory.fx_buses:
@@ -145,7 +148,7 @@ class Scene(object):
             # TODO: consider whether it makes sense for a FxBus to connect to another FxBus
             # ignoring for now.
 
-            if instrument_name not in self.pre_fx:
+            if self.pre_fx is None or instrument_name not in self.pre_fx:
                 # connect directly to source
                 print("PRE DIRECT CONNECT")
                 self._scale_source.send_to(self._players[instrument_name])
@@ -158,7 +161,7 @@ class Scene(object):
             channel_assign = Channel(channel=instrument.channel)
             player.send_to(channel_assign)
 
-            if instrument_name not in self.post_fx:
+            if self.post_fx is None or instrument_name not in self.post_fx:
                 # connect directly to output
                 print("POST DIRECT CONNECT")
                 channel_assign.send_to(self._output)

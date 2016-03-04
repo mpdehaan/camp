@@ -46,6 +46,9 @@ class Permit(Member):
         self._when = when
         self.reset()
 
+    def copy(self):
+        return Permit(when=self._when, channel=self.channel)
+
     def reset(self):
 
         self._should_silence = self.draw_from(self._when)

@@ -37,6 +37,9 @@ class Roman(Member):
         print("ROMAN CONSTRUCTED WITH SYMBOLS=%s" % symbols)
         self.reset()
 
+    def copy(self):
+        return Roman(symbols=self._symbols, channel=self.channel, when=self._when)
+
     def reset(self):
 
         self.symbol_looper = self.draw_from(self._symbols)

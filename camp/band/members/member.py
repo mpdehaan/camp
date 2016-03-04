@@ -118,6 +118,9 @@ class Member(object):
 
         return (self, item)
 
+    def copy(self):
+        raise NotImplementedError()
+
     def signal(self, event, start_time, end_time):
         """
         Fires the beat or note events down through the chain.

@@ -30,6 +30,9 @@ class Channel(Member):
         super().__init__(channel=channel, when=when)
         self.reset()
 
+    def copy(self):
+        return Channel(channel=self.channel, when=self._when)
+
     def reset(self):
         pass
 

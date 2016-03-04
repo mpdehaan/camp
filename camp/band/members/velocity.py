@@ -28,6 +28,9 @@ class Velocity(Member):
         self._levels = levels
         self.reset()
 
+    def copy(self):
+        return Velocity(levels=self._levels, channel=self.channel, when=self._when)
+
     def reset(self):
 
         # question: not sure if this should respond to reset due to scale change

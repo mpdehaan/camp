@@ -79,4 +79,4 @@ class FxBus(object):
         return callback
 
     def nodes(self):
-        return self._nodes
+        return [ node.copy() for node in self._nodes ]

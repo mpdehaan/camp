@@ -59,67 +59,59 @@ def play():
         Instruments().set(
             strings = Instrument().set(channel=1),
             lead    = Instrument().set(channel=2),
-            drums   = Instrument().set(channel=3, notation='literal')
+            # drums   = Instrument().set(channel=3, notation='literal')
         ),
 
         # -- PATTERNS --
         RandomPatterns(mode='probability').set(
-            chordify_chance_pt = [ 0, 0.5 ]
+            # chordify_chance_pt = [ 0, 0.5 ]
         ),
 
         BasicPatterns().set(
             some_jam_pt1 = "4 6 1 6 | 4 4 4 4 | 6 6 4 1 | 1 4 6 4 | 6 4 4 4 | 4 6 4 6",
             some_jam_pt2 = "1 2 3 4 | 3 2 5 1 | 1 1 7 6 | 5 4 3 2 | 1 2 3 4 | 5 6 7 1",
-            basic_chords = "I IV V I"
         ),
 
         RandomPatterns(mode='choice').set(
-            random_pt1 = "1 2 3 4 5 6 7",
-            transpose_pt1 = [ 2, 0, -2 ],
+            # random_pt1 = "1 2 3 4 5 6 7",
             # implies we want a new kind of generator below...
-            velocity_pt1 = [ 127, 126, 125, 124, 123, 122, 121, 120, 119, 118, 117, 116, 115, 114, 113, 112, 111, 110 ]
+            # velocity_pt1 = [ 127, 126, 125, 124, 123, 122, 121, 120, 119, 118, 117, 116, 115, 114, 113, 112, 111, 110 ]
         ),
 
         RandomPatterns(mode='probability').set(
-            chordify_chance_pt1 = [ 0, 0.5, 0.25, 0.125 ]
+            # chordify_chance_pt1 = [ 0, 0.5, 0.25, 0.125 ]
         ),
 
         EndlessPatterns().set(
-            duration_pt1 = [ 0.25, 0.25, 0.125, 0.125 ],
-            chordify_pt1 = [ "major", "major", "minor", "major", "pow", "aug"]
+            transpose_pt1 = [ 2, 0, -2 ],
+            # duration_pt1 = [ 0.25, 0.25, 0.125, 0.125 ],
+            # chordify_pt1 = [ "major", "major", "minor", "major", "pow", "aug"],
+            basic_chords = "I IV V I"
         ),
 
         # --- FX ---
         FxBuses().set(
-            arpeggiate_strings = FxBus().set([
+            arpeggiate_lead = FxBus().set([
                 dict(module='arp', splits=[4], octaves='transpose_pt1', mode='locked')
             ]),
-            random_velocity_and_duration = FxBus().set([
-                dict(module='velocity', levels='velocity_pt1'),
-                dict(module='duration', lengths='duration_pt1')
-            ]),
-            chordify_lead = FxBus().set([
-                dict(module='chordify', types='chordify_pt1', when='chordify_chance_pt1')
-            ]),
-            transpose_lead = FxBus().set([
-                dict(module='transpose', octaves='transpose_pt1')
-            ])
         ),
 
         # -- SCENES --
         Scenes().set(
+            # BOOKMARK: FIXME: bar count is not yet implemented as of time of writing, need a camp.band.members.stop or something to implement.  Easy though.
             overture = Scene().set(
                 scale = "C4 major",
                 bar_count = 12,
-                pre_fx = dict(strings='random_velocity_and_duration'),
-                post_fx = dict(strings='arpeggiate_strings', lead='transpose_lead'),
+                # pre_fx = dict(strings='random_velocity_and_duration'),
+                # post_fx = dict(strings='arpeggiate_lead'),
                 patterns = dict(strings='basic_chords', lead=[ 'some_jam_pt2', 'some_jam_pt1' ])
             ),
             llama_theme = Scene().set(
                 scale = "C4 major",
                 bar_count = 12,
-                pre_fx = dict(strings = 'random_velocity_and_duration'),
-                post_fx = dict(strings = 'arpeggiate_strings', lead = 'transpose_lead'),
+                # pre_fx = dict(strings = 'random_velocity_and_duration'),
+                # post_fx = dict(strings = 'arpeggiate_strings', lead = 'transpose_lead'),
+                post_fx = dict(strings='arpeggiate_lead'),
                 patterns = dict(strings = 'basic_chords', lead = [ 'some_jam_pt1', 'some_jam_pt2' ])
             )
         )
