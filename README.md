@@ -30,24 +30,25 @@ Stage 1 (mostly complete):
    * a library suitable as a basis for theory-backed algorithmic composition programs
    * tools that enable composition at faster speeds, inspired by trackers but evolved from them
 
-Stage 2 (in progress) - see the API example above:
-
-   * a system that can represent a mesh network of improvising but conducted "musicians"
-   * a library of usable mutators to slice, dice, and evolve musical patterns
-   * inspirations: Real life Jazz, the Reactable at the Museum of the Science and Industry, etc
-   * endless-composition genre-shifting program  suitable for never ending songs that also remain interesting
-
-Stage 3 (pending and orthogonal):
+Stage 2 (now in progress):
 
    * a friendly entry format for rapid transcription of scores across multiple tracks, inspired by classic step sequencers, and usuable by non-programmers
    * inspirations: the Elektron Monomachine, the Sequentix Cirklon, etc.
    * a way to allow randomness and chaos to influence the compositions
    * easy to describe automation of synth parameters (filter cutoffs, wub wub, etc) 
 
+Stage 3 (next up, and mostly unrelated!):
+
+   * a system that can represent a mesh network of improvising but conducted "musicians"
+   * a library of usable mutators to slice, dice, and evolve musical patterns
+   * inspirations: Real life Jazz, the Reactable at the Museum of the Science and Industry, etc
+   * endless-composition genre-shifting program  suitable for never ending songs that also remain interesting
+
 Design Goals:
 
    * easy to understand code
    * ease of setup
+   * making it really easy to extend the code and add plugins
    * some independence from low level MIDI implementations, so we're not dependent on some library continuing to work, but enable both realtime MIDI, MIDI output, and notation
 
 These features might not all be used at the same time or even be 100% compatible, but will grow and evolve out of a common base.
@@ -66,11 +67,11 @@ On topic: Ideas, Code discussions, Troubleshooting,  Bug Reports, Sharing things
 
 * https://groups.google.com/forum/#!forum/camp-python-music
 
-
 Notes
 =====
 
-   * The tests probably explain the API best at this point, see tests/band.py and other files
+   * tests/band.py mostly explains the low level API (notes, chords, etc) 
+   * The examples/ directory probably explain the high level API
    * API is super subject to change.
    * Contributors should join the mailing list at https://groups.google.com/forum/#!topic/camp-python-music - to avoid frustration, duplicate work, and API breakage, I highly suggest talking about what you are going to be doing it.
    * The issue tracker is disabled.  Fix something via a pull request or ask a question on the mailing list.
@@ -81,8 +82,7 @@ Setup: OS X
 
 It's recommended you target some soft synths running inside a Digital Audio Workstation program (DAW) or standalone.  
 
-Initial testing in the early days of this program were done against Native Instrument's Absynth and Reaper.  These are prety friendly to set up
-MIDI wise.
+Initial testing in the early days of this program were done against Native Instrument's Absynth and Reaper.  These are prety friendly to set up MIDI wise.
 
 For the program itself, software dependencies:
 
@@ -110,9 +110,7 @@ this read in via en environment variable.  Short term, hack camp/playback/realti
 
         midi_out.open_port(1)
 
-If you are using Logic, Logic is by default idiotic when it comes to MIDI and multi-track recording.  In Logic X, go to File > Project Settings > Recording
-and be sure the "Auto Demix" option is checked.  Then, one each channel strip, assign a MIDI channel that is not "ALL".  You will then want to arm all tracks
-for recording before running the program.
+If you are using Logic, Logic is by default idiotic when it comes to MIDI and multi-track recording.  In Logic X, go to File > Project Settings > Recording and be sure the "Auto Demix" option is checked.  Then, one each channel strip, assign a MIDI channel that is not "ALL".  You will then want to arm all tracks for recording before running the program.
 
 If you have problems with this step (or want to share Windows/Linux tips), stop by the mailing list!
 
