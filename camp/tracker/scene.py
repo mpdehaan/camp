@@ -24,29 +24,39 @@ from camp.core.scale import scale as core_scale
 
 class Scene(object):
 
-    def __init__(self):
-        pass
+    def __init__(self, bpm=None, scale=None, pre_fx=None, post_fx=None, patterns=None, bar_count=None):
 
-    def set(self, bpm=None, scale=None, pre_fx=None, post_fx=None, patterns=None, bar_count=None):
+        self.scale = scale
+        self.bpm = None
+        self.pre_fx = pre_fx
+        self.post_fx = post_fx
+        self.patterns = patterns
+        self.bar_count = bar_count
+        self._factory = None # set up by scenes.py
+        self._scale_source = ScaleSource(scales=core_scale(self.scale))
+        self._output = None
+        self._players = dict()
 
-        def callback(song):
 
-            self._factory = song
-            self.scale = scale
-            self.bpm = None
-            self.pre_fx = pre_fx
-            self.post_fx = post_fx
-            self.patterns = patterns
-            self.bar_count = bar_count
-
-            self._factory = None # set up by scenes.py
-            self._scale_source = ScaleSource(scales=core_scale(self.scale))
-            self._output = None
-            self._players = dict()
-
-            return self
-
-        return callback
+    def to_data(self):
+        result = dict(
+            scale = self.scale,
+            bpm = self.bpm,
+            pre_fx = self.pre_fx,
+            post_fx = self.post_fx,
+            patterns = self.patterns,
+            bar_count = self.bar_count
+        )
+        #if self.pre_fx:
+        #    for (k,v) in self.pre_fx.items():
+        #        result['pre_fx'][k] = v.to_data()
+        #if self.post_fx:
+        #    for (k,v) in self.post_fx.items():
+        #        result['post_fx'][k] = v.to_data()
+        #if self.patterns:
+        #    for (k,v) in self.patterns.items():
+        #        result['patterns'][k] = v.to_data()
+        return result
 
     def build(self):
 

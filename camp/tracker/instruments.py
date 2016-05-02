@@ -20,31 +20,32 @@ class Instruments(object):
 
     __slots__ = [ "_instruments", "_factory" ]
 
-    def __init__(self):
+    def __init__(self, song, **instruments):
+
+        self._factory = song
         self._instruments = dict()
 
-    def set(self, **kwargs):
+        for (instrument_name, instrument) in instruments.items():
 
-        def callback(song):
+            print("CREATING INSTRUMENT: %s" % instrument)
 
-            for (instrument_name, instrument) in kwargs.items():
-
-                print("CREATING INSTRUMENT: %s" % instrument)
-
-                instrument = instrument(song)
-                print(instrument.channel)
-                if instrument.channel is None:
-                    raise Exception("DEBUG: channel is None")
+            instrument._factory = song
+            
+            print(instrument.channel)
+            if instrument.channel is None:
+                raise Exception("DEBUG: channel is None")
 
 
-                if type(instrument) != Instrument:
-                    raise Exception("instruments collection requires an instrument")
+            if type(instrument) != Instrument:
+                raise Exception("instruments collection requires an instrument")
 
-                print("AIGHT")
-                self._instruments[instrument_name] = instrument
-
-            return self
-        return callback
+            print("AIGHT")
+            self._instruments[instrument_name] = instrument
 
     def as_dict(self):
         return self._instruments
+
+    def to_data(self):
+        results = dict(cls="camp.tracker.instruments.Instruments")
+        for (k,v) in self._instruments():
+            results['data'][k] = v.to_data()

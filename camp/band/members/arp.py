@@ -87,6 +87,16 @@ class Arp(Member):
         self._subdivide_amounts = self.draw_from(splits)
         self._run_once = True
 
+    def to_data(self):
+        return dict(cls="camp.band.members.Arp", data=dict(
+            mode = self.datafy(self._mode),
+            splits = self.datafy(self._splits),
+            semitones = self.datafy(self._semitones),
+            octaves = self.datafy(self._octaves),
+            rests = self.datafy(self._rests),
+            when = self.datafy(self._when)
+        ))
+
     def copy(self):
         return Arp(channel=self.channel, splits=self._splits, semitones=self._semitones, octaves=self._octaves, scale_notes=self._scale_notes,
           rests=self._rests, mode=self._mode, when=self._when)

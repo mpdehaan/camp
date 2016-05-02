@@ -30,3 +30,6 @@ class Endlessly(Selector):
     def draw(self):
         result = next(self.my_generator)
         return result
+
+    def to_data(self):
+        return dict(cls="camp.band.selectors.selector.Endlessly", data=dict(alist=self.data))

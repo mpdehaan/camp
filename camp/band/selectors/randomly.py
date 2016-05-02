@@ -85,6 +85,7 @@ class Randomly(Selector):
 
     def __init__(self, alist, mode='choice'):
         self.data = alist
+        self.mode = mode
         self.my_generator = endlessly_generate(alist, mode)
 
         random.seed()
@@ -93,3 +94,6 @@ class Randomly(Selector):
     def draw(self):
         result = next(self.my_generator)
         return result
+
+    def to_data(self):
+        return dict(cls="camp.band.selectors.selector.Randomly", data=dict(alist=self.data, mode=self.mode))

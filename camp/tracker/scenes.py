@@ -20,26 +20,21 @@ class Scenes(object):
 
     __slots__ = [ '_scenes', '_factory' ]
 
-    def __init__(self):
+    def __init__(self, song, **scenes):
+
+        self._factory = song
         self._scenes = dict()
 
-    def set(self, **scenes):
+        for (scene_name, scene) in scenes.items():
 
-        def callback(song):
+            if getattr(scene, '__call__', None) is not None:
+                scene = scene(song)
+            if not isinstance(scene, Scene):
+                raise Exception("only a Scene is allowed inside of Scenes set method, got %s" % scene)
 
-            for (scene_name, scene) in scenes.items():
-
-                if getattr(scene, '__call__', None) is not None:
-                    scene = scene(song)
-                if not isinstance(scene, Scene):
-                    raise Exception("only a Scene is allowed inside of Scenes set method, got %s" % scene)
-                    
-                self._scenes[scene_name] = scene
-                scene._factory = song
-                scene.build()
-            return self
-
-        return callback
+            self._scenes[scene_name] = scene
+            scene._factory = song
+            scene.build()
 
     def as_dict(self):
         return self._scenes

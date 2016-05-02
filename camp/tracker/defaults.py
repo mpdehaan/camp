@@ -24,11 +24,20 @@ class Defaults(object):
 
     __slots__ = [ '_defaults', '_factory']
 
-    def __init__(self, **kwargs):
+    def __init__(self, song, **kwargs):
+
+        # the initial defaults object, if no defaults are set, has some global defaults
         self._defaults = CODED_DEFAULTS
+        self._factory = song
+
+        # now apply whatever default overrides from the user
         self.set(**kwargs)
 
     def set(self, **kwargs):
+
+        # it is not valid to set a default that the system doesn't know about, so for instance
+        # the system will yell at you if you misspell "scene_bar_count" as "scene_bar_ct".  This is
+        # exclusively for typo prevention.
 
         keys = CODED_DEFAULTS.keys()
         for (k,v) in kwargs.items():

@@ -20,29 +20,26 @@ from camp.band.selectors.randomly import Randomly
 
 class Patterns(object):
 
-    def __init__(self):
+    def __init__(self, song, patterns=None):
+
+        assert patterns is not None
+
+        self._factory = song
         self._patterns = dict()
 
-    def _produce(self):
-        raise Exception("Patterns is not a thing, did you mean BasicPatterns, EndlessPatterns, RandomPatterns, or RepeatedPatterns?")
-
-    def set(self, **kwargs):
-        def callback(song):
-            for (name, pattern) in kwargs.items():
-                if isinstance(pattern, str):
-                    pattern = pattern.replace("|","").split()
-                self._patterns[name] = self._produce(pattern)
-            return self
-        return callback
+        for (name, pattern) in patterns.items():
+            if isinstance(pattern, str):
+                pattern = pattern.replace("|","").split()
+            self._patterns[name] = self._produce(pattern)
 
     def as_dict(self):
         return self._patterns
 
 class RandomPatterns(Patterns):
 
-    def __init__(self, mode):
+    def __init__(self, song, mode=None, patterns=None):
         self.mode = mode
-        super().__init__()
+        super().__init__(song, patterns=patterns)
 
     def _produce(self, pattern):
         return Randomly(pattern, mode=self.mode)
@@ -59,9 +56,10 @@ class BasicPatterns(Patterns):
 
 class RepeatedPatterns(Patterns):
 
-    def __init__(self, hold=None):
+    def __init__(self, song, mode=None, patterns=None, hold=None):
         self.hold = hold
-        super().__init__()
+        self.mode = mode
+        super().__init__(song, patterns=patterns)
 
 
     def _produce(self, pattern):

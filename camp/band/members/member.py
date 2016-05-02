@@ -155,3 +155,19 @@ class Member(object):
 
         # see scale_follower for a good example
         raise NotImplementedError
+
+    def datafy(self, x):
+        """
+        Helper function used in serialization.
+        """
+        if type(x) == list:
+            return [ self.datafy(y) for y in x ]
+        elif type(x) == dict:
+            result = {}
+            for (k,v) in x.items():
+                result[k] = self.datafy(v)
+            return result
+        elif x is None or type(x) in [ bool, int, float, str ]:
+            return x
+        else:
+            return x.to_data()

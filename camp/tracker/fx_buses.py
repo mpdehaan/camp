@@ -20,22 +20,24 @@ class FxBuses(object):
 
     __slots__ = [ '_buses', '_factory' ]
 
-    def __init__(self):
+    def __init__(self, song, **buses):
+
+        self._factory = song
         self._buses = dict()
 
-    def set(self, **buses):
-
-        def callback(song):
-            for (bus_name, bus) in buses.items():
-                if getattr(bus, '__call__', None) is not None:
-                    bus = bus(song)
-                if not isinstance(bus, FxBus):
-                    raise Exception("only a FxBus is allowed inside of FxBusses set method, got: %s" % bus)
-                self._buses[bus_name] = bus
-                bus._factory = song
-            return self
-
-        return callback
+        for (bus_name, bus) in buses.items():
+            if getattr(bus, '__call__', None) is not None:
+                bus = bus(song)
+            if not isinstance(bus, FxBus):
+                raise Exception("only a FxBus is allowed inside of FxBusses set method, got: %s" % bus)
+            self._buses[bus_name] = bus
+            bus._factory = song
 
     def as_dict(self):
         return self._buses
+
+    def to_data(self):
+        result = dict(cls='camp.tracker.fx_bus.FxBuses')
+        for (k,v) in self._buses:
+            result['data'][k] = v.to_data()
+        return result

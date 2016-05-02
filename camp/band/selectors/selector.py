@@ -21,3 +21,6 @@ class Selector(object):
 
     def draw(self):
         raise NotImplementedError()
+
+    def to_data(self):
+        raise NotImplementedError()

@@ -24,59 +24,11 @@ from camp.band.selectors.endlessly import Endlessly
 
 class FxBus(object):
 
-    def __init__(self):
-
-        self._nodes = []
-
-    def set(self, param_list):
-
-        def callback(song):
-
-            # FIXME: in any function where song is passed in, remove references to _factory in all files
-            self._factory = song
-
-            print("-- FORMING MODULES --")
-
-            if type(param_list) != list:
-                raise Exception("The constructor to FxBus expects a list of dicts, got: %s" % param_list)
-
-            for params in param_list:
-
-                print("PARAMS: %s" % params)
-
-                if type(params) != dict:
-                    raise Exception("The constructor to FxBus expects a list of dicts, got element: %s" % params)
-
-                module = params.get('module', None)
-                if module is None:
-                    raise Exception("'module' required in FxBus")
-
-                namespace = "camp.band.members.%s" % module
-
-                params_out = dict()
-
-                for (k,v) in params.items():
-
-                    if k == 'module':
-                        pass
-                    elif isinstance(v, str):
-                        # FIXME: DO WE WANT TO HAVE A SPECIFIC SYNTAX TO DENOTE A PATTERN LOOKUP RATHER THAN DOING IT IMPLICITLY?
-                        # (yes, shouty, maybe important)
-                        if v in song.patterns:
-                            v = song.patterns[v]
-                        params_out[k] = v
-                    elif type(v) == list:
-                        params_out[k] = Endlessly(v)
-                    else:
-                        raise Exception("unknown pattern type: %s" % v)
-
-                instance = instance_produce(namespace, module, [], params_out)
-                print("--> INSTANCE: %s" % instance)
-                self._nodes.append(instance)
-
-            return self
-
-        return callback
+    def __init__(self, member_list):
+        self._nodes = [ member.copy() for member in member_list ]
 
     def nodes(self):
         return [ node.copy() for node in self._nodes ]
+
+    def to_data(self):
+        return [ x.to_data() for x in self._nodes ]

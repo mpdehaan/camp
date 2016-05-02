@@ -22,26 +22,15 @@ VALID_NOTATIONS = [ 'roman', 'literal' ]
 
 class Instrument(object):
 
-    def __init__(self):
-        pass
+    def __init__(self, channel=None, notation='roman'):
 
-    def set(self, channel=None, notation='roman'):
-        print("INSTRUMENT SET!")
+        self.channel = channel
+        self.notation = notation
 
-        def callback(song):
-            print("GO CALLBACK!")
+        if type(self.channel) != int:
+            raise Exception("channel must be set, as an integer, got: %s" % self.channel)
+        if notation not in VALID_NOTATIONS:
+            raise Exception("invalid notation type: %s" % notation)
 
-            self.channel = channel
-            self.notation = notation
-
-            self._factory = song
-
-            if type(self.channel) != int:
-                raise Exception("channel must be set, as an integer, got: %s" % self.channel)
-            if notation not in VALID_NOTATIONS:
-                raise Exception("invalid notation type: %s" % notation)
-
-            print("MY CHANNEL IS %s" % self.channel)
-            return self
-
-        return callback
+    def to_data(self):
+        return dict(cls="camp.band.tracker.Instrument", data=dict(channel=self.channel, notation=self.notation))

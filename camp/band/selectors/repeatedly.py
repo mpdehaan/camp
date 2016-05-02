@@ -25,8 +25,12 @@ class Repeatedly(Selector):
 
     def __init__(self, alist, cycles=1):
         self.data = alist
+        self.cycles = cycles
         self.my_generator = do_generate(cycles, alist)
 
     def draw(self):
         result = next(self.my_generator)
         return result
+
+    def to_data(self):
+        return dict(cls="camp.band.selectors.selector.Repeatedly", data=dict(alist=self.data, cycles=self.cycles))
