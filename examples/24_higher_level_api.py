@@ -23,6 +23,7 @@ from camp.tracker.fx_buses import FxBuses
 from camp.tracker.fx_bus import FxBus
 from camp.tracker.scenes import Scenes
 from camp.tracker.scene import Scene
+from camp.band.members.chordify import Chordify
 from camp.band.members.arp import Arp
 
 # ---------------------------------------------------------------------------------
@@ -49,7 +50,7 @@ def play():
 
     song.set_instruments(
         strings = Instrument(channel=1),
-        lead    = Instrument(channel=2),
+        lead    = Instrument(channel=1),
     )
 
     song.set_patterns(typ='basic', patterns=dict(
@@ -61,11 +62,15 @@ def play():
         # chordify_chance_pt = [ 0, 0.5 ]
     ))
 
+    song.set_patterns(typ='random', mode='exhaust', patterns=dict(
+        serialism = "1 2 3 4 5 6 7 8 9 10 11 12"
+    ))
 
     song.set_patterns(typ='random', mode='choice', patterns=dict(
         # random_pt1 = "1 2 3 4 5 6 7",
         # implies we want a new kind of generator below...
         # velocity_pt1 = [ 127, 126, 125, 124, 123, 122, 121, 120, 119, 118, 117, 116, 115, 114, 113, 112, 111, 110 ]
+
     ))
 
     song.set_patterns(typ='random', mode='probability', patterns=dict(
@@ -73,34 +78,42 @@ def play():
     ))
 
     song.set_patterns(typ='endless', patterns=dict(
-        subdivide_arp = [4],
+        chord_sequence = [ 'major', 'minor', 'power' ],
+        subdivide_arp = [ 3 ],
         transpose_pt1 = [ 2, 0, -2 ],
         # duration_pt1 = [ 0.25, 0.25, 0.125, 0.125 ],
         # chordify_pt1 = [ "major", "major", "minor", "major", "pow", "aug"],
-        basic_chords = "I IV V I"
+        basic_chords = "I IV V I",
+        boring_part = "1",
+        transpose_arp = [ 0, 4, 5 ]
     ))
 
     # --- FX ---
     song.set_fx_buses(
-        arpeggiate_lead = FxBus([ Arp(splits=song.pattern('subdivide_arp'), octaves=song.pattern('transpose_pt1'), mode='locked') ])
+        chordify_lead = FxBus([
+            Chordify(types=song.pattern('chord_sequence'))
+        ]),
+        arpeggiate_lead = FxBus([
+             Arp(semitones=song.pattern('transpose_arp'), splits=song.pattern('subdivide_arp'), octaves=song.pattern('transpose_pt1'), mode='locked')
+        ])
     )
 
     song.set_scenes(
         # BOOKMARK: FIXME: bar count is not yet implemented as of time of writing, need a camp.band.members.stop or something to implement.  Easy though.
         overture = Scene(
-            scale = "C4 major",
+            scale = "C4 chromatic",
             bar_count = 12,
             # pre_fx = dict(strings='random_velocity_and_duration'),
-            # post_fx = dict(strings='arpeggiate_lead'),
-            patterns = dict(strings='basic_chords', lead=[ 'some_jam_pt2', 'some_jam_pt1' ])
+            post_fx = dict(strings='chordify_lead'),
+            patterns = dict(strings='serialism')
         ),
         llama_theme = Scene(
-            scale = "C4 major",
+            scale = "C5 minor",
             bar_count = 12,
             # pre_fx = dict(strings = 'random_velocity_and_duration'),
             # post_fx = dict(strings = 'arpeggiate_strings', lead = 'transpose_lead'),
             post_fx = dict(strings='arpeggiate_lead'),
-            patterns = dict(strings='basic_chords', lead=[ 'some_jam_pt1', 'some_jam_pt2' ])
+            patterns = dict(strings='boring_part', lead=[ 'some_jam_pt1', 'some_jam_pt2' ])
         )
     )
 

@@ -16,8 +16,8 @@ limitations under the License.
 
 class Selector(object):
 
-    def __init__(self, alist):
-        pass
+    def __init__(self, alist, mode=None):
+        raise NotImplementedError()
 
     def draw(self):
         raise NotImplementedError()

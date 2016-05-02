@@ -54,12 +54,15 @@ def endlessly_generate(alist, mode):
 
         elif mode == 'exhaust':
 
-            while len(alist) > 0:
-
-                length = len(alist)
-                index = random.randint(0,alist) - 1
-                item = alist.pop(index)
-                yield index
+            my_list = alist[:]
+            while len(my_list) > 0:
+                print("DRAWING")
+                length = len(my_list)
+                index = random.randint(0,length) - 1
+                item = my_list.pop(index)
+                print("EXHAUST YIELDS: %s" % item)
+                yield item
+            print("ALL DONE")
 
         elif mode == 'human':
 
@@ -68,11 +71,11 @@ def endlessly_generate(alist, mode):
                 length = len(alist)
                 index = random.randint(0,alist) - 1
                 item = alist.pop(index)
-                yield index
+                yield item
 
         else:
 
-            raise Exception("unknown Randomly mode")
+            raise Exception("unknown Randomly mode: %s" % mode)
 
 
 class Randomly(Selector):

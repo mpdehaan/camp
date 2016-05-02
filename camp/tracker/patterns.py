@@ -26,11 +26,17 @@ class Patterns(object):
 
         self._factory = song
         self._patterns = dict()
+        self._save(patterns)
 
+    def _save(self, patterns):
         for (name, pattern) in patterns.items():
             if isinstance(pattern, str):
                 pattern = pattern.replace("|","").split()
-            self._patterns[name] = self._produce(pattern)
+                # print("USING PATTERN: %s" % pattern)
+            self._patterns[name] = self.create(pattern)
+
+    def create(self, pattern):
+        raise NotImplementedError()
 
     def as_dict(self):
         return self._patterns
@@ -41,26 +47,26 @@ class RandomPatterns(Patterns):
         self.mode = mode
         super().__init__(song, patterns=patterns)
 
-    def _produce(self, pattern):
+    def create(self, pattern):
         return Randomly(pattern, mode=self.mode)
 
 class EndlessPatterns(Patterns):
 
-    def _produce(self, pattern):
+    def create(self, pattern):
         return Endlessly(pattern)
 
 class BasicPatterns(Patterns):
 
-    def _produce(self, pattern):
+    def create(self, pattern):
         return pattern
 
 class RepeatedPatterns(Patterns):
 
-    def __init__(self, song, mode=None, patterns=None, hold=None):
+    def __init__(self, song, hold=None, patterns=None):
         self.hold = hold
         self.mode = mode
         super().__init__(song, patterns=patterns)
 
 
-    def _produce(self, pattern):
+    def create(self, pattern):
         return Repeatedly(pattern, hold=self.hold)

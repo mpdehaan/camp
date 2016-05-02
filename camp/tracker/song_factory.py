@@ -164,14 +164,18 @@ class SongFactory(object):
 
         which = None
         if typ == 'basic':
-            which = BasicPatterns
+            print("A")
+            which = BasicPatterns(self, patterns=patterns)
         elif typ == 'random':
-            which = RandomPatterns
+            print("B")
+            which = RandomPatterns(self, patterns=patterns, mode=mode)
         elif typ == 'endless':
-            which = EndlessPatterns
+            print("C")
+            which = EndlessPatterns(self, patterns=patterns)
         else:
+            # TODO: support RepeatedPatterns here?
             raise Exception("unknown pattern type: %s" % typ)
-        self.patterns.update(which(self, patterns=patterns).as_dict())
+        self.patterns.update(which.as_dict())
 
 
     def handle_scene(self, scene_name, play=False):

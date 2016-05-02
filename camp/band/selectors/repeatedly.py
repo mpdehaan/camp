@@ -23,7 +23,7 @@ def do_generate(cycles, alist):
 
 class Repeatedly(Selector):
 
-    def __init__(self, alist, cycles=1):
+    def __init__(self, alist, cycles=1, mode=None):
         self.data = alist
         self.cycles = cycles
         self.my_generator = do_generate(cycles, alist)

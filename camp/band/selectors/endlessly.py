@@ -23,7 +23,7 @@ def endlessly_generate(alist):
 
 class Endlessly(Selector):
 
-    def __init__(self, alist):
+    def __init__(self, alist, mode=None):
         self.data = alist
         self.my_generator = endlessly_generate(alist)
 
