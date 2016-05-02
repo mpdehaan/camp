@@ -31,6 +31,13 @@ class Ordered(Member):
         self._sources = sources
         self.reset()
 
+    def to_data(self):
+        return dict(cls="camp.band.members.ordered.Ordered", data=dict(
+            sources = [ s.to_data() for s in self._sources ],
+            channel = self.datafy(self.channel),
+            when = self.datafy(self._when)
+        ))
+
     def copy(self):
         return Ordered(channel=self.channel, when=self._when, sources=self._sources)
 

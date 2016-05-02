@@ -21,12 +21,20 @@ class Transpose(Member):
 
     def __init__(self, channel=None, octaves=None, when=True):
 
-        # TODO: later also support step transpositions
+        # TODO: later also support semitone and step transpositions in higher level API
+        # (already possible in lower levels)
         # or even grabbing the next note in the scale
 
         super().__init__(channel=channel, when=when)
         self._octaves = octaves
         self.reset()
+
+    def to_data(self):
+        return dict(cls="camp.band.members.transpose.Transpose", data=dict(
+            octaves = self.datafy(self._octaves),
+            channel = self.datafy(self.channel),
+            when = self.datafy(self._when)
+        ))
 
     def copy(self):
         return Transpose(channel=self.channel, octaves=self._octaves, when=self._when)

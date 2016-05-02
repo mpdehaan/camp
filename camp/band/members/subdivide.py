@@ -50,6 +50,13 @@ class Subdivide(Member):
         self._splits = splits
         self.reset()
 
+    def to_data(self):
+        return dict(cls="camp.band.members.subdivide.Subdivide", data=dict(
+            splits = self.datafy(self._splits),
+            channel = self.datafy(self.channel),
+            when = self.datafy(self._when)
+        ))
+
     def copy(self):
         return Subdivide(channel=self.channel, when=self._when, splits=self._splits)
 

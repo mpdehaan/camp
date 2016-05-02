@@ -121,8 +121,10 @@ def play():
 
     # scene_names = ['overture', 'llama_theme', 'bridge', 'chorus', 'verse', 'chorus', 'verse', 'ending']
     scene_names = ['overture', 'llama_theme' ]
-    song.play(scene_names)
 
+    #song.play(scene_names)
+
+    print(song.to_json())
 
 
 if __name__ == "__main__":

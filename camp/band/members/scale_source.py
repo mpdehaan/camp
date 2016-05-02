@@ -39,6 +39,14 @@ class ScaleSource(Member):
         self._scales = scales
         self.reset()
 
+    def to_data(self):
+        return dict(cls="camp.band.members.scale_source.ScaleSource", data=dict(
+            scales = self.datafy(self._scales),
+            channel = self.datafy(self.channel),
+            when = self.datafy(self._when),
+            beats = self.datafy(self.beats)
+        ))
+
     def copy(self):
         return ScaleSource(scales=self._scales, beats=self.beats, channel=self.channel, when=self._when)
 

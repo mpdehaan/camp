@@ -1,4 +1,4 @@
-"""
+ma"""
 Copyright 2016, Michael DeHaan <michael.dehaan@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,6 +27,13 @@ class Duration(Member):
         super().__init__(channel=channel, when=when)
         self._lengths = lengths
         self.reset()
+
+    def to_data(self):
+        return dict(cls="camp.band.members.duration.Duration", data=dict(
+            lengths = self.datafy(self._lengths),
+            channel = self.datafy(self.channel),
+            when = self.datafy(self._when)
+        ))
 
     def copy(self):
         return Duration(lengths=self._lengths, channel=self.channel, when=self._when)

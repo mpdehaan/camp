@@ -44,6 +44,13 @@ class ScaleFollower(Member):
         self._lengths = lengths
         self.reset()
 
+    def to_data(self):
+        return dict(cls="camp.band.members.scale_follower.ScaleFollower", data=dict(
+            lengths = self.datafy(self._lengths),
+            channel = self.datafy(self.channel),
+            when = self.datafy(self._when)
+        ))
+
     def copy(self):
         return ScaleFollower(lengths=self._lengths, channel=self.channel, when=self._when)
 

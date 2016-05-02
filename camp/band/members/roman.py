@@ -37,6 +37,13 @@ class Roman(Member):
         print("ROMAN CONSTRUCTED WITH SYMBOLS=%s" % symbols)
         self.reset()
 
+    def to_data(self):
+        return dict(cls="camp.band.members.roman.Roman", data=dict(
+            symbols = self.datafy(self._symbols),
+            channel = self.datafy(self.channel),
+            when = self.datafy(self._when)
+        ))
+
     def copy(self):
         return Roman(symbols=self._symbols, channel=self.channel, when=self._when)
 

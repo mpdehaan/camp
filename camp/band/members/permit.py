@@ -46,6 +46,12 @@ class Permit(Member):
         self._when = when
         self.reset()
 
+    def to_data(self):
+        return dict(cls="camp.band.members.permit.Permit", data=dict(
+            channel = self.datafy(self.channel),
+            when = self.datafy(self._when)
+        ))
+
     def copy(self):
         return Permit(when=self._when, channel=self.channel)
 

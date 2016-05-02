@@ -28,6 +28,13 @@ class Velocity(Member):
         self._levels = levels
         self.reset()
 
+    def to_data(self):
+        return dict(cls="camp.band.members.velocity.Velocity", data=dict(
+            levels = self.datafy(self._levels),
+            channel = self.datafy(self.channel),
+            when = self.datafy(self._when)
+        ))
+
     def copy(self):
         return Velocity(levels=self._levels, channel=self.channel, when=self._when)
 

@@ -33,4 +33,4 @@ class Instrument(object):
             raise Exception("invalid notation type: %s" % notation)
 
     def to_data(self):
-        return dict(cls="camp.band.tracker.Instrument", data=dict(channel=self.channel, notation=self.notation))
+        return dict(cls="camp.band.tracker.instrument.Instrument", data=dict(channel=self.channel, notation=self.notation))

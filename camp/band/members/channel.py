@@ -30,6 +30,12 @@ class Channel(Member):
         super().__init__(channel=channel, when=when)
         self.reset()
 
+    def to_data(self):
+        return dict(cls="camp.band.members.channel.Channel", data=dict(
+            channel = self.channel,
+            when = self.datafy(self._when)
+        ))
+
     def copy(self):
         return Channel(channel=self.channel, when=self._when)
 

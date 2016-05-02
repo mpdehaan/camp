@@ -51,8 +51,14 @@ class Chordify(Member):
     def copy(self):
         return Chordify(types=self._types, channel=self.channel, when=self._when)
 
-    def reset(self):
+    def to_data(self):
+        return dict(cls="camp.band.members.chordify.Chordify", data=dict(
+            types = self.datafy(self._types),
+            channel = self.datafy(self.channel),
+            when = self.datafy(self._when)
+        ))
 
+    def reset(self):
         self._which_chord = self.draw_from(self._types)
 
     def on_signal(self, event, start_time, end_time):

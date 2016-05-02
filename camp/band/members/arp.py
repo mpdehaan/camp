@@ -88,7 +88,8 @@ class Arp(Member):
         self._run_once = True
 
     def to_data(self):
-        return dict(cls="camp.band.members.Arp", data=dict(
+        return dict(cls="camp.band.members.arp.Arp", data=dict(
+            channel = self.datafy(self.channel),
             mode = self.datafy(self._mode),
             splits = self.datafy(self._splits),
             semitones = self.datafy(self._semitones),
