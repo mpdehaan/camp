@@ -25,6 +25,9 @@ from camp.tracker.scenes import Scenes
 from camp.tracker.scene import Scene
 from camp.band.members.chordify import Chordify
 from camp.band.members.arp import Arp
+from camp.band.members.permit import Permit
+from camp.band.members.subdivide import Subdivide
+from camp.band.members.transpose import Transpose
 
 # ---------------------------------------------------------------------------------
 # WARNING -- THIS EXAMPLE IS UNDER DEVELOPMENT CURRENTLY
@@ -50,7 +53,7 @@ def play():
 
     song.set_instruments(
         strings = Instrument(channel=1),
-        lead    = Instrument(channel=1),
+        lead    = Instrument(channel=2),
     )
 
     song.set_patterns(typ='basic', patterns=dict(
@@ -78,14 +81,17 @@ def play():
     ))
 
     song.set_patterns(typ='endless', patterns=dict(
+        occasional_holes = [ 1, 0, 1, 1, 0, 0 ],
         chord_sequence = [ 'major', 'minor', 'power' ],
         subdivide_arp = [ 3 ],
+        subdivide_lots = [ 2 ],
         transpose_pt1 = [ 2, 0, -2 ],
         # duration_pt1 = [ 0.25, 0.25, 0.125, 0.125 ],
         # chordify_pt1 = [ "major", "major", "minor", "major", "pow", "aug"],
         basic_chords = "I IV V I",
         boring_part = "1",
-        transpose_arp = [ 0, 4, 5 ]
+        transpose_arp = [ 0, 4, 5 ],
+        down_two_up_two = [ -2, 2]
     ))
 
     # --- FX ---
@@ -95,7 +101,16 @@ def play():
         ]),
         arpeggiate_lead = FxBus([
              Arp(semitones=song.pattern('transpose_arp'), splits=song.pattern('subdivide_arp'), octaves=song.pattern('transpose_pt1'), mode='locked')
+        ]),
+        some_silence_and_vamp_but_transpose_down = FxBus([
+             Transpose(octaves=song.pattern('down_two_up_two'))
+        ]),
+        subdivide = FxBus([
+            # FIXME: Permit seems to not work.  Figure out why.
+            Permit(when=song.pattern('occasional_holes')),
+            Subdivide(splits=song.pattern('subdivide_lots')),
         ])
+
     )
 
     song.set_scenes(
@@ -110,19 +125,21 @@ def play():
         llama_theme = Scene(
             scale = "C5 minor",
             bar_count = 12,
-            # pre_fx = dict(strings = 'random_velocity_and_duration'),
+            # pre_fx = dict(lead='subdivide'),
             # post_fx = dict(strings = 'arpeggiate_strings', lead = 'transpose_lead'),
-            post_fx = dict(strings='arpeggiate_lead'),
-            patterns = dict(strings='boring_part', lead=[ 'some_jam_pt1', 'some_jam_pt2' ])
+            post_fx = dict(strings='arpeggiate_lead', lead='some_silence_and_vamp_but_transpose_down'),
+            patterns = dict(strings='boring_part', lead=[ 'some_jam_pt1', 'some_jam_pt2', 'some_jam_pt1', 'some_jam_pt2' ])
         )
     )
 
     # -- GO! --
 
     # scene_names = ['overture', 'llama_theme', 'bridge', 'chorus', 'verse', 'chorus', 'verse', 'ending']
-    scene_names = ['overture', 'llama_theme' ]
+    # scene_names = ['overture', 'llama_theme' ]
+    scene_names = ['llama_theme' ]
 
-    #song.play(scene_names)
+
+    song.play(scene_names)
 
     print(song.to_json())
 
